@@ -122,14 +122,16 @@ namespace TMS.API.Controllers
             }
 
         }
-        [HttpDelete("Disable")]
-        public IActionResult DisableUser([FromForm] UserDTO user)
+
+        [HttpDelete("Disable/{id:int}")]
+        public IActionResult DisableUser(int id)
         {
-            if (user == null) return BadRequest("User is required");
+            if (id == 0) return BadRequest("User is required");
             if (!ModelState.IsValid) return BadRequest("Please provide vaild User");
             try
             {
-                _userService.DisableUser(user);
+                _userService.DisableUser(id);
+
                 return Ok("The User was Disabled successfully");
             }
             catch (System.Exception ex)

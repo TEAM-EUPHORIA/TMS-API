@@ -217,6 +217,10 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+
+                    b.Property<bool>("isDisabled")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
@@ -320,6 +324,10 @@ namespace TMS.API.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("isDisabled")
+                        .HasColumnType("bit");
+
 
                     b.HasKey("Id");
 
@@ -448,6 +456,10 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("isDisabled")
+                        .HasColumnType("bit");
+
+
                     b.HasKey("Id");
 
                     b.HasIndex("ReviewerId");
@@ -512,6 +524,9 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("isDisabled")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -551,6 +566,10 @@ namespace TMS.API.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
+
+
+                    b.Property<bool>("isDisabled")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -803,6 +822,7 @@ namespace TMS.API.Migrations
                         .WithMany()
                         .HasForeignKey("ReviewerId")
                         .OnDelete(DeleteBehavior.NoAction)
+
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.ReviewStatus", "Status")
@@ -815,6 +835,7 @@ namespace TMS.API.Migrations
                         .WithMany()
                         .HasForeignKey("TraineeId")
                         .OnDelete(DeleteBehavior.NoAction)
+
                         .IsRequired();
 
                     b.Navigation("Reviewer");
@@ -844,13 +865,17 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
+
                         .OnDelete(DeleteBehavior.NoAction)
+
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.User", "Trainer")
                         .WithMany()
                         .HasForeignKey("TrainerId")
                         .OnDelete(DeleteBehavior.NoAction)
+
+
                         .IsRequired();
 
                     b.Navigation("Course");

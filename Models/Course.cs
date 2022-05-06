@@ -16,7 +16,6 @@ namespace TMS.API.Models
         public string Name { get; set; }
         public string Duration { get; set; }
         public string Description { get; set; }
-
         public CourseStatus? Status { get; set; }
         [NotMapped]
         public User? Trainer { get; set; }
@@ -24,6 +23,7 @@ namespace TMS.API.Models
         public List<Topic>? Topics { get; set; }
         public List<User>? Trainees { get; set; }
         public List<CourseFeedback>? Feedbacks { get; set; }
+
 
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }

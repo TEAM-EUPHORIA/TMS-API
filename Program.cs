@@ -29,9 +29,15 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 // Making UserService available for the App
 builder.Services.AddTransient<UserService>();
 
+builder.Services.AddTransient<CourseFeedbackService>();
+builder.Services.AddTransient<TraineeFeedbackService>();
+
+
 builder.Services.AddTransient<ReviewService>();
+
 builder.Services.AddTransient<CourseService>();
 builder.Services.AddTransient<DepartmentService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,6 +51,12 @@ builder.Services.AddCors((setup) =>
         options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
     });
 });
+
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
 
 var app = builder.Build();
 
