@@ -13,6 +13,9 @@
 		<PackageReference Include="serilog.expressions" Version="3.3.0"/>
 		<PackageReference Include="serilog.sinks.seq" Version="5.1.1"/>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0"/>
+<<<<<<< HEAD
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0"/>
+=======
+>>>>>>> 07fe34b4a7b220e1bd9c3a79440ae1f2984bd355
 	</ItemGroup>
 </Project>

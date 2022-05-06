@@ -2,5 +2,8 @@
 .vscode/
 bin/
 obj/
+<<<<<<< HEAD
 appsettings.json
+=======
+>>>>>>> 07fe34b4a7b220e1bd9c3a79440ae1f2984bd355
 logs/
