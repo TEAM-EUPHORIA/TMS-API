@@ -9,7 +9,7 @@ namespace TMS.API.Services
     {
         private readonly AppDbContext _context;
         private readonly ILogger<CourseService> _logger;
-
+   
         public CourseService(AppDbContext context, ILogger<CourseService> logger)
         {
             _context = context;
@@ -56,6 +56,11 @@ namespace TMS.API.Services
             }
         }
 
+        internal object GetAllCourses()
+        {
+            throw new NotImplementedException();
+        }
+
         public Object GetCourseById(int id)
         {
             var obj = _context.Courses.Find(id);
@@ -98,7 +103,25 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
+        public Object GetTopicDetailsById(int id)
+        {
+            var dbTopic = _context.Topics.Where(u => u.Id == id).Include("Course").FirstOrDefault();
+            if (dbTopic != null)
+            {
 
+                var result = new
+                {
+                    Id = dbTopic.Id,
+                    Course = dbTopic.CourseId,
+                    Name = dbTopic.Name,
+                    Duration = dbTopic.Duration,
+                    Context = dbTopic.Context
+                };
+
+                return result;
+            }
+            return "not found";
+        }
     //     public IEnumerable<User> GetUsersByDepartment(int departmentId)
     //     {
     //         if (departmentId == 0) throw new Exception("GetUsersByDepartment requires a vaild Id not zero");
@@ -220,6 +243,6 @@ namespace TMS.API.Services
     }
 }
         
-    }
-}
+    
+
 

@@ -12,12 +12,7 @@ namespace TMS.API.Models
         public string ReviewDate { get; set; }
         public string ReviewTime { get; set; }
         public string Mode { get; set; }
-<<<<<<< HEAD
-
         public bool isDisabled { get; set; }
-=======
-        public bool? isDisabled { get; set; }
->>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
         public User? Reviewer { get; set; }
         public User? Trainee { get; set; }
         [NotMapped]

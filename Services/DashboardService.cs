@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TMS.API.DTO;
 using TMS.API.Models;
+using TMS.API.Services;
 
 namespace TMS.API.Services
 {
@@ -11,13 +12,15 @@ namespace TMS.API.Services
         private readonly ILogger<DashboardService> _logger;
         private readonly UserService _userService;
         private readonly CourseService _courseService;
+        private readonly DepartmentService _departmentService;
 
-        public DashboardService(AppDbContext context, ILogger<DashboardService> logger, UserService userService, CourseService courseService)
+        public DashboardService(AppDbContext context, ILogger<DashboardService> logger, UserService userService, CourseService courseService, DepartmentService departmentService)
         {
             _context = context;
             _logger = logger;
             _userService = userService;
             _courseService = courseService;
+            _departmentService = departmentService;
         }
         public object getUserCount(){
             int coordinatorCount = _userService.GetUsersByRole(2).Count();
@@ -33,11 +36,16 @@ namespace TMS.API.Services
         }
 
         public object getCourseCount(){
-            int courseCount = _courseService.GetAllCourses().Count();
+            var courseCount = _courseService.GetAllCourses().Count();
             return new {
                 courseCount
             };
         }
+
+        // public object getDepartmentCount(){
+        //     int departmentCount = _departmentService.GetAllDepartments().Count();
+        //     return departmentCount;
+        // }
         public IEnumerable<Course> D()
         {
             try

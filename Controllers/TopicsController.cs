@@ -26,7 +26,7 @@ namespace TMS.API.Controllers
             if (id == 0) return BadRequest("Please provide a valid Depatment id");
             try
             {
-                var result = _courseService.GetTopicById(id);
+                var result = _courseService.GetTopicDetailsById(id);
                 if (result != "not found") return Ok(result);
                 return NotFound("we are sorry, the thing you requested was not found");
             }
