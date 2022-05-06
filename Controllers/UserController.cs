@@ -95,15 +95,7 @@ namespace TMS.API.Controllers
                     _logger.LogError($"error thrown by user service " + ex.ToString());
                 }
             }
-<<<<<<< HEAD
- 
-=======
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
->>>>>>> 07fe34b4a7b220e1bd9c3a79440ae1f2984bd355
             return Problem("we are sorry, some thing went wrong");
 
         }
@@ -130,21 +122,9 @@ namespace TMS.API.Controllers
             }
 
         }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 07fe34b4a7b220e1bd9c3a79440ae1f2984bd355
-        [HttpDelete("Disable")]
-        public IActionResult DisableUser([FromForm] UserDTO user)
-        {
-            if (user == null) return BadRequest("User is required");
-            if (!ModelState.IsValid) return BadRequest("Please provide vaild User");
-            try
-            {
-                _userService.DisableUser(user);
-<<<<<<< HEAD
-=======
-=======
+
+
+
         [HttpDelete("Disable/{id:int}")]
         public IActionResult DisableUser(int id)
         {
@@ -153,8 +133,7 @@ namespace TMS.API.Controllers
             try
             {
                 _userService.DisableUser(id);
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
->>>>>>> 07fe34b4a7b220e1bd9c3a79440ae1f2984bd355
+
                 return Ok("The User was Disabled successfully");
             }
             catch (System.Exception ex)

@@ -16,12 +16,12 @@ namespace TMS.API.Services
             _logger = logger;
         }
 
-        public CourseFeedback GetFeedbackByID(int id)
+        public CourseFeedback GetFeedbackByID(int cid,int oid)
         {
-            if (id == 0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
+            if (cid == 0|| oid==0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
             try
             {
-               return _context.CourseFeedbacks.Include(cf=> cf.Course).Include(cf=>cf.Owner).FirstOrDefault(cf=>cf.Id==id);
+               return _context.CourseFeedbacks.Include(cf=> cf.Course).Include(cf=>cf.Owner).FirstOrDefault(cf=>cf.CourseId==cid && cf.OwnerId == oid);
                 
             }
             catch (System.InvalidOperationException ex)
