@@ -17,6 +17,7 @@ namespace TMS.API.Models
         public string Duration { get; set; }
         public string Description { get; set; }
 
+        public bool isDisabled { get; set; }
         public CourseStatus? Status { get; set; }
         [NotMapped]
         public User? Trainer { get; set; }
