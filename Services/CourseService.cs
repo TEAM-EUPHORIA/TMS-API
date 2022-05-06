@@ -16,11 +16,31 @@ namespace TMS.API.Services
             _logger = logger;
         }
 
-        public IEnumerable<Course> GetAllCourses()
+         public Object GetTopicById(int id)
         {
+            var dbTopic = _context.Topics.Where(u => u.Id == id).Include("Course").FirstOrDefault();
+            if (dbTopic != null)
+            {
+
+                var result = new
+                {
+                    Id = dbTopic.Id,
+                    Course = dbTopic.CourseId,
+                    Name = dbTopic.Name,
+                    Duration = dbTopic.Duration,
+                    Context = dbTopic.Context
+                };
+
+                return result;
+            }
+            return "not found";
+        }
+        public IEnumerable<Topic> GetAllTopicsByCourseId(int courseId)
+        {
+            
             try
             {
-                return _context.Courses.ToList();
+                return _context.Topics.Where(u => u.CourseId == courseId).Include("Course").ToList();
             }
             catch (System.InvalidOperationException ex)
             {
@@ -199,3 +219,7 @@ namespace TMS.API.Services
 
     }
 }
+        
+    }
+}
+

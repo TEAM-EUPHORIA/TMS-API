@@ -39,7 +39,7 @@ namespace TMS.API.Controllers
         }
 
         
-         [HttpGet("GetDepartmentByUserId/{id:int}")]
+         [HttpGet("GetDepartmentNameByUserId/{id:int}")]
         public IActionResult GetDepartmentNameByUserId(int id)
         {
             if (id == 0) return BadRequest("Please provide a valid Depatment id");

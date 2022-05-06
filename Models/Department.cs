@@ -11,8 +11,10 @@ namespace TMS.API.Models
         public string Name { get; set; }
 <<<<<<< HEAD
 =======
+
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
         public bool isDisabled { get; set; }
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
+
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }

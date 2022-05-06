@@ -21,13 +21,13 @@ namespace TMS.API.Controllers
             _coursefeedbackservice = courseFeedbackService;
         }
         // "GetCourse?CourseId={0}&UserId={1}"
-        [HttpGet ("GetCourseFeedbackBy/{id:int}") ]
-        public IActionResult GetCourseFeedback(int id)
+        [HttpGet ("GetCourseFeedbackBy/{cid:int},{oid:int}") ]
+        public IActionResult GetCourseFeedback(int cid,int oid)
         {
-            if (id ==0 ) return BadRequest("Please provide a valid courseid and userid");
+            if (cid ==0 || oid==0) return BadRequest("Please provide a valid courseid and userid");
             try
             {
-                var result = _coursefeedbackservice.GetFeedbackByID(id);
+                var result = _coursefeedbackservice.GetFeedbackByID(cid,oid);
                 if (result != null) return Ok(result);
                 return NotFound("we are sorry, the thing you requested was not found");
             }

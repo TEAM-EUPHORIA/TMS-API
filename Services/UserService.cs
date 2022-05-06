@@ -154,21 +154,14 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-<<<<<<< HEAD
-        public void DisableUser(UserDTO user)
-        {
-            if (user == null) throw new ArgumentException("DisableUser requires a vaild User Object");
-            try
-            {
-                var dbUser = _context.Users.Find(user.Id);
-=======
+
         public void DisableUser(int userId)
         {
             if (userId == 0) throw new ArgumentException("DisableUser requires a vaild User Object");
             try
             {
                 var dbUser = _context.Users.Find(userId);
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
+
                 if (dbUser != null)
                 {
 
@@ -192,12 +185,12 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-        public void DeleteUser(UserDTO user)
+        public void DeleteUser(int id)
         {
-            if (user == null) throw new ArgumentException("DeleteUser requires a vaild User Object");
+            if (id == 0) throw new ArgumentException("DeleteUser requires a vaild User Object");
             try
             {
-                var dbUser = _context.Users.Find(user.Id);
+                var dbUser = _context.Users.Find(id);
                 if (dbUser != null)
                 {
                     if (dbUser.isDisabled == true)

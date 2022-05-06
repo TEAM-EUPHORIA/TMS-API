@@ -16,11 +16,11 @@ namespace TMS.API.Models
         public string Name { get; set; }
         public string Duration { get; set; }
         public string Description { get; set; }
-
 <<<<<<< HEAD
-=======
         public bool isDisabled { get; set; }
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
+
+=======
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
         public CourseStatus? Status { get; set; }
         [NotMapped]
         public User? Trainer { get; set; }
@@ -28,6 +28,7 @@ namespace TMS.API.Models
         public List<Topic>? Topics { get; set; }
         public List<User>? Trainees { get; set; }
         public List<CourseFeedback>? Feedbacks { get; set; }
+
 
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
