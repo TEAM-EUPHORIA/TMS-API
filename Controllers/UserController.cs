@@ -95,7 +95,11 @@ namespace TMS.API.Controllers
                     _logger.LogError($"error thrown by user service " + ex.ToString());
                 }
             }
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
             return Problem("we are sorry, some thing went wrong");
 
         }
@@ -123,8 +127,11 @@ namespace TMS.API.Controllers
 
         }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
         [HttpDelete("Disable/{id:int}")]
         public IActionResult DisableUser(int id)
         {

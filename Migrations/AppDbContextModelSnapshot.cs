@@ -325,8 +325,11 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
@@ -458,7 +461,10 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
@@ -530,7 +536,10 @@ namespace TMS.API.Migrations
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -825,6 +834,7 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
+<<<<<<< HEAD
 
                         .OnDelete(DeleteBehavior.NoAction)
 
@@ -832,6 +842,10 @@ namespace TMS.API.Migrations
 
                         .OnDelete(DeleteBehavior.Cascade)
 
+=======
+                        .OnDelete(DeleteBehavior.NoAction)
+
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.ReviewStatus", "Status")
@@ -843,11 +857,16 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
+<<<<<<< HEAD
 
                         .OnDelete(DeleteBehavior.NoAction)
 
                         .OnDelete(DeleteBehavior.NoAction)
 
+=======
+                        .OnDelete(DeleteBehavior.NoAction)
+
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
                         .IsRequired();
 
                     b.Navigation("Reviewer");
@@ -880,17 +899,25 @@ namespace TMS.API.Migrations
 
                         .OnDelete(DeleteBehavior.NoAction)
 
+<<<<<<< HEAD
                         .OnDelete(DeleteBehavior.NoAction)
 
+=======
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.User", "Trainer")
                         .WithMany()
                         .HasForeignKey("TrainerId")
+<<<<<<< HEAD
 
                         .OnDelete(DeleteBehavior.NoAction)
 
                         .OnDelete(DeleteBehavior.NoAction)
+=======
+                        .OnDelete(DeleteBehavior.NoAction)
+
+>>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
 
                         .IsRequired();
 
