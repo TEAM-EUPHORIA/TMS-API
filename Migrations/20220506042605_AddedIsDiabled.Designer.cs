@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS.API;
 
@@ -11,9 +12,10 @@ using TMS.API;
 namespace TMS.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220506042605_AddedIsDiabled")]
+    partial class AddedIsDiabled
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,12 +219,9 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
-=======
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
@@ -327,12 +326,9 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
-=======
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
@@ -460,12 +456,9 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
-=======
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                     b.HasKey("Id");
 
                     b.HasIndex("ReviewerId");
@@ -530,12 +523,9 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
-=======
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -576,12 +566,9 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
-=======
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
@@ -832,11 +819,7 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.NoAction)
-=======
                         .OnDelete(DeleteBehavior.Cascade)
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.ReviewStatus", "Status")
@@ -848,11 +831,7 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.NoAction)
-=======
                         .OnDelete(DeleteBehavior.Cascade)
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                         .IsRequired();
 
                     b.Navigation("Reviewer");
@@ -882,21 +861,13 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.NoAction)
-=======
                         .OnDelete(DeleteBehavior.Cascade)
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.User", "Trainer")
                         .WithMany()
                         .HasForeignKey("TrainerId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.NoAction)
-=======
                         .OnDelete(DeleteBehavior.Cascade)
->>>>>>> 1fe932234a10319c0f2fae96b4ac19f00dca9bee
                         .IsRequired();
 
                     b.Navigation("Course");
