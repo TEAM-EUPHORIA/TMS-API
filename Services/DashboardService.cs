@@ -36,7 +36,7 @@ namespace TMS.API.Services
         }
 
         public object getCourseCount(){
-            var courseCount = _courseService.GetAllCourses().Count();
+             int courseCount = _courseService.GetAllCourses().Count();
             return new {
                 courseCount
             };
