@@ -154,14 +154,12 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-
         public void DisableUser(int userId)
         {
             if (userId == 0) throw new ArgumentException("DisableUser requires a vaild User Object");
             try
             {
                 var dbUser = _context.Users.Find(userId);
-
                 if (dbUser != null)
                 {
 

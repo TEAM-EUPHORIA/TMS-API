@@ -130,7 +130,6 @@ namespace TMS.API.Controllers
             try
             {
                 _userService.DisableUser(id);
-
                 return Ok("The User was Disabled successfully");
             }
             catch (System.Exception ex)

@@ -325,6 +325,8 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+
+
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
@@ -456,6 +458,7 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
@@ -526,6 +529,7 @@ namespace TMS.API.Migrations
 
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
+
 
                     b.HasKey("Id");
 
@@ -821,6 +825,13 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
+
+                        .OnDelete(DeleteBehavior.NoAction)
+
+                        .OnDelete(DeleteBehavior.NoAction)
+
+                        .OnDelete(DeleteBehavior.Cascade)
+
                         .OnDelete(DeleteBehavior.NoAction)
 
                         .IsRequired();
@@ -834,6 +845,11 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
+
+                        .OnDelete(DeleteBehavior.NoAction)
+
+                        .OnDelete(DeleteBehavior.NoAction)
+
                         .OnDelete(DeleteBehavior.NoAction)
 
                         .IsRequired();
@@ -868,11 +884,17 @@ namespace TMS.API.Migrations
 
                         .OnDelete(DeleteBehavior.NoAction)
 
+                        .OnDelete(DeleteBehavior.NoAction)
+
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.User", "Trainer")
                         .WithMany()
                         .HasForeignKey("TrainerId")
+
+                        .OnDelete(DeleteBehavior.NoAction)
+
+                        .OnDelete(DeleteBehavior.NoAction)
                         .OnDelete(DeleteBehavior.NoAction)
 
 

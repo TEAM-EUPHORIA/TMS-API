@@ -34,6 +34,7 @@ builder.Services.AddTransient<TraineeFeedbackService>();
 
 
 builder.Services.AddTransient<ReviewService>();
+builder.Services.AddTransient<CourseService>();
 
 builder.Services.AddTransient<CourseService>();
 builder.Services.AddTransient<DepartmentService>();
@@ -47,11 +48,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors((setup) =>
 {
     setup.AddPolicy("default", (options) =>
-    {
+    { 
         options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
     });
 });
-
 
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
