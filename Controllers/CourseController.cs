@@ -96,7 +96,7 @@ namespace TMS.API.Controllers
         [HttpGet("GetTopicsByCourseId/{id:int}")]
         public IActionResult GetAllTopicByCourseId(int id)
         {
-           
+            if (id == 0) return BadRequest("Please provide a valid Depatment id");
             try
             {
                 var result = _CourseService.GetAllTopicsByCourseId(id);
