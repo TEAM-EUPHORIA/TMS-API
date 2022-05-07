@@ -35,11 +35,8 @@ builder.Services.AddTransient<TraineeFeedbackService>();
 
 builder.Services.AddTransient<ReviewService>();
 
-<<<<<<< HEAD
-=======
 builder.Services.AddTransient<CourseService>();
 builder.Services.AddTransient<DepartmentService>();
->>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -55,10 +52,7 @@ builder.Services.AddCors((setup) =>
     });
 });
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 52946caf757255edd0cdbd4a50bd9915160746cb
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
