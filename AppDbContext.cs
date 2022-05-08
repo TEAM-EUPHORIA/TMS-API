@@ -14,7 +14,7 @@ namespace TMS.API
         public DbSet<Department> Departments { get; set; }
 
         public DbSet<Course> Courses { get; set; }
-        public Dbset<Topic> Topics{get; set;}
+        public DbSet<Topic> Topics{get; set;}
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AttendanceStatus> AttendanceStatuses { get; set; }
         public DbSet<Assigment> Assigments { get; set; }
