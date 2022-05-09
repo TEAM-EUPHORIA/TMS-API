@@ -15,7 +15,16 @@ namespace TMS.API.Services
             _context = context;
             _logger = logger;
         }
+<<<<<<< HEAD
 
+=======
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cid"></param>
+    /// <param name="oid"></param>
+    /// <returns></returns>
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
         public CourseFeedback GetFeedbackByID(int cid,int oid)
         {
             if (cid == 0|| oid==0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
@@ -26,13 +35,21 @@ namespace TMS.API.Services
             }
             catch (System.InvalidOperationException ex)
             {
+<<<<<<< HEAD
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+=======
+                _logger.LogCritical("An Critical error occured in Feedback services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                 _logger.LogTrace(ex.ToString());
                 throw ex;
             }
             catch (System.Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+=======
+                _logger.LogCritical("An Critical error occured in Feedback services. Some external factors are involved. please check the log files to know more about it");
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                 _logger.LogTrace(ex.ToString());
                 throw ex;
             }
@@ -58,10 +75,20 @@ namespace TMS.API.Services
         //         throw ex;
         //     }
         // }
+<<<<<<< HEAD
 
         public void CreateCFeedback(CourseFeedbackDTO courseFeedback)
         {
             if (courseFeedback == null) throw new ArgumentException("CreateUser requires a vaild User Object");
+=======
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="courseFeedback"></param>
+        public void CreateCFeedback(CourseFeedbackDTO courseFeedback)
+        {
+            if (courseFeedback == null) throw new ArgumentException("CreateFeedback requires a vaild Object");
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
             try
             {
                 // Random ran = new Random();
@@ -90,20 +117,38 @@ namespace TMS.API.Services
             }
             catch (System.InvalidOperationException ex)
             {
+<<<<<<< HEAD
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+=======
+                _logger.LogCritical("An Critical error occured in Feedback services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                 _logger.LogTrace(ex.ToString());
                 throw ex;
             }
             catch (System.Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+=======
+                _logger.LogCritical("An Critical error occured in Feedback services. Some external factors are involved. please check the log files to know more about it");
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                 _logger.LogTrace(ex.ToString());
                 throw ex;
             }
         }
+<<<<<<< HEAD
         public void UpdateCFeedback(CourseFeedback courseFeedback)
         {
             if (courseFeedback == null) throw new ArgumentException("UpdateUser requires a vaild User Object");
+=======
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="courseFeedback"></param>
+        public void UpdateCFeedback(CourseFeedback courseFeedback)
+        {
+            if (courseFeedback == null) throw new ArgumentException("UpdateFeedback requires a vaild  Object");
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
             try
             {
                 var dbUser = _context.CourseFeedbacks.Find(courseFeedback.Id);
@@ -121,13 +166,21 @@ namespace TMS.API.Services
             }
             catch (System.InvalidOperationException ex)
             {
+<<<<<<< HEAD
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+=======
+                _logger.LogCritical("An Critical error occured in Feedback services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                 _logger.LogTrace(ex.ToString());
                 throw ex;
             }
             catch (System.Exception ex)
             {
+<<<<<<< HEAD
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+=======
+                _logger.LogCritical("An Critical error occured in Feedback services. Some external factors are involved. please check the log files to know more about it");
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                 _logger.LogTrace(ex.ToString());
                 throw ex;
             }

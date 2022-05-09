@@ -1,11 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
+<<<<<<< HEAD
 
+=======
+using TMS.API.DTO;
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
 using TMS.API.Services;
 
 namespace TMS.API.Controllers
 {
     [ApiController]
+<<<<<<< HEAD
     [Route("api/[controller]")]
+=======
+    [Route("[controller]")]
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
     public class DepartmentController : ControllerBase
     {
         private readonly ILogger<DepartmentController> _logger;
@@ -38,6 +46,7 @@ namespace TMS.API.Controllers
             }
         }
 
+<<<<<<< HEAD
         
          [HttpGet("GetDepartmentNameByUserId/{id:int}")]
         public IActionResult GetDepartmentNameByUserId(int id)
@@ -56,5 +65,67 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
+=======
+           [HttpPost("Create")]
+        public IActionResult CreateDepartment(DepartmentDTO department)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _departmentService.CreateDepartment(department);
+                    return Ok("The Department was Created successfully");
+                }
+                catch (System.Exception ex)
+                {
+                    _logger.LogWarning("There was an error in creating the department. please check the user service for more information");
+                    _logger.LogError($"error thrown by department service " + ex.ToString());
+                }
+            }
+ 
+            return Problem("we are sorry, some thing went wrong");
+
+        }
+        [HttpPut("Update")]
+        public IActionResult UpdateDepartment([FromForm] DepartmentDTO department)
+        {
+           
+           
+            if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
+            try
+            {
+                _departmentService.UpdateDepartment(department);
+                return Ok("The departemnt was Updated successfully");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning("There was an error in Updating the department. please check the departemnt service for more information");
+                _logger.LogError($"error thrown by department service " + ex.ToString());
+                return Problem("we are sorry, some thing went wrong");
+            }
+
+        }
+
+        [HttpDelete("Disable/{id:int}")]
+        public IActionResult DisableDepartment(int id)
+        {
+            if (id == 0) return BadRequest("Department is required");
+            if (!ModelState.IsValid) return BadRequest("Please provide vaild Department");
+            try
+            {
+                _departmentService.DisableDepartment(id);
+
+                return Ok("The department was Disabled successfully");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning("There was an error in Disabling the department. please check the department service for more information");
+                _logger.LogError($"error thrown by department service " + ex.ToString());
+                return Problem("we are sorry, some thing went wrong");
+            }
+
+        }
+ 
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
     }
 }

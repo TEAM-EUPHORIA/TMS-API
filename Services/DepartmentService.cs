@@ -7,6 +7,10 @@ namespace TMS.API.Services
 {
     public class DepartmentService
     {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
         private readonly AppDbContext _context;
         private readonly ILogger<DepartmentService> _logger;
 
@@ -35,6 +39,7 @@ namespace TMS.API.Services
             return "not found";
         }
 
+<<<<<<< HEAD
     //     public IEnumerable<Department> GetAllDepartments()
     //     {
              
@@ -53,3 +58,99 @@ namespace TMS.API.Services
     //     }
     // }
     }}
+=======
+        public void CreateDepartment(DepartmentDTO department)
+        {
+            if (department == null) throw new ArgumentException("CreateDepartment requires a vaild Department Object");
+            try
+            {
+
+                Department dbDepartment = new Department();
+
+                dbDepartment.Name = department.Name;
+              
+                dbDepartment.isDisabled = false;
+                dbDepartment.CreatedOn = DateTime.Now;
+                _context.Departments.Add(dbDepartment);
+                _context.SaveChanges();
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.LogCritical("An Critical error occured in Department services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogCritical("An Critical error occured in Department services. Some external factors are involved. please check the log files to know more about it");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+        }
+
+        
+        public void UpdateDepartment(DepartmentDTO department)
+        {
+            if (department == null) throw new ArgumentException("UpdateDepartemt requires a vaild User Object");
+            try
+            {
+                var dbdepartment = _context.Departments.Find(department.Id);
+                if (dbdepartment != null)
+                {
+                    
+                    
+                    dbdepartment.Name = department.Name;
+                   
+                    dbdepartment.UpdatedOn = DateTime.Now;
+                  
+                    _context.Update(dbdepartment);
+                    _context.SaveChanges();
+                }
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.LogCritical("An Critical error occured in department services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogCritical("An Critical error occured in department services. Some external factors are involved. please check the log files to know more about it");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+        }
+
+        public void DisableDepartment(int departmentId)
+        {
+            if (departmentId == 0) throw new ArgumentException("Disabledepartment requires a vaild departemnt Object");
+            try
+            {
+                var dbdepartment = _context.Departments.Find(departmentId);
+
+                if (dbdepartment != null)
+                {
+
+                    dbdepartment.isDisabled = true;
+                    dbdepartment.UpdatedOn = DateTime.Now;
+
+                    _context.Update(dbdepartment);
+                    _context.SaveChanges();
+                }
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.LogCritical("An Critical error occured in department services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogCritical("An Critical error occured in department services. Some external factors are involved. please check the log files to know more about it");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+        }
+    }
+}
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce

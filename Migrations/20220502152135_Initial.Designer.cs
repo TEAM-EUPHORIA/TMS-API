@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS.API;
 
@@ -11,9 +12,10 @@ using TMS.API;
 namespace TMS.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220502152135_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,9 +219,6 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("isDisabled")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
@@ -323,9 +322,6 @@ namespace TMS.API.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("isDisabled")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -454,9 +450,6 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("isDisabled")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ReviewerId");
@@ -521,9 +514,6 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("isDisabled")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -554,11 +544,7 @@ namespace TMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
                     b.Property<string>("Name")
-=======
-                    b.Property<string>("TopicName")
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -567,9 +553,6 @@ namespace TMS.API.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("isDisabled")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -586,7 +569,7 @@ namespace TMS.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<int?>("CreatedBy")
@@ -858,9 +841,7 @@ namespace TMS.API.Migrations
                 {
                     b.HasOne("TMS.API.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
 
                     b.HasOne("TMS.API.Models.User", "Trainee")
                         .WithMany()

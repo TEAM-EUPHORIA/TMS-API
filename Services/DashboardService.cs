@@ -35,12 +35,21 @@ namespace TMS.API.Services
             };
         }
 
+<<<<<<< HEAD
         // public object getCourseCount(){
         //      int courseCount = _courseService.GetAllCourses().Count();
         //     return new {
         //         courseCount
         //     };
         // }
+=======
+        public object getCourseCount(){
+             int courseCount = _courseService.GetAllCourses().Count();
+            return new {
+                courseCount
+            };
+        }
+>>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
 
         // public object getDepartmentCount(){
         //     int departmentCount = _departmentService.GetAllDepartments().Count();
