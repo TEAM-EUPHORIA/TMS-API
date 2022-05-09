@@ -8,6 +8,7 @@ namespace TMS.API.Models
         public int Id { get; set; }
         public int TraineeId { get; set; }
         public int TrainerId { get; set; }
+        public int CourseId { get; set; }
         public string Feedback { get; set; }
 
         public Course? Course { get; set; }

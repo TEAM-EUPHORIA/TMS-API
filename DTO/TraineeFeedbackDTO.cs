@@ -6,6 +6,7 @@ namespace TMS.API.DTO
     {
         public int Id { get; set; }
         public int TraineeId { get; set; }
+        public int CourseId { get; set; }
         public int TrainerId { get; set; }
         public string Feedback { get; set; }
 

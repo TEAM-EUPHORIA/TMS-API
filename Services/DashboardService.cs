@@ -2,42 +2,51 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TMS.API.DTO;
 using TMS.API.Models;
+using TMS.API.Services;
 
 namespace TMS.API.Services
 {
-    public class CourseService
+    public class DashboardService
     {
         private readonly AppDbContext _context;
-        private readonly ILogger<CourseService> _logger;
-   
-        public CourseService(AppDbContext context, ILogger<CourseService> logger)
+        private readonly ILogger<DashboardService> _logger;
+        private readonly UserService _userService;
+        private readonly CourseService _courseService;
+        private readonly DepartmentService _departmentService;
+
+        public DashboardService(AppDbContext context, ILogger<DashboardService> logger, UserService userService, CourseService courseService, DepartmentService departmentService)
         {
             _context = context;
             _logger = logger;
+            _userService = userService;
+            _courseService = courseService;
+            _departmentService = departmentService;
+        }
+        public object getUserCount(){
+            int coordinatorCount = _userService.GetUsersByRole(2).Count();
+            int trainerCount = _userService.GetUsersByRole(2).Count();
+            int traineeCount = _userService.GetUsersByRole(1).Count();
+            int reviewerCount = _userService.GetUsersByRole(2).Count();
+            return new {
+                coordinatorCount,
+                trainerCount,
+                traineeCount,
+                reviewerCount
+            };
         }
 
-        public IEnumerable<Topic> GetAllTopicsByCourseId(int id)
-        {
-            
-            try
-            {
-                return _context.Topics.Where(t=>t.CourseId == id).Include(t=>t.Course).ToList();
-            }
-            catch (System.InvalidOperationException ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
+        public object getCourseCount(){
+             int courseCount = _courseService.GetAllCourses().Count();
+            return new {
+                courseCount
+            };
         }
-        
-        public IEnumerable<Course> GetAllCourses()
+
+        // public object getDepartmentCount(){
+        //     int departmentCount = _departmentService.GetAllDepartments().Count();
+        //     return departmentCount;
+        // }
+        public IEnumerable<Course> D()
         {
             try
             {
@@ -56,9 +65,10 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
+
         public Object GetCourseById(int id)
         {
-            var obj = _context.Courses.Where(c=>c.Id==id).FirstOrDefault(c=>c.Id==1 || c.Id==id);
+            var obj = _context.Courses.Find(id);
             if (obj != null)   
             {
                 return obj;
@@ -98,25 +108,7 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-        public Object GetTopicDetailsById(int id)
-        {
-            var dbTopic = _context.Topics.Where(u => u.Id == id).Include("Course").FirstOrDefault();
-            if (dbTopic != null)
-            {
 
-                var result = new
-                {
-                    Id = dbTopic.Id,
-                    Course = dbTopic.CourseId,
-                    Name = dbTopic.Name,
-                    Duration = dbTopic.Duration,
-                    Context = dbTopic.Context
-                };
-
-                return result;
-            }
-            return "not found";
-        }
     //     public IEnumerable<User> GetUsersByDepartment(int departmentId)
     //     {
     //         if (departmentId == 0) throw new Exception("GetUsersByDepartment requires a vaild Id not zero");
@@ -237,7 +229,3 @@ namespace TMS.API.Services
 
     }
 }
-        
-    
-
-

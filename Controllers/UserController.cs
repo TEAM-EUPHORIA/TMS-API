@@ -95,7 +95,6 @@ namespace TMS.API.Controllers
                     _logger.LogError($"error thrown by user service " + ex.ToString());
                 }
             }
- 
             return Problem("we are sorry, some thing went wrong");
 
         }
@@ -131,7 +130,6 @@ namespace TMS.API.Controllers
             try
             {
                 _userService.DisableUser(id);
-
                 return Ok("The User was Disabled successfully");
             }
             catch (System.Exception ex)
