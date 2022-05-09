@@ -38,23 +38,7 @@ namespace TMS.API.Controllers
             }
         }
         
-        [HttpGet("GetCourseById/{id:int}")]
-        public IActionResult GetCoursesById(int id)
-        {
-            if (id == 0) return BadRequest("Please provide a valid Depatment id");
-            try
-            {
-                var result = _CourseService.GetCourseById(id);
-                if (result != "not found") return Ok(result);
-                return NotFound("we are sorry, the thing you requested was not found");
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogWarning("There was an error in getting all user by depatment. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
-            }
-        }
+    
 
         [HttpPost("CreateCourse")]
         public IActionResult CreateCourse([FromForm] CourseDTO course)
@@ -93,10 +77,11 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-        [HttpGet("GetTopicsByCourseId/{id:int}")]
+        [HttpGet("GetAllTopicsByCourseId/{id:int}")]
         public IActionResult GetAllTopicByCourseId(int id)
         {
-           
+            if (id == 0) return BadRequest("Please provide a valid Depatment id");
+
             try
             {
                 var result = _CourseService.GetAllTopicsByCourseId(id);
@@ -106,6 +91,23 @@ namespace TMS.API.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogWarning("There was an error in getting all user by role. please check the user service for more information");
+                _logger.LogError($"error thrown by user service " + ex.ToString());
+                return Problem("we are sorry, some thing went wrong");
+            }
+        }
+         [HttpGet("GetCourseById/{id:int}")]
+        public IActionResult GetCourseById(int id)
+        {
+            if (id == 0) return BadRequest("Please provide a valid Depatment id");
+            try
+            {
+                var result = _CourseService.GetCourseById(id);
+                if (result != "not found") return Ok(result);
+                return NotFound("we are sorry, the thing you requested was not found");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning("There was an error in getting all user by depatment. please check the user service for more information");
                 _logger.LogError($"error thrown by user service " + ex.ToString());
                 return Problem("we are sorry, some thing went wrong");
             }

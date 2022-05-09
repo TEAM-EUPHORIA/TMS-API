@@ -217,7 +217,6 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
@@ -325,11 +324,8 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-
-
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
-
 
                     b.HasKey("Id");
 
@@ -458,10 +454,8 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
-
 
                     b.HasKey("Id");
 
@@ -530,7 +524,6 @@ namespace TMS.API.Migrations
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
 
-
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -561,7 +554,7 @@ namespace TMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("TopicName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -570,7 +563,6 @@ namespace TMS.API.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
-
 
                     b.Property<bool>("isDisabled")
                         .HasColumnType("bit");
@@ -590,7 +582,7 @@ namespace TMS.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CourseId")
+                    b.Property<int>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<int?>("CreatedBy")
@@ -825,15 +817,7 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
                         .OnDelete(DeleteBehavior.Cascade)
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.ReviewStatus", "Status")
@@ -845,13 +829,7 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.API.Models.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Reviewer");
@@ -876,28 +854,20 @@ namespace TMS.API.Migrations
                 {
                     b.HasOne("TMS.API.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TMS.API.Models.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TMS.API.Models.User", "Trainer")
                         .WithMany()
                         .HasForeignKey("TrainerId")
-
-                        .OnDelete(DeleteBehavior.NoAction)
-
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .OnDelete(DeleteBehavior.NoAction)
-
-
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");

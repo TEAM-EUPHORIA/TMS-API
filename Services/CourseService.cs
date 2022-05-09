@@ -16,31 +16,12 @@ namespace TMS.API.Services
             _logger = logger;
         }
 
-         public Object GetTopicById(int id)
-        {
-            var dbTopic = _context.Topics.Where(u => u.Id == id).Include("Course").FirstOrDefault();
-            if (dbTopic != null)
-            {
-
-                var result = new
-                {
-                    Id = dbTopic.Id,
-                    Course = dbTopic.CourseId,
-                    Name = dbTopic.Name,
-                    Duration = dbTopic.Duration,
-                    Context = dbTopic.Context
-                };
-
-                return result;
-            }
-            return "not found";
-        }
-        public IEnumerable<Topic> GetAllTopicsByCourseId(int courseId)
+        public IEnumerable<Topic> GetAllTopicsByCourseId(int id)
         {
             
             try
             {
-                return _context.Topics.Where(u => u.CourseId == courseId).Include("Course").ToList();
+                return _context.Topics.Where(t=>t.CourseId == id).Include(t=>t.Course).ToList();
             }
             catch (System.InvalidOperationException ex)
             {
@@ -55,15 +36,29 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-
-        internal object GetAllCourses()
+        
+        public IEnumerable<Course> GetAllCourses()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _context.Courses.ToList();
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
         }
-
         public Object GetCourseById(int id)
         {
-            var obj = _context.Courses.Find(id);
+            var obj = _context.Courses.Where(c=>c.Id==id).FirstOrDefault(c=>c.Id==1 || c.Id==id);
             if (obj != null)   
             {
                 return obj;
