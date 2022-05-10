@@ -37,47 +37,8 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-        
-        [HttpGet("GetCourseById/{id:int}")]
-        public IActionResult GetCoursesById(int id)
-        {
-            if (id == 0) return BadRequest("Please provide a valid Depatment id");
-            try
-            {
-                var result = _CourseService.GetCourseById(id);
-                if (result != "not found") return Ok(result);
-                return NotFound("we are sorry, the thing you requested was not found");
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogWarning("There was an error in getting all user by depatment. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
-            }
-        }
 
-
-        [HttpPost("CreateCourse")]
-        public IActionResult CreateCourse([FromForm] CourseDTO course)
-        {
-            
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _CourseService.CreateCourse(course);
-                    return Ok("The course was Created successfully");
-                }
-                catch (System.Exception ex)
-                {
-                    _logger.LogWarning("There was an error in creating the course. please check the course service for more information");
-                    _logger.LogError($"error thrown by course service " + ex.ToString());
-                }
-            }
- 
-            return Problem("we are sorry, some thing went wrong");
-        }
-          [HttpGet("GetTopicById/{id:int}")]
+        [HttpGet("GetTopicById/{id:int}")]
         public IActionResult GetTopicDetailsById(int id)
         {
             if (id == 0) return BadRequest("Please provide a valid Depatment id");
@@ -94,14 +55,11 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-
-
-
-
         [HttpGet("GetAllTopicsByCourseId/{id:int}")]
         public IActionResult GetAllTopicByCourseId(int id)
         {
             if (id == 0) return BadRequest("Please provide a valid Depatment id");
+
             try
             {
                 var result = _CourseService.GetAllTopicsByCourseId(id);
@@ -116,8 +74,7 @@ namespace TMS.API.Controllers
             }
         }
 
-
-         [HttpGet("GetCourseById/{id:int}")]
+        [HttpGet("GetCourseById/{id:int}")]
         public IActionResult GetCourseById(int id)
         {
             if (id == 0) return BadRequest("Please provide a valid Depatment id");
@@ -135,9 +92,70 @@ namespace TMS.API.Controllers
             }
         }
 
+        [HttpPost("CreateCourse")]
+        public IActionResult CreateCourse([FromForm] CourseDTO course)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _CourseService.CreateCourse(course);
+                    return Ok("The course was Created successfully");
+                }
+                catch (System.Exception ex)
+                {
+                    _logger.LogWarning("There was an error in creating the course. please check the course service for more information");
+                    _logger.LogError($"error thrown by course service " + ex.ToString());
+                }
+            }
+
+            return Problem("we are sorry, some thing went wrong");
+        }
 
 
+        [HttpPut("UpdateCourse/{id:int}")]
+        public IActionResult UpdateCourse([FromForm] Course courses)
+        {
+            // if (user == null || user.image == null) return BadRequest("User is required");
+            // user.Password = HashPassword.Sha256(user.Password);
+            // if (user.image != null)
+            // {
+            //     user.Image = ImageService.imageToByteArray(user.image);
+            // }
+            if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
+            try
+            {
+                _CourseService.UpdateCourse(courses);
+                return Ok("The User was Updated successfully");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning("There was an error in Updating the user. please check the user service for more information");
+                _logger.LogError($"error thrown by user service " + ex.ToString());
+                return Problem("we are sorry, some thing went wrong");
+            }
 
+        }
+
+        [HttpDelete("Disable/{id:int}")]
+        public IActionResult DisableCourse(int id)
+        {
+            if (id == 0) return BadRequest("User is required");
+            if (!ModelState.IsValid) return BadRequest("Please provide vaild Course");
+            try
+            {
+                _CourseService.DisableCourse(id);
+                return Ok("The User was Disabled successfully");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning("There was an error in Disabling the course. please check the Course service for more information");
+                _logger.LogError($"error thrown by user service " + ex.ToString());
+                return Problem("we are sorry, some thing went wrong");
+            }
+
+        }
 
         // [HttpGet("GetUsersByRole/{id:int}")]
         // public IActionResult GetAllUserByRole(int id)
@@ -175,7 +193,7 @@ namespace TMS.API.Controllers
         //     }
         // }
 
-      
+
         // [HttpPut("Update")]
         // public IActionResult UpdateUser([FromForm] UserDTO user)
         // {
@@ -218,5 +236,4 @@ namespace TMS.API.Controllers
 
         // }
     }
-
 }
