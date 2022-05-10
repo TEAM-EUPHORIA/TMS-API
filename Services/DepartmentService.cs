@@ -7,10 +7,6 @@ namespace TMS.API.Services
 {
     public class DepartmentService
     {
-<<<<<<< HEAD
-=======
-
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
         private readonly AppDbContext _context;
         private readonly ILogger<DepartmentService> _logger;
 
@@ -39,7 +35,7 @@ namespace TMS.API.Services
             return "not found";
         }
 
-<<<<<<< HEAD
+
     //     public IEnumerable<Department> GetAllDepartments()
     //     {
              
@@ -57,8 +53,7 @@ namespace TMS.API.Services
     //         }
     //     }
     // }
-    }}
-=======
+
         public void CreateDepartment(DepartmentDTO department)
         {
             if (department == null) throw new ArgumentException("CreateDepartment requires a vaild Department Object");
@@ -153,4 +148,4 @@ namespace TMS.API.Services
         }
     }
 }
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+

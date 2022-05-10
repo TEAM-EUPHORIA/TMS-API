@@ -58,11 +58,8 @@ namespace TMS.API.Controllers
 
          
         [HttpPost("Create")]
-<<<<<<< HEAD
         public IActionResult CreateReview( ReviewDTO review)
-=======
-        public IActionResult CreateReview([FromForm] ReviewDTO review)
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+
         {
             if (review == null ) return BadRequest("User is required");
            
@@ -81,11 +78,9 @@ namespace TMS.API.Controllers
 
         }
         [HttpPut("Update")]
-<<<<<<< HEAD
+
         public IActionResult UpdateReview( ReviewDTO review)
-=======
-        public IActionResult UpdateReview([FromForm] Review review)
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+
         {
             if (review == null ) return BadRequest("User is required");
            
@@ -122,9 +117,4 @@ namespace TMS.API.Controllers
 
 
         }
-<<<<<<< HEAD
-       
-=======
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
-
     }}

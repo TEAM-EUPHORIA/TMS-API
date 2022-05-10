@@ -36,10 +36,6 @@ builder.Services.AddTransient<TraineeFeedbackService>();
 builder.Services.AddTransient<ReviewService>();
 builder.Services.AddTransient<CourseService>();
 
-<<<<<<< HEAD
-builder.Services.AddTransient<CourseService>();
-=======
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
 builder.Services.AddTransient<DepartmentService>();
 
 

@@ -21,11 +21,7 @@ namespace TMS.API.Services
             if (statusId == 0) throw new ArgumentException("GetReviewByStatus requires a vaild Id not zero");
             try
             {
-<<<<<<< HEAD
                 return _context.Reviews.Where(r => r.StatusId == statusId).Include("Reviewer").Include("Trainee").Include("Status").ToList();
-=======
-                return _context.Reviews.Where(u => u.StatusId == statusId).Include("Reviewer").Include("Trainee").Include("Status").ToList();
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
             }
             catch (System.InvalidOperationException ex)
             {
@@ -81,10 +77,9 @@ namespace TMS.API.Services
                 dbReview.Mode = review.Mode;
                 
                 dbReview.CreatedOn = DateTime.Now;
-<<<<<<< HEAD
+
                 _context.Reviews.Add(dbReview);
-=======
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+
                 _context.SaveChanges();
             }
             catch (System.InvalidOperationException ex)
@@ -100,11 +95,7 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-<<<<<<< HEAD
          public void UpdateReview(ReviewDTO review)
-=======
-         public void UpdateReview(Review review)
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
         {
             if (review == null) throw new ArgumentException("UpdateUser requires a vaild User Object");
             try
@@ -168,8 +159,7 @@ namespace TMS.API.Services
             }
         }
 
-       
-<<<<<<< HEAD
+    
          public Object GetMomById(int id)
         {
             var dbMOM= _context.MOMs.Where(m => m.Id == id).Include("Review").Include("Owner").Include("Status").FirstOrDefault();
@@ -275,14 +265,6 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-
-
-
-
-        
-       
-=======
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
 
     }
 }

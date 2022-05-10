@@ -1,19 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-<<<<<<< HEAD
 
-=======
+
+
 using TMS.API.DTO;
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
 using TMS.API.Services;
 
 namespace TMS.API.Controllers
 {
     [ApiController]
-<<<<<<< HEAD
     [Route("api/[controller]")]
-=======
-    [Route("[controller]")]
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
     public class DepartmentController : ControllerBase
     {
         private readonly ILogger<DepartmentController> _logger;
@@ -45,8 +40,6 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-
-<<<<<<< HEAD
         
          [HttpGet("GetDepartmentNameByUserId/{id:int}")]
         public IActionResult GetDepartmentNameByUserId(int id)
@@ -65,7 +58,7 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-=======
+
            [HttpPost("Create")]
         public IActionResult CreateDepartment(DepartmentDTO department)
         {
@@ -125,7 +118,5 @@ namespace TMS.API.Controllers
             }
 
         }
- 
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
     }
 }

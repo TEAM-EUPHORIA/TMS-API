@@ -38,7 +38,6 @@ namespace TMS.API.Controllers
             }
         }
         
-<<<<<<< HEAD
         [HttpGet("GetCourseById/{id:int}")]
         public IActionResult GetCoursesById(int id)
         {
@@ -56,9 +55,7 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-=======
-    
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+
 
         [HttpPost("CreateCourse")]
         public IActionResult CreateCourse([FromForm] CourseDTO course)
@@ -97,18 +94,14 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-<<<<<<< HEAD
-        [HttpGet("GetTopicsByCourseId/{id:int}")]
-        public IActionResult GetAllTopicByCourseId(int id)
-        {
-            if (id == 0) return BadRequest("Please provide a valid Depatment id");
-=======
+
+
+
+
         [HttpGet("GetAllTopicsByCourseId/{id:int}")]
         public IActionResult GetAllTopicByCourseId(int id)
         {
             if (id == 0) return BadRequest("Please provide a valid Depatment id");
-
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
             try
             {
                 var result = _CourseService.GetAllTopicsByCourseId(id);
@@ -122,8 +115,8 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-<<<<<<< HEAD
-=======
+
+
          [HttpGet("GetCourseById/{id:int}")]
         public IActionResult GetCourseById(int id)
         {
@@ -141,7 +134,11 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+
+
+
+
+
         // [HttpGet("GetUsersByRole/{id:int}")]
         // public IActionResult GetAllUserByRole(int id)
         // {
@@ -221,11 +218,5 @@ namespace TMS.API.Controllers
 
         // }
     }
-<<<<<<< HEAD
-}
-    
-    
 
-=======
 }
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce

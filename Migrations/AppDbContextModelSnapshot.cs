@@ -554,11 +554,9 @@ namespace TMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
                     b.Property<string>("Name")
-=======
-                    b.Property<string>("TopicName")
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+
+
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -20,9 +20,9 @@ namespace TMS.API.Controllers
             _logger = logger;
             _coursefeedbackservice = courseFeedbackService;
         }
-<<<<<<< HEAD
-        // "GetCourse?CourseId={0}&UserId={1}"
-=======
+
+
+
         
         /// <summary>
         /// This method is invoked when the trainer or coordinator wants to view a feedback
@@ -30,7 +30,8 @@ namespace TMS.API.Controllers
         /// <param name="cid">object</param>
         /// <param name="oid">object</param>
         /// <returns>returns bad request when object is null</returns>
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+
+
         [HttpGet ("GetCourseFeedbackBy/{cid:int},{oid:int}") ]
         public IActionResult GetCourseFeedback(int cid,int oid)
         {
@@ -43,13 +44,8 @@ namespace TMS.API.Controllers
             }
             catch (System.Exception ex)
             {
-<<<<<<< HEAD
-                _logger.LogWarning("There was an error in getting all user by role. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-=======
                 _logger.LogWarning("There was an error in getting feedback. please check the Feedback service for more information");
                 _logger.LogError($"error thrown by Feedback service " + ex.ToString());
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                 return Problem("we are sorry, some thing went wrong");
             }
         }
@@ -71,13 +67,6 @@ namespace TMS.API.Controllers
         //         return Problem("we are sorry, some thing went wrong");
         //     }
         // }
-<<<<<<< HEAD
-
-        [HttpPost("Create")]
-        public IActionResult CreateCourseFeedback([FromForm] CourseFeedbackDTO courseFeedback)
-        {
-            if (courseFeedback == null) return BadRequest("User is required");
-=======
     /// <summary>
     /// This method is invoked when the trainee wants to create a feedback
     /// </summary>
@@ -87,38 +76,30 @@ namespace TMS.API.Controllers
         public IActionResult CreateCourseFeedback([FromForm] CourseFeedbackDTO courseFeedback)
         {
             if (courseFeedback == null) return BadRequest("Feedback is required");
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
             
             
             if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
             try
             {
                 _coursefeedbackservice.CreateCFeedback(courseFeedback);
-<<<<<<< HEAD
-                return Ok("The User was Created successfully");
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogWarning("There was an error in creating the user. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-=======
                 return Ok("The Feedback was Created successfully");
+
             }
             catch (System.Exception ex)
             {
                 _logger.LogWarning("There was an error in creating the Feedback. please check the Feedback service for more information");
                 _logger.LogError($"error thrown by Feedback service " + ex.ToString());
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
+
                 return Problem("we are sorry, some thing went wrong");
             }
+            // catch (System.Exception ex)
+            // {
+            //     _logger.LogWarning("There was an error in creating the Feedback. please check the Feedback service for more information");
+            //     _logger.LogError($"error thrown by Feedback service " + ex.ToString());
+            //     return Problem("we are sorry, some thing went wrong");
+            // }
 
         }
-<<<<<<< HEAD
-        [HttpPut("Update")]
-        public IActionResult UpdateUser([FromForm] CourseFeedback courseFeedback)
-        {
-            if (courseFeedback == null ) return BadRequest("User is required");
-=======
         /// <summary>
         /// This method is invoked when the trainee wants to update a feedback
         /// </summary>
@@ -128,28 +109,18 @@ namespace TMS.API.Controllers
         public IActionResult UpdateUser([FromForm] CourseFeedback courseFeedback)
         {
             if (courseFeedback == null ) return BadRequest("Feedback is required");
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
            
            
             if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
             try
             {
                 _coursefeedbackservice.UpdateCFeedback(courseFeedback);
-<<<<<<< HEAD
-                return Ok("The User was Updated successfully");
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogWarning("There was an error in Updating the user. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-=======
                 return Ok("The Feedback was Updated successfully");
             }
             catch (System.Exception ex)
             {
                 _logger.LogWarning("There was an error in Updating the Feedback. please check the Feedback service for more information");
                 _logger.LogError($"error thrown by Feedback service " + ex.ToString());
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
                 return Problem("we are sorry, some thing went wrong");
             }
 

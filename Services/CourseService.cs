@@ -16,7 +16,6 @@ namespace TMS.API.Services
             _logger = logger;
         }
 
-<<<<<<< HEAD
          public Object GetTopicById(int id)
         {
             var dbTopic = _context.Topics.Where(u => u.Id == id).Include("Course").FirstOrDefault();
@@ -36,19 +35,12 @@ namespace TMS.API.Services
             }
             return "not found";
         }
-        public IEnumerable<Topic> GetAllTopicsByCourseId(int courseId)
-=======
         public IEnumerable<Topic> GetAllTopicsByCourseId(int id)
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
         {
             
             try
             {
-<<<<<<< HEAD
-                return _context.Topics.Where(u => u.CourseId == courseId).Include("Course").ToList();
-=======
                 return _context.Topics.Where(t=>t.CourseId == id).Include(t=>t.Course).ToList();
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
             }
             catch (System.InvalidOperationException ex)
             {
@@ -63,17 +55,6 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-<<<<<<< HEAD
-
-        internal object GetAllCourses()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Object GetCourseById(int id)
-        {
-            var obj = _context.Courses.Find(id);
-=======
         
         public IEnumerable<Course> GetAllCourses()
         {
@@ -97,7 +78,6 @@ namespace TMS.API.Services
         public Object GetCourseById(int id)
         {
             var obj = _context.Courses.Where(c=>c.Id==id).FirstOrDefault(c=>c.Id==1 || c.Id==id);
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
             if (obj != null)   
             {
                 return obj;
@@ -156,28 +136,6 @@ namespace TMS.API.Services
             }
             return "not found";
         }
-<<<<<<< HEAD
-    public IEnumerable<User> GetUsersByDepartment(int departmentId)
-        {
-            if (departmentId == 0) throw new Exception("GetUsersByDepartment requires a vaild Id not zero");
-            try
-            {
-                return _context.Users.Where(u => (u.DepartmentId != 0 && u.DepartmentId == departmentId)).ToList();
-            }
-            catch (System.InvalidOperationException ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-        }
-=======
     //     public IEnumerable<User> GetUsersByDepartment(int departmentId)
     //     {
     //         if (departmentId == 0) throw new Exception("GetUsersByDepartment requires a vaild Id not zero");
@@ -198,110 +156,10 @@ namespace TMS.API.Services
     //             throw ex;
     //         }
     //     }
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
 
         
 
     
-<<<<<<< HEAD
-        public void UpdateUser(UserDTO user)
-        {
-            if (user == null) throw new ArgumentException("UpdateUser requires a vaild User Object");
-            try
-            {
-                var dbUser = _context.Users.Find(user.Id);
-                if (dbUser != null)
-                {
-                    dbUser.RoleId = user.RoleId;
-                    dbUser.DepartmentId = user.DepartmentId;
-                    dbUser.Name = user.Name;
-                    dbUser.UserName = user.UserName;
-                    dbUser.Password = user.Password;
-                    dbUser.Email = user.Email;
-                    dbUser.UpdatedOn = DateTime.Now;
-                    if (user.Image != null)
-                    {
-                        dbUser.Image = user.Image;
-                    }
-                    _context.Update(dbUser);
-                    _context.SaveChanges();
-                }
-            }
-            catch (System.InvalidOperationException ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-        }
-        public void DisableUser(UserDTO user)
-        {
-            if (user == null) throw new ArgumentException("DisableUser requires a vaild User Object");
-            try
-            {
-                var dbUser = _context.Users.Find(user.Id);
-                if (dbUser != null)
-                {
-
-                    dbUser.isDisabled = true;
-                    dbUser.UpdatedOn = DateTime.Now;
-
-                    _context.Update(dbUser);
-                    _context.SaveChanges();
-                }
-            }
-            catch (System.InvalidOperationException ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-        }
-        public void DeleteUser(UserDTO user)
-        {
-            if (user == null) throw new ArgumentException("DeleteUser requires a vaild User Object");
-            try
-            {
-                var dbUser = _context.Users.Find(user.Id);
-                if (dbUser != null)
-                {
-                    if (dbUser.isDisabled == true)
-                    {
-                        _context.Remove(dbUser);
-                        _context.SaveChanges();
-                    }
-                }
-            }
-            catch (System.InvalidOperationException ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-                _logger.LogTrace(ex.ToString());
-                throw ex;
-            }
-        }
-
-    }
-}
-
-=======
     //     public void UpdateUser(UserDTO user)
     //     {
     //         if (user == null) throw new ArgumentException("UpdateUser requires a vaild User Object");
@@ -398,7 +256,6 @@ namespace TMS.API.Services
 
     }
 }
->>>>>>> 4e842da6d0705ce1fbfbf488482944ed8545abce
         
     
 
