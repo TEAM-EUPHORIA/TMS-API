@@ -72,19 +72,7 @@ namespace TMS.API.Services
             if (courseFeedback == null) throw new ArgumentException("CreateFeedback requires a vaild Object");
             try
             {
-                // Random ran = new Random();
-                // User dbUser = new User();
-                // dbUser.RoleId = user.RoleId;
-                // dbUser.DepartmentId = user.DepartmentId;
-                // dbUser.Name = user.Name;
-                // dbUser.UserName = user.UserName;
-                // dbUser.Password = user.Password;
-                // dbUser.Email = user.Email;
-                // dbUser.Image = user.Image;
-                // dbUser.EmployeeId = ($"ACE{user.RoleId}{ran.Next(0, 10000)}");
-                // dbUser.isDisabled = false;
-                // dbUser.CreatedOn = DateTime.Now;
-                // _context.SaveChanges();
+                
                 Random random=new Random();
                 CourseFeedback dbcoursefeedback=new CourseFeedback();
                 dbcoursefeedback.CourseId=courseFeedback.CourseId;

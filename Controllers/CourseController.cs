@@ -41,7 +41,7 @@ namespace TMS.API.Controllers
     
 
         [HttpPost("CreateCourse")]
-        public IActionResult CreateCourse([FromForm] CourseDTO course)
+        public IActionResult CreateCourse(CourseDTO course)
         {
             
             if (ModelState.IsValid)
@@ -150,7 +150,7 @@ namespace TMS.API.Controllers
 
       
         // [HttpPut("Update")]
-        // public IActionResult UpdateUser([FromForm] UserDTO user)
+        // public IActionResult UpdateUser(UserDTO user)
         // {
         //     if (user == null || user.image == null) return BadRequest("User is required");
         //     user.Password = HashPassword.Sha256(user.Password);
@@ -173,7 +173,7 @@ namespace TMS.API.Controllers
 
         // }
         // [HttpDelete("Disable")]
-        // public IActionResult DisableUser([FromForm] UserDTO user)
+        // public IActionResult DisableUser(UserDTO user)
         // {
         //     if (user == null) return BadRequest("User is required");
         //     if (!ModelState.IsValid) return BadRequest("Please provide vaild User");

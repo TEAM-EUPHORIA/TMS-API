@@ -75,7 +75,7 @@ namespace TMS.API.Controllers
         }
 
         [HttpPost("Create")]
-        public IActionResult CreateUser([FromForm] UserDTO user)
+        public IActionResult CreateUser(UserDTO user)
         {
             user.Password = HashPassword.Sha256(user.Password);
             if (user.image != null)
@@ -99,7 +99,7 @@ namespace TMS.API.Controllers
 
         }
         [HttpPut("Update")]
-        public IActionResult UpdateUser([FromForm] UserDTO user)
+        public IActionResult UpdateUser(UserDTO user)
         {
             if (user == null || user.image == null) return BadRequest("User is required");
             user.Password = HashPassword.Sha256(user.Password);

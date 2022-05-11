@@ -68,7 +68,7 @@ namespace TMS.API.Controllers
     /// <param name="courseFeedback">object</param>
     /// <returns>returns bad request when object is null</returns>
         [HttpPost("Create")]
-        public IActionResult CreateCourseFeedback([FromForm] CourseFeedbackDTO courseFeedback)
+        public IActionResult CreateCourseFeedback(CourseFeedbackDTO courseFeedback)
         {
             if (courseFeedback == null) return BadRequest("Feedback is required");
             
@@ -93,7 +93,7 @@ namespace TMS.API.Controllers
         /// <param name="courseFeedback">object</param>
         /// <returns>returns bad request when object is null</returns>
         [HttpPut("Update")]
-        public IActionResult UpdateUser([FromForm] CourseFeedback courseFeedback)
+        public IActionResult UpdateUser(CourseFeedback courseFeedback)
         {
             if (courseFeedback == null ) return BadRequest("Feedback is required");
            
@@ -113,7 +113,7 @@ namespace TMS.API.Controllers
 
         }
         // [HttpDelete("Disable")]
-        // public IActionResult DisableUser([FromForm] User user)
+        // public IActionResult DisableUser(User user)
         // {
         //     if (user == null) return BadRequest("User is required");
         //     if (!ModelState.IsValid) return BadRequest("Please provide vaild User");
