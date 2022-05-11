@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Compiled output
@@ -46,10 +45,3 @@ Thumbs.db
 
 bin/
 obj/
-=======
-.vs/
-.vscode/
-bin/
-obj/
-logs/
->>>>>>> 9f4ee4676bf74e4a6594aa9216c0f03956d03779
