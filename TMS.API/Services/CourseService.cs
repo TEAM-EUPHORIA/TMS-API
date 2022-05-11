@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TMS.API.DTO;
-using TMS.API.Models;
+using TMS.BAL;
 
 namespace TMS.API.Services
 {
@@ -88,7 +86,7 @@ namespace TMS.API.Services
             return "not found";
         }
    
-        public void CreateCourse(CourseDTO course)
+        public void CreateCourse(Course course)
         {
             if (course == null) throw new ArgumentException("CreateCourse requires a vaild User Object");
             try

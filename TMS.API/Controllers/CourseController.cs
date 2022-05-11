@@ -1,10 +1,7 @@
 
 using Microsoft.AspNetCore.Mvc;
-using TMS.API.DTO;
-using TMS.API.Models;
 using TMS.API.Services;
-using TMS.API.UtilityFunctions;
-
+using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
@@ -39,7 +36,7 @@ namespace TMS.API.Controllers
         }
 
         [HttpPost("CreateCourse")]
-        public IActionResult CreateCourse(CourseDTO course)
+        public IActionResult CreateCourse(Course course)
         {
             
             if (ModelState.IsValid)

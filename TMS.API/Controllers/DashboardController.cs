@@ -1,11 +1,9 @@
 
 using Microsoft.AspNetCore.Mvc;
-using TMS.API.DTO;
-using TMS.API.Models;
 using TMS.API.Services;
-using TMS.API.UtilityFunctions;
 
-namespace  TMS.API.Controllers{
+namespace TMS.API.Controllers
+{
 
     [ApiController]
     [Route("api/[controller]")]

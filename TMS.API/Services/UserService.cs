@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-using TMS.DAL;
 
 namespace TMS.API.Services
 {

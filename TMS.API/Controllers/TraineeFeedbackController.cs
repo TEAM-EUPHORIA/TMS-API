@@ -1,10 +1,7 @@
 
 using Microsoft.AspNetCore.Mvc;
-using TMS.API.DTO;
-using TMS.API.Models;
 using TMS.API.Services;
-using TMS.API.UtilityFunctions;
-
+using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
@@ -67,7 +64,7 @@ namespace TMS.API.Controllers
     /// <param name="traineeFeedback">object</param>
     /// <returns>returns bad request when object is null</returns>
         [HttpPost("Create")]
-        public IActionResult CreateTraineeFeedback(TraineeFeedbackDTO traineeFeedback)
+        public IActionResult CreateTraineeFeedback(TraineeFeedback traineeFeedback)
         {
             if (traineeFeedback == null) return BadRequest("Feedback is required");
             

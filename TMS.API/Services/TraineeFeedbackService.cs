@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TMS.API.DTO;
-using TMS.API.Models;
+using TMS.BAL;
 
 namespace TMS.API.Services
 {
@@ -15,18 +13,18 @@ namespace TMS.API.Services
             _context = context;
             _logger = logger;
         }
-    /// <summary>
-    /// </summary>
-    /// <param name="cid"></param>
-    /// <param name="tid"></param>
-    /// <returns></returns>
-        public TraineeFeedback GetTraineeFeedbackByID(int cid,int tid)
+        /// <summary>
+        /// </summary>
+        /// <param name="cid"></param>
+        /// <param name="tid"></param>
+        /// <returns></returns>
+        public TraineeFeedback GetTraineeFeedbackByID(int cid, int tid)
         {
-            if (cid == 0 || tid==0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
+            if (cid == 0 || tid == 0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
             try
             {
-               return _context.traineeFeedbacks.Include(tf=> tf.Course).Include(cf=>cf.Trainee).FirstOrDefault(tf=>tf.TraineeId==tid && tf.CourseId==cid);
-                
+                return _context.TraineeFeedbacks.Include(tf => tf.Course).Include(cf => cf.Trainee).FirstOrDefault(tf => tf.TraineeId == tid && tf.CourseId == cid);
+
             }
             catch (System.InvalidOperationException ex)
             {
@@ -62,24 +60,24 @@ namespace TMS.API.Services
         //         throw ex;
         //     }
         // }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="traineeFeedback"></param>
-        public void CreateTFeedback(TraineeFeedbackDTO traineeFeedback)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="traineeFeedback"></param>
+        public void CreateTFeedback(TraineeFeedback traineeFeedback)
         {
             if (traineeFeedback == null) throw new ArgumentException("CreateFeedback requires a vaild User Object");
             try
             {
-                
-                Random random=new Random();
-                TraineeFeedback dbcoursefeedback=new TraineeFeedback();
-                dbcoursefeedback.CourseId=traineeFeedback.CourseId;
-                dbcoursefeedback.TraineeId=traineeFeedback.TraineeId;
-                dbcoursefeedback.TrainerId=traineeFeedback.TrainerId;
-                dbcoursefeedback.Feedback=traineeFeedback.Feedback;
-               
-                 _context.traineeFeedbacks.Add(dbcoursefeedback);
+
+                Random random = new Random();
+                TraineeFeedback dbcoursefeedback = new TraineeFeedback();
+                dbcoursefeedback.CourseId = traineeFeedback.CourseId;
+                dbcoursefeedback.TraineeId = traineeFeedback.TraineeId;
+                dbcoursefeedback.TrainerId = traineeFeedback.TrainerId;
+                dbcoursefeedback.Feedback = traineeFeedback.Feedback;
+
+                _context.TraineeFeedbacks.Add(dbcoursefeedback);
                 _context.SaveChanges();
 
 
@@ -106,16 +104,16 @@ namespace TMS.API.Services
             if (traineeFeedback == null) throw new ArgumentException("UpdateFeedback requires a vaild User Object");
             try
             {
-                var dbUser = _context.traineeFeedbacks.Find(traineeFeedback.Id);
+                var dbUser = _context.TraineeFeedbacks.Find(traineeFeedback.Id);
                 if (dbUser != null)
                 {
                     dbUser.TraineeId = traineeFeedback.TraineeId;
-                    dbUser.CourseId=traineeFeedback.CourseId;
+                    dbUser.CourseId = traineeFeedback.CourseId;
                     dbUser.TrainerId = traineeFeedback.TrainerId;
                     dbUser.Feedback = traineeFeedback.Feedback;
-                                       
+
                     dbUser.UpdatedOn = DateTime.Now;
-                    
+
                     _context.Update(dbUser);
                     _context.SaveChanges();
                 }

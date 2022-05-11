@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TMS.API.DTO;
-using TMS.API.Models;
+using TMS.BAL;
 
 namespace TMS.API.Services
 {
@@ -15,19 +13,19 @@ namespace TMS.API.Services
             _context = context;
             _logger = logger;
         }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="cid"></param>
-    /// <param name="oid"></param>
-    /// <returns></returns>
-        public CourseFeedback GetFeedbackByID(int cid,int oid)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cid"></param>
+        /// <param name="oid"></param>
+        /// <returns></returns>
+        public CourseFeedback GetFeedbackByID(int cid, int oid)
         {
-            if (cid == 0|| oid==0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
+            if (cid == 0 || oid == 0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
             try
             {
-               return _context.CourseFeedbacks.Include(cf=> cf.Course).Include(cf=>cf.Owner).FirstOrDefault(cf=>cf.CourseId==cid && cf.OwnerId == oid);
-                
+                return _context.CourseFeedbacks.Include(cf => cf.Course).Include(cf => cf.Owner).FirstOrDefault(cf => cf.CourseId == cid && cf.OwnerId == oid);
+
             }
             catch (System.InvalidOperationException ex)
             {
@@ -63,23 +61,23 @@ namespace TMS.API.Services
         //         throw ex;
         //     }
         // }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="courseFeedback"></param>
-        public void CreateCFeedback(CourseFeedbackDTO courseFeedback)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="courseFeedback"></param>
+        public void CreateCFeedback(CourseFeedback courseFeedback)
         {
             if (courseFeedback == null) throw new ArgumentException("CreateFeedback requires a vaild Object");
             try
             {
-                
-                Random random=new Random();
-                CourseFeedback dbcoursefeedback=new CourseFeedback();
-                dbcoursefeedback.CourseId=courseFeedback.CourseId;
-                dbcoursefeedback.OwnerId=courseFeedback.OwnerId;
-                dbcoursefeedback.Feddback=courseFeedback.Feddback;
-                dbcoursefeedback.Rating=courseFeedback.Rating;
-                 _context.CourseFeedbacks.Add(dbcoursefeedback);
+
+                Random random = new Random();
+                CourseFeedback dbcoursefeedback = new CourseFeedback();
+                dbcoursefeedback.CourseId = courseFeedback.CourseId;
+                dbcoursefeedback.OwnerId = courseFeedback.OwnerId;
+                dbcoursefeedback.Feedback = courseFeedback.Feedback;
+                dbcoursefeedback.Rating = courseFeedback.Rating;
+                _context.CourseFeedbacks.Add(dbcoursefeedback);
                 _context.SaveChanges();
 
 
@@ -111,10 +109,10 @@ namespace TMS.API.Services
                 {
                     dbUser.CourseId = courseFeedback.CourseId;
                     dbUser.OwnerId = courseFeedback.OwnerId;
-                    dbUser.Feddback = courseFeedback.Feddback;
-                    dbUser.Rating = courseFeedback.Rating;                   
+                    dbUser.Feedback = courseFeedback.Feedback;
+                    dbUser.Rating = courseFeedback.Rating;
                     dbUser.UpdatedOn = DateTime.Now;
-                    
+
                     _context.Update(dbUser);
                     _context.SaveChanges();
                 }

@@ -1,10 +1,7 @@
 
 using Microsoft.AspNetCore.Mvc;
-using TMS.API.DTO;
-using TMS.API.Models;
 using TMS.API.Services;
-using TMS.API.UtilityFunctions;
-
+using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
@@ -23,7 +20,7 @@ namespace TMS.API.Controllers
 
 
 
-        
+
         /// <summary>
         /// This method is invoked when the trainer or coordinator wants to view a feedback
         /// </summary>
@@ -32,13 +29,13 @@ namespace TMS.API.Controllers
         /// <returns>returns bad request when object is null</returns>
 
 
-        [HttpGet ("GetCourseFeedbackBy/{cid:int},{oid:int}") ]
-        public IActionResult GetCourseFeedback(int cid,int oid)
+        [HttpGet("GetCourseFeedbackBy/{cid:int},{oid:int}")]
+        public IActionResult GetCourseFeedback(int cid, int oid)
         {
-            if (cid ==0 || oid==0) return BadRequest("Please provide a valid courseid and userid");
+            if (cid == 0 || oid == 0) return BadRequest("Please provide a valid courseid and userid");
             try
             {
-                var result = _coursefeedbackservice.GetFeedbackByID(cid,oid);
+                var result = _coursefeedbackservice.GetFeedbackByID(cid, oid);
                 if (result != null) return Ok(result);
                 return NotFound("we are sorry, the thing you requested was not found");
             }
@@ -67,17 +64,17 @@ namespace TMS.API.Controllers
         //         return Problem("we are sorry, some thing went wrong");
         //     }
         // }
-    /// <summary>
-    /// This method is invoked when the trainee wants to create a feedback
-    /// </summary>
-    /// <param name="courseFeedback">object</param>
-    /// <returns>returns bad request when object is null</returns>
+        /// <summary>
+        /// This method is invoked when the trainee wants to create a feedback
+        /// </summary>
+        /// <param name="courseFeedback">object</param>
+        /// <returns>returns bad request when object is null</returns>
         [HttpPost("Create")]
-        public IActionResult CreateCourseFeedback(CourseFeedbackDTO courseFeedback)
+        public IActionResult CreateCourseFeedback(CourseFeedback courseFeedback)
         {
             if (courseFeedback == null) return BadRequest("Feedback is required");
-            
-            
+
+
             if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
             try
             {
@@ -108,9 +105,9 @@ namespace TMS.API.Controllers
         [HttpPut("Update")]
         public IActionResult UpdateUser(CourseFeedback courseFeedback)
         {
-            if (courseFeedback == null ) return BadRequest("Feedback is required");
-           
-           
+            if (courseFeedback == null) return BadRequest("Feedback is required");
+
+
             if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
             try
             {

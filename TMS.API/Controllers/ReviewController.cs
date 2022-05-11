@@ -1,10 +1,7 @@
 
 using Microsoft.AspNetCore.Mvc;
-using TMS.API.DTO;
-using TMS.API.Models;
 using TMS.API.Services;
-using TMS.API.UtilityFunctions;
-
+using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
@@ -27,7 +24,7 @@ namespace TMS.API.Controllers
             if (id == 0) return BadRequest("Please provide a valid Review id");
             try
             {
-                var result =_reviewService.GetReviewById(id);
+                var result = _reviewService.GetReviewById(id);
                 if (result != "not found") return Ok(result);
                 return NotFound("we are sorry, the thing you requested was not found");
             }
@@ -56,13 +53,13 @@ namespace TMS.API.Controllers
             }
         }
 
-         
+
         [HttpPost("Create")]
-        public IActionResult CreateReview( ReviewDTO review)
+        public IActionResult CreateReview(Review review)
 
         {
-            if (review == null ) return BadRequest("User is required");
-           
+            if (review == null) return BadRequest("User is required");
+
             if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
             try
             {
@@ -79,11 +76,11 @@ namespace TMS.API.Controllers
         }
         [HttpPut("Update")]
 
-        public IActionResult UpdateReview( ReviewDTO review)
+        public IActionResult UpdateReview(Review review)
 
         {
-            if (review == null ) return BadRequest("User is required");
-           
+            if (review == null) return BadRequest("User is required");
+
             if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
             try
             {
@@ -117,4 +114,5 @@ namespace TMS.API.Controllers
 
 
         }
-    }}
+    }
+}
