@@ -1,0 +1,49 @@
+<div class="content">
+    <app-sidebar></app-sidebar>
+    <!-- Navbar End -->
+    <div class="Bread pt-1 px-1">
+
+
+        <div class="Bread pt-1 px-1">
+
+
+            <!-- Breadcrums Start -->
+            <div style="margin:20px;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="co-home.html">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">My Profile </li>
+                    </ol>
+                </nav>
+            </div>
+
+        </div>
+        <section>
+            <h2 class="pt-4 px-4">My Profile</h2>
+        </section>
+
+
+        <div class="card mb-3 p-4 px-4 py-4 ms-4" style="width: 600px">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img [src]="data.image" class="img-fluid rounded-start" alt="image">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body text-left">
+                        <h3 class="">Personal Details</h3>
+                        <div class="">
+                            <h5 class="text-muted">Name : {{data.userName}} </h5>
+                            <h5 class="text-muted">Role : {{data.role.name}}</h5>
+                            <h5 class="text-muted">Department : {{data.department.name}}</h5>
+                            <h5 class="text-muted">Employee ID : {{data.employeeId}}</h5>
+                            <h5 class="text-muted">Fullname : {{data.name}}</h5>
+                            <h5 class="text-muted">E-Mail : {{data.email}}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
