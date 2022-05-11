@@ -1,4 +1,4 @@
-namespace TMS.DAL
+namespace TMS.BAL
 {
     public class TraineeFeedback
     {

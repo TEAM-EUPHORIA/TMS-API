@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TMS.DAL
+namespace TMS.BAL
 {
     public class User
     {
