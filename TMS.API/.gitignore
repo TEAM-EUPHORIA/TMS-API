@@ -1,9 +1,5 @@
 .vs/
 .vscode/
-<<<<<<< HEAD
 .bin/
-=======
-bin/
->>>>>>> 9f4ee4676bf74e4a6594aa9216c0f03956d03779
 obj/
 logs/
