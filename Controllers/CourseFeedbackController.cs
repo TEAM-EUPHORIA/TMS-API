@@ -20,6 +20,9 @@ namespace TMS.API.Controllers
             _logger = logger;
             _coursefeedbackservice = courseFeedbackService;
         }
+
+
+
         
         /// <summary>
         /// This method is invoked when the trainer or coordinator wants to view a feedback
@@ -27,6 +30,8 @@ namespace TMS.API.Controllers
         /// <param name="cid">object</param>
         /// <param name="oid">object</param>
         /// <returns>returns bad request when object is null</returns>
+
+
         [HttpGet ("GetCourseFeedbackBy/{cid:int},{oid:int}") ]
         public IActionResult GetCourseFeedback(int cid,int oid)
         {
@@ -78,13 +83,21 @@ namespace TMS.API.Controllers
             {
                 _coursefeedbackservice.CreateCFeedback(courseFeedback);
                 return Ok("The Feedback was Created successfully");
+
             }
             catch (System.Exception ex)
             {
                 _logger.LogWarning("There was an error in creating the Feedback. please check the Feedback service for more information");
                 _logger.LogError($"error thrown by Feedback service " + ex.ToString());
+
                 return Problem("we are sorry, some thing went wrong");
             }
+            // catch (System.Exception ex)
+            // {
+            //     _logger.LogWarning("There was an error in creating the Feedback. please check the Feedback service for more information");
+            //     _logger.LogError($"error thrown by Feedback service " + ex.ToString());
+            //     return Problem("we are sorry, some thing went wrong");
+            // }
 
         }
         /// <summary>

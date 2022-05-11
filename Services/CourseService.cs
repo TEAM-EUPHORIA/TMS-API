@@ -58,7 +58,8 @@ namespace TMS.API.Services
         }
         public Object GetCourseById(int id)
         {
-            var obj = _context.Courses.Where(c=>c.Id==id).FirstOrDefault(c=>c.Id==1 || c.Id==id);
+            if (id==0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
+            var obj = _context.Courses.Where(c=>c.Id==id ).ToList();
             if (obj != null)   
             {
                 return obj;
@@ -67,6 +68,26 @@ namespace TMS.API.Services
             "not found";
         }
 
+        public Object GetTopicDetailsById(int id)
+        {
+            var dbTopic = _context.Topics.Where(u => u.Id == id).Include("Course").FirstOrDefault();
+            if (dbTopic != null)
+            {
+
+                var result = new
+                {
+                    Id = dbTopic.Id,
+                    Course = dbTopic.CourseId,
+                    Name = dbTopic.Name,
+                    Duration = dbTopic.Duration,
+                    Context = dbTopic.Context
+                };
+
+                return result;
+            }
+            return "not found";
+        }
+   
         public void CreateCourse(CourseDTO course)
         {
             if (course == null) throw new ArgumentException("CreateCourse requires a vaild User Object");
@@ -76,7 +97,7 @@ namespace TMS.API.Services
                 Course dbCourse = new Course();
                 dbCourse.Id = course.Id;
                 dbCourse.StatusId = course.StatusId;
-                dbCourse.TrainerId = course.TrainerId;
+                // dbCourse.TrainerId = course.TrainerId;
                 dbCourse.DepartmentId = course.DepartmentId;
                 dbCourse.Name = course.Name;
                 dbCourse.Duration = course.Duration;
@@ -98,49 +119,69 @@ namespace TMS.API.Services
                 throw ex;
             }
         }
-        public Object GetTopicDetailsById(int id)
-        {
-            var dbTopic = _context.Topics.Where(u => u.Id == id).Include("Course").FirstOrDefault();
-            if (dbTopic != null)
-            {
-
-                var result = new
-                {
-                    Id = dbTopic.Id,
-                    Course = dbTopic.CourseId,
-                    Name = dbTopic.Name,
-                    Duration = dbTopic.Duration,
-                    Context = dbTopic.Context
-                };
-
-                return result;
-            }
-            return "not found";
-        }
-    //     public IEnumerable<User> GetUsersByDepartment(int departmentId)
-    //     {
-    //         if (departmentId == 0) throw new Exception("GetUsersByDepartment requires a vaild Id not zero");
-    //         try
-    //         {
-    //             return _context.Users.Where(u => (u.DepartmentId != 0 && u.DepartmentId == departmentId)).ToList();
-    //         }
-    //         catch (System.InvalidOperationException ex)
-    //         {
-    //             _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-    //             _logger.LogTrace(ex.ToString());
-    //             throw ex;
-    //         }
-    //         catch (System.Exception ex)
-    //         {
-    //             _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-    //             _logger.LogTrace(ex.ToString());
-    //             throw ex;
-    //         }
-    //     }
-
         
+        public void UpdateCourse(Course course)
+        {
+            if (course == null) throw new ArgumentException("UpdateCourse requires a vaild User Object");
+            try
+            {
+                var dbCourse = _context.Courses.Find(course.Id);
+                if(dbCourse!=null)
+                dbCourse.Id = course.Id;
+                dbCourse.StatusId = course.StatusId;
+                // dbCourse.TrainerId = course.TrainerId;
+                dbCourse.DepartmentId = course.DepartmentId;
+                dbCourse.Name = course.Name;
+                dbCourse.Duration = course.Duration;
+                dbCourse.Description = course.Description;
+                _context.Update(dbCourse);
+                _context.SaveChanges();
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+        }
 
-    
+           public void DisableCourse(int courseId)
+        {
+            if (courseId == 0) throw new ArgumentException("DisableCourse requires a vaild User Object");
+            try
+            {
+                var dbCourse = _context.Courses.Find(courseId);
+                if (dbCourse != null)
+                {
+
+                    dbCourse.isDisabled = true;
+                    dbCourse.UpdatedOn = DateTime.Now;
+
+                    _context.Update(dbCourse);
+                    _context.SaveChanges();
+                }
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+                _logger.LogTrace(ex.ToString());
+                throw ex;
+            }
+        }
+
+
     //     public void UpdateUser(UserDTO user)
     //     {
     //         if (user == null) throw new ArgumentException("UpdateUser requires a vaild User Object");

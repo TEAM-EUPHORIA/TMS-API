@@ -37,8 +37,6 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-        
-    
 
         [HttpPost("CreateCourse")]
         public IActionResult CreateCourse(CourseDTO course)
@@ -95,7 +93,8 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-         [HttpGet("GetCourseById/{id:int}")]
+
+        [HttpGet("GetCourseById/{id:int}")]
         public IActionResult GetCourseById(int id)
         {
             if (id == 0) return BadRequest("Please provide a valid Depatment id");
@@ -112,6 +111,50 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
+
+        [HttpPut("UpdateCourse/{id:int}")]
+        public IActionResult UpdateCourse([FromForm] Course courses)
+        {
+            // if (user == null || user.image == null) return BadRequest("User is required");
+            // user.Password = HashPassword.Sha256(user.Password);
+            // if (user.image != null)
+            // {
+            //     user.Image = ImageService.imageToByteArray(user.image);
+            // }
+            if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
+            try
+            {
+                _CourseService.UpdateCourse(courses);
+                return Ok("The User was Updated successfully");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning("There was an error in Updating the user. please check the user service for more information");
+                _logger.LogError($"error thrown by user service " + ex.ToString());
+                return Problem("we are sorry, some thing went wrong");
+            }
+
+        }
+
+        [HttpDelete("Disable/{id:int}")]
+        public IActionResult DisableCourse(int id)
+        {
+            if (id == 0) return BadRequest("User is required");
+            if (!ModelState.IsValid) return BadRequest("Please provide vaild Course");
+            try
+            {
+                _CourseService.DisableCourse(id);
+                return Ok("The User was Disabled successfully");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning("There was an error in Disabling the course. please check the Course service for more information");
+                _logger.LogError($"error thrown by user service " + ex.ToString());
+                return Problem("we are sorry, some thing went wrong");
+            }
+
+        }
+
         // [HttpGet("GetUsersByRole/{id:int}")]
         // public IActionResult GetAllUserByRole(int id)
         // {
@@ -148,7 +191,7 @@ namespace TMS.API.Controllers
         //     }
         // }
 
-      
+
         // [HttpPut("Update")]
         // public IActionResult UpdateUser(UserDTO user)
         // {

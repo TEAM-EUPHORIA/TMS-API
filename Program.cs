@@ -37,6 +37,7 @@ builder.Services.AddTransient<ReviewService>();
 builder.Services.AddTransient<CourseService>();
 
 builder.Services.AddTransient<DepartmentService>();
+builder.Services.AddTransient<DashboardService>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
