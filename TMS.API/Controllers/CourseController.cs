@@ -1,7 +1,10 @@
 
 using Microsoft.AspNetCore.Mvc;
+using TMS.API.DTO;
+using TMS.API.Models;
 using TMS.API.Services;
-using TMS.BAL;
+using TMS.API.UtilityFunctions;
+
 
 namespace TMS.API.Controllers
 {
@@ -35,27 +38,7 @@ namespace TMS.API.Controllers
             }
         }
 
-        [HttpPost("CreateCourse")]
-        public IActionResult CreateCourse(Course course)
-        {
-            
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _CourseService.CreateCourse(course);
-                    return Ok("The course was Created successfully");
-                }
-                catch (System.Exception ex)
-                {
-                    _logger.LogWarning("There was an error in creating the course. please check the course service for more information");
-                    _logger.LogError($"error thrown by course service " + ex.ToString());
-                }
-            }
- 
-            return Problem("we are sorry, some thing went wrong");
-        }
-          [HttpGet("GetTopicById/{id:int}")]
+        [HttpGet("GetTopicById/{id:int}")]
         public IActionResult GetTopicDetailsById(int id)
         {
             if (id == 0) return BadRequest("Please provide a valid Depatment id");
@@ -108,6 +91,29 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
+
+        [HttpPost("Create")]
+        public IActionResult CreateCourse(CourseDTO course)
+        {
+            if (course == null) return BadRequest("Course is required");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _CourseService.CreateCourse(course);
+                    var result=new { message="The course was Created successfully"};
+                    return Ok(result);
+                }
+                catch (System.Exception ex)
+                {
+                    _logger.LogWarning("There was an error in creating the course. please check the course service for more information");
+                    _logger.LogError($"error thrown by course service " + ex.ToString());
+                }
+            }
+
+            return Problem("we are sorry, some thing went wrong");
+        }
+
 
         [HttpPut("UpdateCourse/{id:int}")]
         public IActionResult UpdateCourse([FromForm] Course courses)
@@ -190,7 +196,7 @@ namespace TMS.API.Controllers
 
 
         // [HttpPut("Update")]
-        // public IActionResult UpdateUser(UserDTO user)
+        // public IActionResult UpdateUser([FromForm] UserDTO user)
         // {
         //     if (user == null || user.image == null) return BadRequest("User is required");
         //     user.Password = HashPassword.Sha256(user.Password);
@@ -213,7 +219,7 @@ namespace TMS.API.Controllers
 
         // }
         // [HttpDelete("Disable")]
-        // public IActionResult DisableUser(UserDTO user)
+        // public IActionResult DisableUser([FromForm] UserDTO user)
         // {
         //     if (user == null) return BadRequest("User is required");
         //     if (!ModelState.IsValid) return BadRequest("Please provide vaild User");

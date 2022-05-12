@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TMS.BAL;
+using TMS.API.DTO;
+using TMS.API.Models;
 
 namespace TMS.API.Services
 {
@@ -86,16 +88,17 @@ namespace TMS.API.Services
             return "not found";
         }
    
-        public void CreateCourse(Course course)
+        public void CreateCourse(CourseDTO course)
         {
             if (course == null) throw new ArgumentException("CreateCourse requires a vaild User Object");
             try
             {
-                Random ran = new Random();
                 Course dbCourse = new Course();
                 dbCourse.Id = course.Id;
                 dbCourse.StatusId = course.StatusId;
-                // dbCourse.TrainerId = course.TrainerId;
+                var trainer=_context.Users.Find(course.TrainerId);
+                dbCourse.Trainees.Add(trainer);
+                dbCourse.TrainerId=course.TrainerId;
                 dbCourse.DepartmentId = course.DepartmentId;
                 dbCourse.Name = course.Name;
                 dbCourse.Duration = course.Duration;
@@ -106,13 +109,13 @@ namespace TMS.API.Services
             }
             catch (System.InvalidOperationException ex)
             {
-                _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+                _logger.LogCritical("An Critical error occured in Course services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
                 throw ex;
             }
             catch (System.Exception ex)
             {
-                _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+                _logger.LogCritical("An Critical error occured in Course services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
                 throw ex;
             }

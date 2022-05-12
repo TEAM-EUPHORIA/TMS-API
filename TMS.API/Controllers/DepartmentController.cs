@@ -1,23 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
+
+
+
+using TMS.API.DTO;
 using TMS.API.Services;
-using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class DepartmentController : ControllerBase
     {
         private readonly ILogger<DepartmentController> _logger;
         private readonly AppDbContext _context;
 
-        private readonly DepartmentService _departmentService;
+         private readonly DepartmentService  _departmentService;
 
         public DepartmentController(ILogger<DepartmentController> logger, AppDbContext context, DepartmentService departmentService)
         {
             _logger = logger;
             _context = context;
-            _departmentService = departmentService;
+            _departmentService= departmentService;
         }
 
         [HttpGet("GetAllDepartments")]
@@ -37,8 +40,8 @@ namespace TMS.API.Controllers
                 return Problem("we are sorry, some thing went wrong");
             }
         }
-
-        [HttpGet("GetDepartmentNameByUserId/{id:int}")]
+        
+         [HttpGet("GetDepartmentNameByUserId/{id:int}")]
         public IActionResult GetDepartmentNameByUserId(int id)
         {
             if (id == 0) return BadRequest("Please provide a valid Depatment id");
@@ -56,8 +59,8 @@ namespace TMS.API.Controllers
             }
         }
 
-        [HttpPost("Create")]
-        public IActionResult CreateDepartment(Department department)
+           [HttpPost("Create")]
+        public IActionResult CreateDepartment(DepartmentDTO department)
         {
             if (ModelState.IsValid)
             {
@@ -72,15 +75,15 @@ namespace TMS.API.Controllers
                     _logger.LogError($"error thrown by department service " + ex.ToString());
                 }
             }
-
+ 
             return Problem("we are sorry, some thing went wrong");
 
         }
         [HttpPut("Update")]
-        public IActionResult UpdateDepartment([FromForm] Department department)
+        public IActionResult UpdateDepartment([FromForm] DepartmentDTO department)
         {
-
-
+           
+           
             if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
             try
             {

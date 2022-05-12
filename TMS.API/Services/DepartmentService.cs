@@ -1,4 +1,7 @@
-using TMS.BAL;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TMS.API.DTO;
+using TMS.API.Models;
 
 namespace TMS.API.Services
 {
@@ -13,7 +16,7 @@ namespace TMS.API.Services
             _logger = logger;
         }
 
-        public Object GetDepartmentByUserId(int id)
+         public Object GetDepartmentByUserId(int id)
         {
             var dbdepartment = _context.Departments.Where(u => u.Id == id).FirstOrDefault();
             if (dbdepartment != null)
@@ -22,9 +25,9 @@ namespace TMS.API.Services
                 var result = new
                 {
                     Id = dbdepartment.Id,
-
+    
                     Name = dbdepartment.Name
-
+                    
                 };
 
                 return result;
@@ -33,25 +36,25 @@ namespace TMS.API.Services
         }
 
 
-        //     public IEnumerable<Department> GetAllDepartments()
-        //     {
+    //     public IEnumerable<Department> GetAllDepartments()
+    //     {
+             
+    //         try
+    //         {
+    //             var result = _context.Departments.ToList();
+    //             if (result != null) return Ok(result);
+    //             return NotFound("we are sorry, the thing you requested was not found");
+    //         }
+    //         catch (System.Exception ex)
+    //         {
+    //             _logger.LogWarning("There was an error in getting all Departments. please check the db for more information");
+    //             _logger.LogError($"error:  " + ex.ToString());
+    //             return Problem("we are sorry, some thing went wrong");
+    //         }
+    //     }
+    // }
 
-        //         try
-        //         {
-        //             var result = _context.Departments.ToList();
-        //             if (result != null) return Ok(result);
-        //             return NotFound("we are sorry, the thing you requested was not found");
-        //         }
-        //         catch (System.Exception ex)
-        //         {
-        //             _logger.LogWarning("There was an error in getting all Departments. please check the db for more information");
-        //             _logger.LogError($"error:  " + ex.ToString());
-        //             return Problem("we are sorry, some thing went wrong");
-        //         }
-        //     }
-        // }
-
-        public void CreateDepartment(Department department)
+        public void CreateDepartment(DepartmentDTO department)
         {
             if (department == null) throw new ArgumentException("CreateDepartment requires a vaild Department Object");
             try
@@ -60,7 +63,7 @@ namespace TMS.API.Services
                 Department dbDepartment = new Department();
 
                 dbDepartment.Name = department.Name;
-
+              
                 dbDepartment.isDisabled = false;
                 dbDepartment.CreatedOn = DateTime.Now;
                 _context.Departments.Add(dbDepartment);
@@ -80,8 +83,8 @@ namespace TMS.API.Services
             }
         }
 
-
-        public void UpdateDepartment(Department department)
+        
+        public void UpdateDepartment(DepartmentDTO department)
         {
             if (department == null) throw new ArgumentException("UpdateDepartemt requires a vaild User Object");
             try
@@ -89,12 +92,12 @@ namespace TMS.API.Services
                 var dbdepartment = _context.Departments.Find(department.Id);
                 if (dbdepartment != null)
                 {
-
-
+                    
+                    
                     dbdepartment.Name = department.Name;
-
+                   
                     dbdepartment.UpdatedOn = DateTime.Now;
-
+                  
                     _context.Update(dbdepartment);
                     _context.SaveChanges();
                 }
