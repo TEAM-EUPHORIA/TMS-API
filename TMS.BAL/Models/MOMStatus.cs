@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace TMS.BAL
 {
     public class MOMStatus
@@ -13,13 +16,9 @@ namespace TMS.BAL
         public string Name { get; set; }
         
         //Audit fields
-        [JsonIgnore]
         public DateTime? CreatedOn { get; set; }
-        [JsonIgnore]
         public int? CreatedBy { get; set; }
-        [JsonIgnore]
         public DateTime? UpdatedOn { get; set; }
-        [JsonIgnore]
         public int? UpdatedBy { get; set; }
 
     }

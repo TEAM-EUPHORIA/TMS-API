@@ -1,4 +1,7 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 namespace TMS.BAL
 {
     public class Course
@@ -30,13 +33,9 @@ namespace TMS.BAL
         public bool? isDisabled { get; set; }
         
         //Audit fields
-        [JsonIgnore]
         public DateTime? CreatedOn { get; set; }
-        [JsonIgnore]
         public int? CreatedBy { get; set; }
-        [JsonIgnore]
         public DateTime? UpdatedOn { get; set; }
-        [JsonIgnore]
         public int? UpdatedBy { get; set; }
 
         //Foreign key relation

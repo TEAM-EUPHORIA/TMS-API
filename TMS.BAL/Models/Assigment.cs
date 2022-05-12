@@ -1,9 +1,17 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TMS.BAL
 {
     public class Assigment
     {
+        public Assigment()
+        {
+            AssignmentStatus Status = new AssignmentStatus();
+            Topic Topic = new Topic();
+            User Owner = new User();
+        }
         //model attributes
         [Required]
         public int Id { get; set; }
@@ -19,13 +27,9 @@ namespace TMS.BAL
         public byte[]? Document { get; set; }
 
         //Audit Fields
-        [JsonIgnore]
         public DateTime? CreatedOn { get; set; }
-        [JsonIgnore]
         public int? CreatedBy { get; set; }
-        [JsonIgnore]
         public DateTime? UpdatedOn { get; set; }
-        [JsonIgnore]
         public int? UpdatedBy { get; set; }
         
         //Foreign key relation
