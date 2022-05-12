@@ -12,8 +12,8 @@ using TMS.API;
 namespace TMS.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220511163643_InitailCreate")]
-    partial class InitailCreate
+    [Migration("20220512070657_Dbcreate")]
+    partial class Dbcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,7 +39,7 @@ namespace TMS.API.Migrations
                     b.ToTable("CourseUser");
                 });
 
-            modelBuilder.Entity("TMS.BAL.Assigment", b =>
+            modelBuilder.Entity("TMS.BAL.Assignment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,6 +54,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("Document")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("OwnerId")
@@ -79,7 +80,7 @@ namespace TMS.API.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Assigments");
+                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("TMS.BAL.AssignmentStatus", b =>
@@ -219,6 +220,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -261,9 +263,6 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("isDisabled")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
@@ -298,6 +297,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -345,9 +345,6 @@ namespace TMS.API.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool?>("isDisabled")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -431,6 +428,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -498,6 +496,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -541,6 +540,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -584,6 +584,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -612,6 +613,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DepartmentId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -619,9 +621,11 @@ namespace TMS.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Image")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
@@ -650,6 +654,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -676,7 +681,7 @@ namespace TMS.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TMS.BAL.Assigment", b =>
+            modelBuilder.Entity("TMS.BAL.Assignment", b =>
                 {
                     b.HasOne("TMS.BAL.User", "Owner")
                         .WithMany()
@@ -691,7 +696,7 @@ namespace TMS.API.Migrations
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.Topic", "Topic")
-                        .WithMany("Assigments")
+                        .WithMany("Assignments")
                         .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -856,7 +861,9 @@ namespace TMS.API.Migrations
                 {
                     b.HasOne("TMS.BAL.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TMS.BAL.Role", "Role")
                         .WithMany()
@@ -878,7 +885,7 @@ namespace TMS.API.Migrations
 
             modelBuilder.Entity("TMS.BAL.Topic", b =>
                 {
-                    b.Navigation("Assigments");
+                    b.Navigation("Assignments");
 
                     b.Navigation("Attendances");
                 });

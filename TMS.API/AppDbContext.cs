@@ -16,7 +16,7 @@ namespace TMS.API
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AttendanceStatus> AttendanceStatuses { get; set; }
-        public DbSet<Assigment> Assigments { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
         public DbSet<AssignmentStatus> AssignmentStatuses { get; set; }
         public DbSet<CourseFeedback> CourseFeedbacks { get; set; }
         public DbSet<Review> Reviews { get; set; }

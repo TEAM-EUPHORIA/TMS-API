@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TMS.API.Migrations
 {
-    public partial class InitailCreate : Migration
+    public partial class Dbcreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,7 +50,7 @@ namespace TMS.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
+                    isDisabled = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -102,7 +102,7 @@ namespace TMS.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
+                    isDisabled = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -124,7 +124,7 @@ namespace TMS.API.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Duration = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
+                    isDisabled = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -148,15 +148,15 @@ namespace TMS.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     base64Header = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    EmployeeId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    EmployeeId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isDisabled = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -169,7 +169,8 @@ namespace TMS.API.Migrations
                         name: "FK_Users_Departments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
@@ -188,7 +189,7 @@ namespace TMS.API.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Duration = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Context = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
+                    isDisabled = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -215,7 +216,6 @@ namespace TMS.API.Migrations
                     OwnerId = table.Column<int>(type: "int", nullable: false),
                     Feedback = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rating = table.Column<float>(type: "real", nullable: false),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -274,7 +274,7 @@ namespace TMS.API.Migrations
                     ReviewDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReviewTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
+                    isDisabled = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -313,7 +313,7 @@ namespace TMS.API.Migrations
                     TrainerId = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     Feedback = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
+                    isDisabled = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -343,7 +343,7 @@ namespace TMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Assigments",
+                name: "Assignments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -351,7 +351,7 @@ namespace TMS.API.Migrations
                     TopicId = table.Column<int>(type: "int", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     OwnerId = table.Column<int>(type: "int", nullable: false),
-                    Document = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Document = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -359,21 +359,21 @@ namespace TMS.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Assigments", x => x.Id);
+                    table.PrimaryKey("PK_Assignments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Assigments_AssignmentStatuses_StatusId",
+                        name: "FK_Assignments_AssignmentStatuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "AssignmentStatuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Assigments_Topics_TopicId",
+                        name: "FK_Assignments_Topics_TopicId",
                         column: x => x.TopicId,
                         principalTable: "Topics",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Assigments_Users_OwnerId",
+                        name: "FK_Assignments_Users_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -429,7 +429,6 @@ namespace TMS.API.Migrations
                     Agenda = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MeetingNotes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PurposeOfMeeting = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isDisabled = table.Column<bool>(type: "bit", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -459,18 +458,18 @@ namespace TMS.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assigments_OwnerId",
-                table: "Assigments",
+                name: "IX_Assignments_OwnerId",
+                table: "Assignments",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assigments_StatusId",
-                table: "Assigments",
+                name: "IX_Assignments_StatusId",
+                table: "Assignments",
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assigments_TopicId",
-                table: "Assigments",
+                name: "IX_Assignments_TopicId",
+                table: "Assignments",
                 column: "TopicId");
 
             migrationBuilder.CreateIndex(
@@ -572,7 +571,7 @@ namespace TMS.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Assigments");
+                name: "Assignments");
 
             migrationBuilder.DropTable(
                 name: "Attendances");

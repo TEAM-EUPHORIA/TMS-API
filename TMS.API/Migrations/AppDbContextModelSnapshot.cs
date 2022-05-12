@@ -37,7 +37,7 @@ namespace TMS.API.Migrations
                     b.ToTable("CourseUser");
                 });
 
-            modelBuilder.Entity("TMS.BAL.Assigment", b =>
+            modelBuilder.Entity("TMS.BAL.Assignment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,6 +52,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("Document")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("OwnerId")
@@ -77,7 +78,7 @@ namespace TMS.API.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Assigments");
+                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("TMS.BAL.AssignmentStatus", b =>
@@ -217,6 +218,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -259,9 +261,6 @@ namespace TMS.API.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("isDisabled")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
@@ -296,6 +295,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -343,9 +343,6 @@ namespace TMS.API.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool?>("isDisabled")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -429,6 +426,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -496,6 +494,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -539,6 +538,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -582,6 +582,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -610,6 +611,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DepartmentId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -617,9 +619,11 @@ namespace TMS.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Image")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
@@ -648,6 +652,7 @@ namespace TMS.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("isDisabled")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -664,34 +669,34 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.BAL.Course", null)
                         .WithMany()
                         .HasForeignKey("CoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TMS.BAL.Assigment", b =>
+            modelBuilder.Entity("TMS.BAL.Assignment", b =>
                 {
                     b.HasOne("TMS.BAL.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.AssignmentStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.Topic", "Topic")
-                        .WithMany("Assigments")
+                        .WithMany("Assignments")
                         .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -706,19 +711,19 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.BAL.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.AttendanceStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.Topic", "Topic")
                         .WithMany("Attendances")
                         .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -733,7 +738,7 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.BAL.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Department");
@@ -744,13 +749,13 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.BAL.Course", "Course")
                         .WithMany("Feedbacks")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -763,19 +768,19 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.BAL.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.Review", "Review")
                         .WithMany()
                         .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.MOMStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -790,19 +795,19 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.BAL.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.ReviewStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Reviewer");
@@ -817,7 +822,7 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.BAL.Course", "Course")
                         .WithMany("Topics")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -828,19 +833,19 @@ namespace TMS.API.Migrations
                     b.HasOne("TMS.BAL.Course", "Course")
                         .WithMany()
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.User", "Trainee")
                         .WithMany()
                         .HasForeignKey("TraineeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TMS.BAL.User", "Trainer")
                         .WithMany()
                         .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -854,12 +859,14 @@ namespace TMS.API.Migrations
                 {
                     b.HasOne("TMS.BAL.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("TMS.BAL.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Department");
@@ -876,7 +883,7 @@ namespace TMS.API.Migrations
 
             modelBuilder.Entity("TMS.BAL.Topic", b =>
                 {
-                    b.Navigation("Assigments");
+                    b.Navigation("Assignments");
 
                     b.Navigation("Attendances");
                 });
