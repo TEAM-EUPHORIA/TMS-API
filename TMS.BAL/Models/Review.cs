@@ -6,6 +6,13 @@ namespace TMS.BAL
 {
     public class Review
     {
+        public Review()
+        {
+             User Reviewer = new User();
+             User Trainee = new User();
+             MOM MOM = new MOM();
+             ReviewStatus Status = new ReviewStatus();
+        }
         //model attribute
         [Required]
         public int Id { get; set; }

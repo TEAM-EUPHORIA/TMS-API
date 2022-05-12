@@ -5,6 +5,12 @@ namespace TMS.BAL
 {
     public class Topic
     {
+        public Topic()
+        {
+            Course Course = new Course();
+            List<Attendance> Attendances = new List<Attendance>();
+            List<Assignment> Assignments = new List<Assignment>();
+        }
         //model attribute
         [Required]
         public int Id { get; set; }
@@ -32,7 +38,7 @@ namespace TMS.BAL
         //Foreign key relation
         public virtual Course? Course { get; set; }
         public virtual List<Attendance>? Attendances { get; set; }
-        public virtual List<Assigment>? Assigments { get; set; }
+        public virtual List<Assignment>? Assignments { get; set; }
 
     }
 }

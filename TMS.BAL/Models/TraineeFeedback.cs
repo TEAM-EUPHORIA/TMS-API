@@ -5,6 +5,12 @@ namespace TMS.BAL
 {
     public class TraineeFeedback
     {
+        public TraineeFeedback()
+        {
+            Course? Course = new Course();
+            User? Trainee = new User();
+            User? Trainer = new User();
+        }
         //model attribute
         [Required]
         public int Id { get; set; }

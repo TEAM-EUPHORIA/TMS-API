@@ -6,6 +6,12 @@ namespace TMS.BAL
 {
     public class User
     {
+        public User()
+        {
+            Role Role = new Role();
+            Department Department = new Department();
+            List<Course> Courses = new List<Course>();
+        }
         //model attribute
         [Required]
         public int Id { get; set; }
@@ -37,7 +43,7 @@ namespace TMS.BAL
             ErrorMessage = "Enter a valid Email address"
         )]
         public string Email { get; set; }
-
+        [Required]
         public string base64Header { get; set; }
         [Required]
         public byte[]? Image { get; set; }
@@ -56,7 +62,5 @@ namespace TMS.BAL
         public virtual Role? Role { get; set; }
         public virtual Department? Department { get; set; }
         public virtual List<Course>? Courses { get; set; }
-
-
     }
 }

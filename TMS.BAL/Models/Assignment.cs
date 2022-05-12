@@ -4,9 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace TMS.BAL
 {
-    public class Assigment
+    public class Assignment
     {
-        public Assigment()
+        public Assignment()
         {
             AssignmentStatus Status = new AssignmentStatus();
             Topic Topic = new Topic();

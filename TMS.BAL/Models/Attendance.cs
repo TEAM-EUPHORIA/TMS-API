@@ -5,6 +5,12 @@ namespace TMS.BAL
 {
     public class Attendance
     {
+        public Attendance()
+        {
+            AttendanceStatus Status = new AttendanceStatus();
+            Topic Topic = new Topic();
+            User Owner = new User();
+        }
         //model attributes
         [Required]
         public int Id { get; set; }

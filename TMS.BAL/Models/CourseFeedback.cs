@@ -5,6 +5,11 @@ namespace TMS.BAL
 {
     public class CourseFeedback
     {
+        public CourseFeedback()
+        {
+            Course Course = new Course();
+            User Owner = new User();
+        }
         //model attribute
         [Required]
         public int Id { get; set; }
@@ -21,7 +26,6 @@ namespace TMS.BAL
         [Required]
         public float Rating { get; set; }
         
-
         //Audit fields
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
