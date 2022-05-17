@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-
-
-
-using TMS.API.DTO;
 using TMS.API.Services;
-
+using TMS.BAL;
 namespace TMS.API.Controllers
 {
     [ApiController]
@@ -60,7 +56,7 @@ namespace TMS.API.Controllers
         }
 
            [HttpPost("Create")]
-        public IActionResult CreateDepartment(DepartmentDTO department)
+        public IActionResult CreateDepartment(Department department)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +76,7 @@ namespace TMS.API.Controllers
 
         }
         [HttpPut("Update")]
-        public IActionResult UpdateDepartment([FromForm] DepartmentDTO department)
+        public IActionResult UpdateDepartment([FromForm] Department department)
         {
            
            

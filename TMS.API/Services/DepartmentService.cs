@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TMS.API.DTO;
-using TMS.API.Models;
+using TMS.BAL;
 
 namespace TMS.API.Services
 {
@@ -54,7 +53,7 @@ namespace TMS.API.Services
     //     }
     // }
 
-        public void CreateDepartment(DepartmentDTO department)
+        public void CreateDepartment(Department department)
         {
             if (department == null) throw new ArgumentException("CreateDepartment requires a vaild Department Object");
             try
@@ -84,7 +83,7 @@ namespace TMS.API.Services
         }
 
         
-        public void UpdateDepartment(DepartmentDTO department)
+        public void UpdateDepartment(Department department)
         {
             if (department == null) throw new ArgumentException("UpdateDepartemt requires a vaild User Object");
             try
