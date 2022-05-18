@@ -79,7 +79,7 @@ namespace TMS.API.Services
                     Course = dbTopic.CourseId,
                     Name = dbTopic.Name,
                     Duration = dbTopic.Duration,
-                    Context = dbTopic.Context
+                    Context = dbTopic.Content
                 };
 
                 return result;

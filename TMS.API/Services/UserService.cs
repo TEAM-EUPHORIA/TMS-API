@@ -59,12 +59,14 @@ namespace TMS.API.Services
                 {
                     string base64String = Convert.ToBase64String(dbUser.Image, 0, dbUser.Image.Length);
                     User result = new User();
-                    result.base64Header = result.base64Header + base64String;
+                    result.Base64 = result.Base64 + base64String;
                     if (dbUser.DepartmentId != null)
                     {
                         result = _context.Users.Where(u => u.Id == id).Include("Role").Include("Department").FirstOrDefault();
                         return result;
-                    }else{
+                    }
+                    else
+                    {
                         result = _context.Users.Where(u => u.Id == id).Include("Role").FirstOrDefault();
                         return result;
                     }
@@ -88,14 +90,14 @@ namespace TMS.API.Services
             try
             {
                 string Imagedate = "";
-                var newUserEmployeeId = _context.Users.ToList().Count() +1;
+                var newUserEmployeeId = _context.Users.ToList().Count() + 1;
 
                 user.EmployeeId = ($"ACE{user.RoleId}{newUserEmployeeId}");
 
                 user.Password = HashPassword.Sha256(user.Password);
 
-                Imagedate = ImageService.Getbase64String(user.base64Header);
-                user.base64Header = ImageService.Getbase64Header(user.base64Header);
+                Imagedate = ImageService.Getbase64String(user.Base64);
+                user.Base64 = ImageService.Getbase64Header(user.Base64);
                 user.Image = System.Convert.FromBase64String(Imagedate);
 
                 user.isDisabled = false;
@@ -131,13 +133,13 @@ namespace TMS.API.Services
 
                     dbUser.Password = HashPassword.Sha256(user.Password);
 
-                    Imagedate = ImageService.Getbase64String(user.base64Header);
-                    dbUser.base64Header = ImageService.Getbase64Header(user.base64Header);
+                    Imagedate = ImageService.Getbase64String(user.Base64);
+                    dbUser.Base64 = ImageService.Getbase64Header(user.Base64);
                     dbUser.Image = System.Convert.FromBase64String(Imagedate);
 
                     dbUser.isDisabled = false;
                     dbUser.UpdatedOn = DateTime.Now;
-                    
+
                     _context.Update(dbUser);
                     _context.SaveChanges();
                     return true;
