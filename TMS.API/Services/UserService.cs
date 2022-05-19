@@ -23,12 +23,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
+                throw;
             }
         }
 
@@ -64,12 +64,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(GetUsersByDepartment));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUsersByDepartment));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUsersByDepartment));
+                throw;
             }
         }
         public User GetUserById(int id)
@@ -82,12 +82,14 @@ namespace TMS.API.Services
                 {
                     string base64String = Convert.ToBase64String(dbUser.Image, 0, dbUser.Image.Length);
                     User result = new User();
-                    result.base64Header = result.base64Header + base64String;
+                    result.Base64 = result.Base64 + base64String;
                     if (dbUser.DepartmentId != null)
                     {
                         result = _context.Users.Where(u => u.Id == id).Include("Role").Include("Department").FirstOrDefault();
                         return result;
-                    }else{
+                    }
+                    else
+                    {
                         result = _context.Users.Where(u => u.Id == id).Include("Role").FirstOrDefault();
                         return result;
                     }
@@ -97,12 +99,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(GetUserById));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUserById));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUserById));
+                throw;
             }
         }
         public bool CreateUser(User user)
@@ -111,14 +113,14 @@ namespace TMS.API.Services
             try
             {
                 string Imagedate = "";
-                var newUserEmployeeId = _context.Users.ToList().Count() +1;
+                var newUserEmployeeId = _context.Users.ToList().Count() + 1;
 
                 user.EmployeeId = ($"ACE{user.RoleId}{newUserEmployeeId}");
 
                 user.Password = HashPassword.Sha256(user.Password);
 
-                Imagedate = ImageService.Getbase64String(user.base64Header);
-                user.base64Header = ImageService.Getbase64Header(user.base64Header);
+                Imagedate = ImageService.Getbase64String(user.Base64);
+                user.Base64 = ImageService.Getbase64Header(user.Base64);
                 user.Image = System.Convert.FromBase64String(Imagedate);
 
                 user.isDisabled = false;
@@ -131,12 +133,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(CreateUser));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(CreateUser));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateUser));
+                throw;
             }
 
         }
@@ -154,13 +156,13 @@ namespace TMS.API.Services
 
                     dbUser.Password = HashPassword.Sha256(user.Password);
 
-                    Imagedate = ImageService.Getbase64String(user.base64Header);
-                    dbUser.base64Header = ImageService.Getbase64Header(user.base64Header);
+                    Imagedate = ImageService.Getbase64String(user.Base64);
+                    dbUser.Base64 = ImageService.Getbase64Header(user.Base64);
                     dbUser.Image = System.Convert.FromBase64String(Imagedate);
 
                     dbUser.isDisabled = false;
                     dbUser.UpdatedOn = DateTime.Now;
-                    
+
                     _context.Update(dbUser);
                     _context.SaveChanges();
                     return true;
@@ -170,12 +172,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(UpdateUser));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(UpdateUser));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(UpdateUser));
+                throw;
             }
         }
 
@@ -200,12 +202,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(DisableUser));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(DisableUser));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(DisableUser));
+                throw;
             }
         }
     }

@@ -1,9 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TMS.BAL
 {
-    public class ReviewStatus
+    public class CourseStatus
     {
         public int Id { get; set; }
         [Required]

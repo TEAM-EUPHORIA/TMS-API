@@ -31,9 +31,9 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
                 return Problem(ProblemResponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(UserService),nameof(GetAllUserByRole));
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetAllUserByRole));
                 return Problem(ProblemResponse);
             }
             return Problem(ProblemResponse);
@@ -80,9 +80,9 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
                 return Problem(ProblemResponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(UserService),nameof(GetAllUserByDepartment));
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetAllUserByDepartment));
                 return Problem(ProblemResponse);
             }
             return Problem(ProblemResponse);
@@ -104,9 +104,9 @@ namespace TMS.API.Controllers
                 return Problem(ProblemResponse);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(UserService),nameof(GetUserById));
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUserById));
                 return Problem(ProblemResponse);
             }
         }
@@ -127,9 +127,9 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(CreateUser));
                 return Problem(ProblemResponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(UserService),nameof(CreateUser));
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateUser));
                 return Problem(ProblemResponse);
             }
         }
@@ -150,9 +150,9 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(UpdateUser));
                 return Problem(ProblemResponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(UserService),nameof(UpdateUser));
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(UpdateUser));
                 return Problem(ProblemResponse);
             }
 
@@ -170,12 +170,12 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(DisableUser));
                 return Problem(ProblemResponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(UserService),nameof(DisableUser));
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(DisableUser));
                 return Problem(ProblemResponse);
             }
 

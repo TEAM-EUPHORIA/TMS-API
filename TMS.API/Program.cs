@@ -1,7 +1,5 @@
 using System.Text;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -11,7 +9,23 @@ using TMS.API.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "https://localhost:5001",
+        ValidAudience = "https://localhost:5001",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+    };
+});
 builder.Services.AddControllers();
 
 // adding serilog
@@ -48,7 +62,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors((setup) =>
 {
     setup.AddPolicy("default", (options) =>
-    { 
+    {
         options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
     });
 });
@@ -70,6 +84,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("default");
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
