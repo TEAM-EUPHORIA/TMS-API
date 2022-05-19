@@ -25,17 +25,17 @@ namespace TMS.BAL
         [Required]
         public int DepartmentId { get; set; }
         [Required]
-        [RegularExpression(
-            @"^(?!*([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z\s]*$",
-            ErrorMessage = "Enter a valid name for Course. Course name must not contain any special character or numbers"
-         )]
+        // [RegularExpression(
+        //     @"^(?!*([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z\s]*$",
+        //     ErrorMessage = "Enter a valid name for Course. Course name must not contain any special character or numbers"
+        //  )]
         public string Name { get; set; }
         [Required]
         public string Duration { get; set; }
-        [RegularExpression(
-            @"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$",
-            ErrorMessage = "Enter a Valid Description"
-         )]
+        // [RegularExpression(
+        //     @"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$",
+        //     ErrorMessage = "Enter a Valid Description"
+        //  )]
         public string Description { get; set; }
         [Required]
         public bool? isDisabled { get; set; }

@@ -611,7 +611,6 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DepartmentId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -623,7 +622,6 @@ namespace TMS.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Image")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
@@ -859,9 +857,7 @@ namespace TMS.API.Migrations
                 {
                     b.HasOne("TMS.BAL.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentId");
 
                     b.HasOne("TMS.BAL.Role", "Role")
                         .WithMany()
