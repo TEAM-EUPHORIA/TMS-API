@@ -6,18 +6,13 @@ namespace TMS.BAL
 {
     public class User
     {
-        public User()
-        {
-            Role Role = new Role();
-            Department Department = new Department();
-            List<Course> Courses = new List<Course>();
-        }
+       
         //model attribute
         [Required]
         public int Id { get; set; }
         [Required]
         public int RoleId { get; set; }
-        [Required]
+        // [Required]
         public int? DepartmentId { get; set; }
         [Required]
         [RegularExpression(
@@ -45,11 +40,11 @@ namespace TMS.BAL
         public string Email { get; set; }
         [Required]
         public string base64Header { get; set; }
-        [Required]
+        
         public byte[]? Image { get; set; }
-        [Required]
+        // [Required]
         public string? EmployeeId { get; set; }
-        [Required]
+        // [Required]
         public bool? isDisabled { get; set; }
 
         //Audit fields

@@ -26,7 +26,7 @@ namespace TMS.BAL
             ErrorMessage = "Enter a Valid Feedback"
          )]
         public string Feedback { get; set; }
-        [Required]
+        // [Required]
         public bool? isDisabled { get; set; }
 
         //Audit fields

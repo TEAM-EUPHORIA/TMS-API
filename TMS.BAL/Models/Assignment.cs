@@ -23,7 +23,7 @@ namespace TMS.BAL
         public int OwnerId { get; set; }
         [NotMapped]
         public string base64 { get; set; }
-        [Required]
+        // [Required]
         public byte[]? Document { get; set; }
 
         //Audit Fields

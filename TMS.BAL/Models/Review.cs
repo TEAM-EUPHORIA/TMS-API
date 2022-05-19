@@ -6,13 +6,6 @@ namespace TMS.BAL
 {
     public class Review
     {
-        public Review()
-        {
-             User Reviewer = new User();
-             User Trainee = new User();
-             MOM MOM = new MOM();
-             ReviewStatus Status = new ReviewStatus();
-        }
         //model attribute
         [Required]
         public int Id { get; set; }
@@ -40,7 +33,7 @@ namespace TMS.BAL
             ErrorMessage = "Enter a Valid Content"
          )]
         public string Mode { get; set; }
-        [Required]
+        // [Required]
         public bool? isDisabled { get; set; }
 
         //Foreign key relation

@@ -5,12 +5,7 @@ namespace TMS.BAL
 {
     public class MOM
     {
-        public MOM()
-        {
-            Review Review = new Review();
-            MOMStatus Status = new MOMStatus();
-            User Owner = new User();
-        }
+
         //model attributes
         [Required]
         public int Id { get; set; }

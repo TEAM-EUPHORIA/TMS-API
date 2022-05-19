@@ -14,7 +14,7 @@ namespace TMS.BAL
             ErrorMessage = "Enter a valid Department name. Department name must not contain any special character or numbers"
         )]
         public string Name { get; set; }
-        [Required]
+        // [Required]
         public bool? isDisabled { get; set; }
 
         //Audit fields
