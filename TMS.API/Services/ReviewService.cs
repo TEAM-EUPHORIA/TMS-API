@@ -25,13 +25,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
 
@@ -84,13 +84,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
         public void UpdateReview(Review review)
@@ -118,13 +118,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
         public void DisableReview(Review review)
@@ -147,13 +147,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
 
@@ -201,13 +201,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in Review services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in Review services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
         public void UpdateMOM(MOM mom)
@@ -234,13 +234,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in MOM services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in MOM services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
         public IEnumerable<MOM> GetMOMByStatus(int statusId)
@@ -254,13 +254,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in MOM services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in MOM services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
 

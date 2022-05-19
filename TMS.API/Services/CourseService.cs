@@ -8,7 +8,7 @@ namespace TMS.API.Services
     {
         private readonly AppDbContext _context;
         private readonly ILogger<CourseService> _logger;
-   
+
         public CourseService(AppDbContext context, ILogger<CourseService> logger)
         {
             _context = context;
@@ -17,25 +17,25 @@ namespace TMS.API.Services
 
         public IEnumerable<Topic> GetAllTopicsByCourseId(int id)
         {
-            
+
             try
             {
-                return _context.Topics.Where(t=>t.CourseId == id).Include(t=>t.Course).ToList();
+                return _context.Topics.Where(t => t.CourseId == id).Include(t => t.Course).ToList();
             }
             catch (System.InvalidOperationException ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
         }
-        
+
         public IEnumerable<Course> GetAllCourses()
         {
             try
@@ -46,24 +46,24 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
         }
         public Object GetCourseById(int id)
         {
-            if (id==0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
-            var obj = _context.Courses.Where(c=>c.Id==id ).ToList();
-            if (obj != null)   
+            if (id == 0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
+            var obj = _context.Courses.Where(c => c.Id == id).ToList();
+            if (obj != null)
             {
                 return obj;
             }
-            return 
+            return
             "not found";
         }
 
@@ -86,7 +86,7 @@ namespace TMS.API.Services
             }
             return "not found";
         }
-   
+
         public void CreateCourse(Course course)
         {
             if (course == null) throw new ArgumentException("CreateCourse requires a vaild User Object");
@@ -95,7 +95,7 @@ namespace TMS.API.Services
                 Course dbCourse = new Course();
                 dbCourse.Id = course.Id;
                 dbCourse.StatusId = course.StatusId;
-                var trainer=_context.Users.Find(course.TrainerId);
+                var trainer = _context.Users.Find(course.TrainerId);
                 dbCourse.Users.Add(trainer);
                 dbCourse.DepartmentId = course.DepartmentId;
                 dbCourse.Name = course.Name;
@@ -109,24 +109,24 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in Course services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in Course services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
         }
-        
+
         public void UpdateCourse(Course course)
         {
             if (course == null) throw new ArgumentException("UpdateCourse requires a vaild User Object");
             try
             {
                 var dbCourse = _context.Courses.Find(course.Id);
-                if(dbCourse!=null)
-                dbCourse.Id = course.Id;
+                if (dbCourse != null)
+                    dbCourse.Id = course.Id;
                 dbCourse.StatusId = course.StatusId;
                 // dbCourse.TrainerId = course.TrainerId;
                 dbCourse.DepartmentId = course.DepartmentId;
@@ -140,17 +140,17 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
         }
 
-           public void DisableCourse(int courseId)
+        public void DisableCourse(int courseId)
         {
             if (courseId == 0) throw new ArgumentException("DisableCourse requires a vaild User Object");
             try
@@ -170,114 +170,114 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+                throw;
             }
         }
 
 
-    //     public void UpdateUser(UserDTO user)
-    //     {
-    //         if (user == null) throw new ArgumentException("UpdateUser requires a vaild User Object");
-    //         try
-    //         {
-    //             var dbUser = _context.Users.Find(user.Id);
-    //             if (dbUser != null)
-    //             {
-    //                 dbUser.RoleId = user.RoleId;
-    //                 dbUser.DepartmentId = user.DepartmentId;
-    //                 dbUser.Name = user.Name;
-    //                 dbUser.UserName = user.UserName;
-    //                 dbUser.Password = user.Password;
-    //                 dbUser.Email = user.Email;
-    //                 dbUser.UpdatedOn = DateTime.Now;
-    //                 if (user.Image != null)
-    //                 {
-    //                     dbUser.Image = user.Image;
-    //                 }
-    //                 _context.Update(dbUser);
-    //                 _context.SaveChanges();
-    //             }
-    //         }
-    //         catch (System.InvalidOperationException ex)
-    //         {
-    //             _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-    //             _logger.LogTrace(ex.ToString());
-    //             throw ex;
-    //         }
-    //         catch (System.Exception ex)
-    //         {
-    //             _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-    //             _logger.LogTrace(ex.ToString());
-    //             throw ex;
-    //         }
-    //     }
-    //     public void DisableUser(UserDTO user)
-    //     {
-    //         if (user == null) throw new ArgumentException("DisableUser requires a vaild User Object");
-    //         try
-    //         {
-    //             var dbUser = _context.Users.Find(user.Id);
-    //             if (dbUser != null)
-    //             {
+        //     public void UpdateUser(UserDTO user)
+        //     {
+        //         if (user == null) throw new ArgumentException("UpdateUser requires a vaild User Object");
+        //         try
+        //         {
+        //             var dbUser = _context.Users.Find(user.Id);
+        //             if (dbUser != null)
+        //             {
+        //                 dbUser.RoleId = user.RoleId;
+        //                 dbUser.DepartmentId = user.DepartmentId;
+        //                 dbUser.Name = user.Name;
+        //                 dbUser.UserName = user.UserName;
+        //                 dbUser.Password = user.Password;
+        //                 dbUser.Email = user.Email;
+        //                 dbUser.UpdatedOn = DateTime.Now;
+        //                 if (user.Image != null)
+        //                 {
+        //                     dbUser.Image = user.Image;
+        //                 }
+        //                 _context.Update(dbUser);
+        //                 _context.SaveChanges();
+        //             }
+        //         }
+        //         catch (System.InvalidOperationException ex)
+        //         {
+        //             _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+        //             _logger.LogTrace(ex.ToString());
+        //            throw;
+        //         }
+        //         catch (System.Exception ex)
+        //         {
+        //             _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+        //             _logger.LogTrace(ex.ToString());
+        //            throw;
+        //         }
+        //     }
+        //     public void DisableUser(UserDTO user)
+        //     {
+        //         if (user == null) throw new ArgumentException("DisableUser requires a vaild User Object");
+        //         try
+        //         {
+        //             var dbUser = _context.Users.Find(user.Id);
+        //             if (dbUser != null)
+        //             {
 
-    //                 dbUser.isDisabled = true;
-    //                 dbUser.UpdatedOn = DateTime.Now;
+        //                 dbUser.isDisabled = true;
+        //                 dbUser.UpdatedOn = DateTime.Now;
 
-    //                 _context.Update(dbUser);
-    //                 _context.SaveChanges();
-    //             }
-    //         }
-    //         catch (System.InvalidOperationException ex)
-    //         {
-    //             _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-    //             _logger.LogTrace(ex.ToString());
-    //             throw ex;
-    //         }
-    //         catch (System.Exception ex)
-    //         {
-    //             _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-    //             _logger.LogTrace(ex.ToString());
-    //             throw ex;
-    //         }
-    //     }
-    //     public void DeleteUser(UserDTO user)
-    //     {
-    //         if (user == null) throw new ArgumentException("DeleteUser requires a vaild User Object");
-    //         try
-    //         {
-    //             var dbUser = _context.Users.Find(user.Id);
-    //             if (dbUser != null)
-    //             {
-    //                 if (dbUser.isDisabled == true)
-    //                 {
-    //                     _context.Remove(dbUser);
-    //                     _context.SaveChanges();
-    //                 }
-    //             }
-    //         }
-    //         catch (System.InvalidOperationException ex)
-    //         {
-    //             _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-    //             _logger.LogTrace(ex.ToString());
-    //             throw ex;
-    //         }
-    //         catch (System.Exception ex)
-    //         {
-    //             _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-    //             _logger.LogTrace(ex.ToString());
-    //             throw ex;
-    //         }
-    //     }
+        //                 _context.Update(dbUser);
+        //                 _context.SaveChanges();
+        //             }
+        //         }
+        //         catch (System.InvalidOperationException ex)
+        //         {
+        //             _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+        //             _logger.LogTrace(ex.ToString());
+        //            throw;
+        //         }
+        //         catch (System.Exception ex)
+        //         {
+        //             _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+        //             _logger.LogTrace(ex.ToString());
+        //            throw;
+        //         }
+        //     }
+        //     public void DeleteUser(UserDTO user)
+        //     {
+        //         if (user == null) throw new ArgumentException("DeleteUser requires a vaild User Object");
+        //         try
+        //         {
+        //             var dbUser = _context.Users.Find(user.Id);
+        //             if (dbUser != null)
+        //             {
+        //                 if (dbUser.isDisabled == true)
+        //                 {
+        //                     _context.Remove(dbUser);
+        //                     _context.SaveChanges();
+        //                 }
+        //             }
+        //         }
+        //         catch (System.InvalidOperationException ex)
+        //         {
+        //             _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
+        //             _logger.LogTrace(ex.ToString());
+        //            throw;
+        //         }
+        //         catch (System.Exception ex)
+        //         {
+        //             _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
+        //             _logger.LogTrace(ex.ToString());
+        //            throw;
+        //         }
+        //     }
 
     }
 }
-        
-    
+
+
 
 

@@ -23,12 +23,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
+                throw;
             }
         }
         public IEnumerable<User> GetUsersByDepartment(int departmentId)
@@ -41,12 +41,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(GetUsersByDepartment));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUsersByDepartment));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUsersByDepartment));
+                throw;
             }
         }
         public User GetUserById(int id)
@@ -76,12 +76,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(GetUserById));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUserById));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUserById));
+                throw;
             }
         }
         public bool CreateUser(User user)
@@ -110,12 +110,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(CreateUser));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(CreateUser));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateUser));
+                throw;
             }
 
         }
@@ -149,12 +149,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(UpdateUser));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(UpdateUser));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(UpdateUser));
+                throw;
             }
         }
 
@@ -179,12 +179,12 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(DisableUser));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(DisableUser));
-                throw ex;
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(DisableUser));
+                throw;
             }
         }
     }
