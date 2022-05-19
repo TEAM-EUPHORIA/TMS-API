@@ -21,7 +21,7 @@ namespace TMS.API.Services
         }
         private static void SetUpImage(User user)
         {
-            Image Image = ImageService.GetBase64HeaderAndByteArray(user.Base64);
+            File Image = FileService.GetBase64HeaderAndByteArray(user.Base64);
             user.Base64 = Image.header;
             user.Image = Image.bytes;
         }
@@ -33,7 +33,7 @@ namespace TMS.API.Services
             if (!string.IsNullOrEmpty(user.Base64) && user.Base64.Length > 1000) SetUpImage(user);
             user.CreatedOn = DateTime.UtcNow;
         }
-        private void SetUpUserDetails(User user, User dbUser)
+        private static void SetUpUserDetails(User user, User dbUser)
         {
             dbUser.isDisabled = false;
             dbUser.Password = HashPassword.Sha256(user.Password);
@@ -55,7 +55,7 @@ namespace TMS.API.Services
         }
         private void UpdateAndSaveUser(User dbUser)
         {
-            _context.Update(dbUser);
+            _context.Users.Update(dbUser);
             _context.SaveChanges();
         }
         public IEnumerable<User> GetUsersByRole(int roleId)

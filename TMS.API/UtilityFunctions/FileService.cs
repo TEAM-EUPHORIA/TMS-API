@@ -1,8 +1,8 @@
 namespace TMS.API
 {
-    public static partial class ImageService
+    public static partial class FileService
     {
-        public static Image GetBase64HeaderAndByteArray(string base64String)
+        public static File GetBase64HeaderAndByteArray(string base64String)
         {
             String[] substrings = base64String.Split(',');
 
@@ -11,7 +11,7 @@ namespace TMS.API
 
             byte[] bytes = Convert.FromBase64String(imgData);
 
-            return new Image { header = header, bytes = bytes };
+            return new File { header = header, bytes = bytes };
         }
     }
 }

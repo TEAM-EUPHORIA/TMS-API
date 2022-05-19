@@ -53,6 +53,7 @@ builder.Services.AddTransient<CourseService>();
 builder.Services.AddTransient<DepartmentService>();
 builder.Services.AddTransient<DashboardService>();
 
+builder.Services.AddTransient<AssignmentService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

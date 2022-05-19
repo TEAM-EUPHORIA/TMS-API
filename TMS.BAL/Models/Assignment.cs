@@ -9,7 +9,6 @@ namespace TMS.BAL
         public int Id { get; set; }
         [Required]
         public int TopicId { get; set; }
-        [Required]
         public int StatusId { get; set; }
         [Required]
         public int OwnerId { get; set; }
