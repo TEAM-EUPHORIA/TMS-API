@@ -1,36 +1,17 @@
-namespace TMS.API.UtilityFunctions
+namespace TMS.API
 {
-    public static class ImageService
+    public static partial class ImageService
     {
-        public static string Getbase64String(string value)
+        public static Image GetBase64HeaderAndByteArray(string base64String)
         {
-            if (value.Contains("jpeg"))
-            {
-                return value.Replace("data:image/jpeg;base64,", "");
-            }
-            else if (value.Contains("jpg"))
-            {
-                return value.Replace("data:image/jpg;base64,", "");
-            }
-            else
-            {
-                return value.Replace("data:image/png;base64,", "");
-            }
-        }
-        public static string Getbase64Header(string value)
-        {
-            if (value.Contains("jpeg"))
-            {
-                return "data:image/jpeg;base64,";
-            }
-            else if (value.Contains("jpg"))
-            {
-                return "data:image/jpg;base64,";
-            }
-            else
-            {
-                return "data:image/png;base64,";
-            }
+            String[] substrings = base64String.Split(',');
+
+            string header = substrings[0];
+            string imgData = substrings[1];
+
+            byte[] bytes = Convert.FromBase64String(imgData);
+
+            return new Image { header = header, bytes = bytes };
         }
     }
 }

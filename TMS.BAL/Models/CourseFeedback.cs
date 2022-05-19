@@ -11,8 +11,11 @@ namespace TMS.BAL
         [Required]
         public int OwnerId { get; set; }
         [Required]
+        [MinLength(5)]
+        [MaxLength(100)] 
         public string Feedback { get; set; }
         [Required]
+        [Range(1.0, 5)]
         public float Rating { get; set; }
 
         //Audit fields

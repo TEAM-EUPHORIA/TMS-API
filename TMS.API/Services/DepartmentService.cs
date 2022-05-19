@@ -15,7 +15,7 @@ namespace TMS.API.Services
             _logger = logger;
         }
 
-         public Object GetDepartmentByUserId(int id)
+        public Object GetDepartmentByUserId(int id)
         {
             var dbdepartment = _context.Departments.Where(u => u.Id == id).FirstOrDefault();
             if (dbdepartment != null)
@@ -24,9 +24,9 @@ namespace TMS.API.Services
                 var result = new
                 {
                     Id = dbdepartment.Id,
-    
+
                     Name = dbdepartment.Name
-                    
+
                 };
 
                 return result;
@@ -35,23 +35,23 @@ namespace TMS.API.Services
         }
 
 
-    //     public IEnumerable<Department> GetAllDepartments()
-    //     {
-             
-    //         try
-    //         {
-    //             var result = _context.Departments.ToList();
-    //             if (result != null) return Ok(result);
-    //             return NotFound("we are sorry, the thing you requested was not found");
-    //         }
-    //         catch (System.Exception ex)
-    //         {
-    //             _logger.LogWarning("There was an error in getting all Departments. please check the db for more information");
-    //             _logger.LogError($"error:  " + ex.ToString());
-    //             return Problem("we are sorry, some thing went wrong");
-    //         }
-    //     }
-    // }
+        //     public IEnumerable<Department> GetAllDepartments()
+        //     {
+
+        //         try
+        //         {
+        //             var result = _context.Departments.ToList();
+        //             if (result != null) return Ok(result);
+        //             return NotFound("we are sorry, the thing you requested was not found");
+        //         }
+        //         catch (System.Exception ex)
+        //         {
+        //             _logger.LogWarning("There was an error in getting all Departments. please check the db for more information");
+        //             _logger.LogError($"error:  " + ex.ToString());
+        //             return Problem("we are sorry, some thing went wrong");
+        //         }
+        //     }
+        // }
 
         public void CreateDepartment(Department department)
         {
@@ -62,7 +62,7 @@ namespace TMS.API.Services
                 Department dbDepartment = new Department();
 
                 dbDepartment.Name = department.Name;
-              
+
                 dbDepartment.isDisabled = false;
                 dbDepartment.CreatedOn = DateTime.Now;
                 _context.Departments.Add(dbDepartment);
@@ -72,17 +72,17 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in Department services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in Department services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
 
-        
+
         public void UpdateDepartment(Department department)
         {
             if (department == null) throw new ArgumentException("UpdateDepartemt requires a vaild User Object");
@@ -91,12 +91,12 @@ namespace TMS.API.Services
                 var dbdepartment = _context.Departments.Find(department.Id);
                 if (dbdepartment != null)
                 {
-                    
-                    
+
+
                     dbdepartment.Name = department.Name;
-                   
+
                     dbdepartment.UpdatedOn = DateTime.Now;
-                  
+
                     _context.Update(dbdepartment);
                     _context.SaveChanges();
                 }
@@ -105,13 +105,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in department services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in department services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
 
@@ -136,13 +136,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in department services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in department services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
     }

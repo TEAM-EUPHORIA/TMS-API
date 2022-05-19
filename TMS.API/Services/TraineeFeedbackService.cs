@@ -30,13 +30,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in Feedback services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in Feedback services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
 
@@ -62,13 +62,13 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in Feedback services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in Feedback services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
         /// <summary>
@@ -98,72 +98,16 @@ namespace TMS.API.Services
             {
                 _logger.LogCritical("An Critical error occured in Feedback services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
             catch (System.Exception ex)
             {
                 _logger.LogCritical("An Critical error occured in Feedback services. Some external factors are involved. please check the log files to know more about it");
                 _logger.LogTrace(ex.ToString());
-                throw ex;
+               throw;
             }
         }
-        // public void DisableUser(User user)
-        // {
-        //     if (user == null) throw new ArgumentException("DisableUser requires a vaild User Object");
-        //     try
-        //     {
-        //         var dbUser = _context.Users.Find(user.Id);
-        //         if (dbUser != null)
-        //         {
-
-        //             dbUser.isDisabled = true;
-        //             dbUser.UpdatedOn = DateTime.Now;
-
-        //             _context.Update(dbUser);
-        //             _context.SaveChanges();
-        //         }
-        //     }
-        //     catch (System.InvalidOperationException ex)
-        //     {
-        //         _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-        //         _logger.LogTrace(ex.ToString());
-        //         throw ex;
-        //     }
-        //     catch (System.Exception ex)
-        //     {
-        //         _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-        //         _logger.LogTrace(ex.ToString());
-        //         throw ex;
-        //     }
-        // }
-        // public void DeleteUser(User user)
-        // {
-        //     if (user == null) throw new ArgumentException("DeleteUser requires a vaild User Object");
-        //     try
-        //     {
-        //         var dbUser = _context.Users.Find(user.Id);
-        //         if (dbUser != null)
-        //         {
-        //             if (dbUser.isDisabled == true)
-        //             {
-        //                 _context.Remove(dbUser);
-        //                 _context.SaveChanges();
-        //             }
-        //         }
-        //     }
-        //     catch (System.InvalidOperationException ex)
-        //     {
-        //         _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-        //         _logger.LogTrace(ex.ToString());
-        //         throw ex;
-        //     }
-        //     catch (System.Exception ex)
-        //     {
-        //         _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-        //         _logger.LogTrace(ex.ToString());
-        //         throw ex;
-        //     }
-        // }
+      
 
     }
 }

@@ -6,15 +6,6 @@ namespace TMS.BAL
 {
     public class Course
     {
-        public Course()
-        {
-            User Trainer = new User();
-            CourseStatus status= new CourseStatus();
-            Department Department = new Department();
-            List<Topic> Topics = new List<Topic>();
-            List<User> Users = new List<User>();
-            List<CourseFeedback> Feedbacks = new List<CourseFeedback>();
-        }
         public int Id { get; set; }
         public int? StatusId { get; set; }
         [Required]
