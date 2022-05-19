@@ -14,6 +14,8 @@ namespace TMS.BAL
         [Required]
         public int CourseId { get; set; }
         [Required]
+        [MinLength(5)]
+        [MaxLength(100)] 
         public string Feedback { get; set; }
         public bool? isDisabled { get; set; }
 
