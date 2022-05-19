@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TMS.BAL;
 
+
 namespace TMS.API.Services
 {
     public class CourseService
@@ -79,7 +80,7 @@ namespace TMS.API.Services
                     Course = dbTopic.CourseId,
                     Name = dbTopic.Name,
                     Duration = dbTopic.Duration,
-                    Context = dbTopic.Context
+                    Context = dbTopic.Content
                 };
 
                 return result;
@@ -92,18 +93,14 @@ namespace TMS.API.Services
             if (course == null) throw new ArgumentException("CreateCourse requires a vaild User Object");
             try
             {
-                Course dbCourse = new Course();
-                dbCourse.Id = course.Id;
-                dbCourse.StatusId = course.StatusId;
-                var trainer=_context.Users.Find(course.TrainerId);
-                dbCourse.Users.Add(trainer);
-                dbCourse.DepartmentId = course.DepartmentId;
-                dbCourse.Name = course.Name;
-                dbCourse.Duration = course.Duration;
-                dbCourse.Description = course.Description;
-                dbCourse.CreatedOn = DateTime.Now;
-                _context.Courses.Add(dbCourse);
+                var user = _context.Users.Find(course.TrainerId);
+                course.Users =new ();
+                course.Users.Add(user);
+
+                course.CreatedOn = DateTime.Now;
+                _context.Courses.Add(course);
                 _context.SaveChanges();
+            
             }
             catch (System.InvalidOperationException ex)
             {

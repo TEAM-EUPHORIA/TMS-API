@@ -115,7 +115,7 @@ namespace TMS.API.Controllers
 
 
         [HttpPut("UpdateCourse/{id:int}")]
-        public IActionResult UpdateCourse([FromForm] Course courses)
+        public IActionResult UpdateCourse(Course courses)
         {
             // if (user == null || user.image == null) return BadRequest("User is required");
             // user.Password = HashPassword.Sha256(user.Password);

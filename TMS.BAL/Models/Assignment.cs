@@ -6,14 +6,6 @@ namespace TMS.BAL
 {
     public class Assignment
     {
-        public Assignment()
-        {
-            AssignmentStatus Status = new AssignmentStatus();
-            Topic Topic = new Topic();
-            User Owner = new User();
-        }
-        //model attributes
-        [Required]
         public int Id { get; set; }
         [Required]
         public int TopicId { get; set; }
@@ -21,9 +13,8 @@ namespace TMS.BAL
         public int StatusId { get; set; }
         [Required]
         public int OwnerId { get; set; }
-        [NotMapped]
-        public string base64 { get; set; }
         [Required]
+        public string Base64 { get; set; }
         public byte[]? Document { get; set; }
 
         //Audit Fields
@@ -31,8 +22,8 @@ namespace TMS.BAL
         public int? CreatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int? UpdatedBy { get; set; }
-        
-        //Foreign key relation
+
+        // virtual navigation properties
         public virtual AssignmentStatus? Status { get; set; }
         public virtual Topic? Topic { get; set; }
         public virtual User? Owner { get; set; }

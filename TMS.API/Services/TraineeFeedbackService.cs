@@ -40,45 +40,21 @@ namespace TMS.API.Services
             }
         }
 
-        // public IEnumerable<User> GetUsersByDepartment(int departmentId)
-        // {
-        //     if (departmentId == 0) throw new Exception("GetUsersByDepartment requires a vaild Id not zero");
-        //     try
-        //     {
-        //         return _context.Users.Where(u => (u.DepartmentId != 0 && u.DepartmentId == departmentId)).ToList();
-        //     }
-        //     catch (System.InvalidOperationException ex)
-        //     {
-        //         _logger.LogCritical("An Critical error occured in User services. Please check the program.cs, context class and connection string. It happend due to failure of injection of context. ");
-        //         _logger.LogTrace(ex.ToString());
-        //         throw ex;
-        //     }
-        //     catch (System.Exception ex)
-        //     {
-        //         _logger.LogCritical("An Critical error occured in User services. Some external factors are involved. please check the log files to know more about it");
-        //         _logger.LogTrace(ex.ToString());
-        //         throw ex;
-        //     }
-        // }
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="traineeFeedback"></param>
-        public void CreateTFeedback(TraineeFeedback traineeFeedback)
+        public bool CreateTFeedback(TraineeFeedback traineeFeedback)
         {
             if (traineeFeedback == null) throw new ArgumentException("CreateFeedback requires a vaild User Object");
             try
             {
-
-                Random random = new Random();
-                TraineeFeedback dbcoursefeedback = new TraineeFeedback();
-                dbcoursefeedback.CourseId = traineeFeedback.CourseId;
-                dbcoursefeedback.TraineeId = traineeFeedback.TraineeId;
-                dbcoursefeedback.TrainerId = traineeFeedback.TrainerId;
-                dbcoursefeedback.Feedback = traineeFeedback.Feedback;
-
-                _context.TraineeFeedbacks.Add(dbcoursefeedback);
+                
+                _context.TraineeFeedbacks.Add(traineeFeedback);
                 _context.SaveChanges();
+                return true;
+                
 
 
             }
