@@ -13,6 +13,51 @@ namespace TMS.API.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+        private void GenerateUserId(User user)
+        {
+            var newId = _context.Users.Count() + 1;
+            if (user.DepartmentId != 0 && user.DepartmentId != null) user.EmployeeId = $"ACE{user.RoleId}{user.DepartmentId}{newId}";
+            else user.EmployeeId = $"ACE{user.RoleId}0{newId}";
+        }
+        private static void SetUpImage(User user)
+        {
+            Image Image = ImageService.GetBase64HeaderAndByteArray(user.Base64);
+            user.Base64 = Image.header;
+            user.Image = Image.bytes;
+        }
+        private void SetUpUserDetails(User user)
+        {
+            user.isDisabled = false;
+            user.Password = HashPassword.Sha256(user.Password);
+            if (string.IsNullOrEmpty(user.EmployeeId)) GenerateUserId(user);
+            if (!string.IsNullOrEmpty(user.Base64) && user.Base64.Length > 1000) SetUpImage(user);
+            user.CreatedOn = DateTime.UtcNow;
+        }
+        private void SetUpUserDetails(User user, User dbUser)
+        {
+            dbUser.isDisabled = false;
+            dbUser.Password = HashPassword.Sha256(user.Password);
+            dbUser.FullName = user.FullName;
+            dbUser.UserName = user.UserName;
+            dbUser.Email = user.Email;
+            if (!string.IsNullOrEmpty(user.Base64) && user.Base64.Length > 1000)
+            {
+                SetUpImage(user);
+                dbUser.Base64 = user.Base64;
+                dbUser.Image = user.Image;
+            }
+            dbUser.UpdatedOn = DateTime.UtcNow;
+        }
+        private void CreateAndSaveUser(User user)
+        {
+            _context.Users.Add(user);
+            _context.SaveChanges();
+        }
+        private void UpdateAndSaveUser(User dbUser)
+        {
+            _context.Update(dbUser);
+            _context.SaveChanges();
+        }
         public IEnumerable<User> GetUsersByRole(int roleId)
         {
             if (roleId == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetUsersByRole));
@@ -36,7 +81,7 @@ namespace TMS.API.Services
             if (departmentId == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetUsersByDepartment));
             try
             {
-                return _context.Users.Where(u => (u.DepartmentId != 0 && u.DepartmentId == departmentId)).ToList();
+                return _context.Users.Where(u => (u.DepartmentId != 0 && u.DepartmentId == departmentId)).Include("Role").ToList();
             }
             catch (InvalidOperationException ex)
             {
@@ -55,23 +100,21 @@ namespace TMS.API.Services
             try
             {
                 var dbUser = _context.Users.Find(id);
+                User result = new User();
                 if (dbUser != null)
                 {
                     string base64String = Convert.ToBase64String(dbUser.Image, 0, dbUser.Image.Length);
-                    User result = new User();
                     result.Base64 = result.Base64 + base64String;
                     if (dbUser.DepartmentId != null)
                     {
                         result = _context.Users.Where(u => u.Id == id).Include("Role").Include("Department").FirstOrDefault();
-                        return result;
                     }
                     else
                     {
                         result = _context.Users.Where(u => u.Id == id).Include("Role").FirstOrDefault();
-                        return result;
                     }
                 }
-                return null;
+                return result;
             }
             catch (InvalidOperationException ex)
             {
@@ -89,22 +132,8 @@ namespace TMS.API.Services
             if (user == null) ServiceExceptions.throwArgumentExceptionForObject(nameof(CreateUser), nameof(user));
             try
             {
-                string Imagedate = "";
-                var newUserEmployeeId = _context.Users.ToList().Count() + 1;
-
-                user.EmployeeId = ($"ACE{user.RoleId}{newUserEmployeeId}");
-
-                user.Password = HashPassword.Sha256(user.Password);
-
-                Imagedate = ImageService.Getbase64String(user.Base64);
-                user.Base64 = ImageService.Getbase64Header(user.Base64);
-                user.Image = System.Convert.FromBase64String(Imagedate);
-
-                user.isDisabled = false;
-                user.CreatedOn = DateTime.Now;
-
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                SetUpUserDetails(user);
+                CreateAndSaveUser(user);
                 return true;
             }
             catch (InvalidOperationException ex)
@@ -128,20 +157,8 @@ namespace TMS.API.Services
                 var dbUser = _context.Users.Find(user.Id);
                 if (dbUser != null)
                 {
-                    string Imagedate = "";
-                    dbUser.EmployeeId = user.EmployeeId;
-
-                    dbUser.Password = HashPassword.Sha256(user.Password);
-
-                    Imagedate = ImageService.Getbase64String(user.Base64);
-                    dbUser.Base64 = ImageService.Getbase64Header(user.Base64);
-                    dbUser.Image = System.Convert.FromBase64String(Imagedate);
-
-                    dbUser.isDisabled = false;
-                    dbUser.UpdatedOn = DateTime.Now;
-
-                    _context.Update(dbUser);
-                    _context.SaveChanges();
+                    SetUpUserDetails(user, dbUser);
+                    UpdateAndSaveUser(dbUser);
                     return true;
                 }
                 return false;
@@ -158,8 +175,6 @@ namespace TMS.API.Services
             }
         }
 
-
-
         public bool DisableUser(int userId)
         {
             if (userId == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(DisableUser));
@@ -170,8 +185,7 @@ namespace TMS.API.Services
                 {
                     dbUser.isDisabled = true;
                     dbUser.UpdatedOn = DateTime.Now;
-                    _context.Update(dbUser);
-                    _context.SaveChanges();
+                    UpdateAndSaveUser(dbUser);
                     return true;
                 }
                 return false;
