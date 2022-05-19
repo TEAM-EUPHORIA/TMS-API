@@ -37,6 +37,33 @@ namespace TMS.API.Controllers
             return Problem(ProblemResponse);
         }
 
+         //sruthi
+       [HttpGet("GetUsersByDeptandrole/{did:int},{rid:int}")]
+        public IActionResult GetUsersByDeptandrole(int did,int rid)
+        {
+            if (did == 0 || rid==0) BadId();
+            try
+            {
+                var result = _userService.GetUsersByDeptandrole(did,rid);
+                if (result!=null) return Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
+                return Problem(ProblemResponse);
+            }
+            catch(Exception ex)
+            {
+                
+                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandrole));
+                return Problem(ProblemResponse);
+
+            }
+            return Problem(ProblemResponse);
+        }
+
+
+
         [HttpGet("Department/{id:int}")]
         public IActionResult GetAllUserByDepartment(int id)
         {

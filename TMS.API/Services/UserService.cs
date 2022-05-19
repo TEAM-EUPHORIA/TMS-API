@@ -76,6 +76,29 @@ namespace TMS.API.Services
                 throw;
             }
         }
+
+
+//sruthi
+         public IEnumerable<User> GetUsersByDeptandrole(int did,int rid)
+        {
+            if (did == 0 || rid==0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetUsersByDeptandrole));
+            try
+            {
+                  return _context.Users.Where(u => u.DepartmentId == did && u.RoleId==rid).Include("Role").Include("Department").ToList();
+                
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandrole));
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+              TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandrole));
+              throw ex;
+            }
+        }
+
         public IEnumerable<User> GetUsersByDepartment(int departmentId)
         {
             if (departmentId == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetUsersByDepartment));

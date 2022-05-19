@@ -13,8 +13,14 @@ namespace TMS.BAL
         public int StatusId { get; set; }
         [Required]
         public int OwnerId { get; set; }
+<<<<<<< HEAD
+        [NotMapped]
+        public string base64 { get; set; }
+        // [Required]
+=======
         [Required]
         public string Base64 { get; set; }
+>>>>>>> 50b501d7741b193a664097fcb9480b4d4cc6466f
         public byte[]? Document { get; set; }
 
         //Audit Fields
