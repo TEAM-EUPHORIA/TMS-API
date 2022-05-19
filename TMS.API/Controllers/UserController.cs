@@ -37,8 +37,7 @@ namespace TMS.API.Controllers
             return Problem(ProblemResponse);
         }
 
-         //sruthi
-       [HttpGet("GetUsersByDeptandrole/{did:int},{rid:int}")]
+        [HttpGet("GetUsersByDeptandrole/{did:int},{rid:int}")]
         public IActionResult GetUsersByDeptandrole(int did,int rid)
         {
             if (did == 0 || rid==0) BadId();
@@ -46,18 +45,16 @@ namespace TMS.API.Controllers
             {
                 var result = _userService.GetUsersByDeptandrole(did,rid);
                 if (result!=null) return Ok(result);
+                return BadId();
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
-                return Problem(ProblemResponse);
             }
             catch(Exception ex)
             {
                 
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandrole));
-                return Problem(ProblemResponse);
-
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandrole));
             }
             return Problem(ProblemResponse);
         }
