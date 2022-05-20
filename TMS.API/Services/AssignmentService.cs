@@ -19,6 +19,12 @@ namespace TMS.API.Services
             assignment.Base64 = PDF.header;
             assignment.Document = PDF.bytes;
         }
+        private static void prepareAssignment(Assignment assignment, Assignment dbAssignment)
+        {
+            File PDF = FileService.GetBase64HeaderAndByteArray(assignment.Base64);
+            dbAssignment.Base64 = PDF.header;
+            dbAssignment.Document = PDF.bytes;
+        }
         public IEnumerable<Assignment> GetAssignmentsByTopicId(int id)
         {
             if (id == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetAssignmentsByTopicId));
@@ -60,54 +66,67 @@ namespace TMS.API.Services
                 throw;
             }
         }
-        public bool CreateAssignment(Assignment assignment)
+        public Dictionary<string, string> CreateAssignment(Assignment assignment)
         {
             if (assignment == null) ServiceExceptions.throwArgumentExceptionForObject(nameof(CreateAssignment), nameof(assignment));
-            if (assignment.TopicId == 0) ServiceExceptions.throwArgumentExceptionForObject(nameof(CreateAssignment), nameof(assignment));
-            try
+            var validation = Validation.ValidateAssignment(assignment);
+            if (validation.ContainsKey("IsValid"))
             {
-                var result = _context.Assignments.Any(a => a.TopicId == assignment.TopicId && a.OwnerId == assignment.OwnerId);
-                if (!result)
+                try
                 {
-                    prepareAssignment(assignment);
-                    _context.Add(assignment);
-                    _context.SaveChanges();
-                    return true;
+                    var result = _context.Assignments.Any(a => a.TopicId == assignment.TopicId && a.OwnerId == assignment.OwnerId);
+                    if (!result)
+                    {
+                        prepareAssignment(assignment);
+                        _context.Add(assignment);
+                        _context.SaveChanges();
+                    }
                 }
-                return false;
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(CreateAssignment));
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateAssignment));
+                    throw;
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(CreateAssignment));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateAssignment));
-                throw;
-            }
+            return validation;
         }
-        public bool UpdateAssignment(Assignment assignment)
+        public Dictionary<string, string> UpdateAssignment(Assignment assignment)
         {
             if (assignment == null) ServiceExceptions.throwArgumentExceptionForObject(nameof(UpdateAssignment), nameof(assignment));
-            if (assignment.Id == 0 || assignment.TopicId == 0) ServiceExceptions.throwArgumentExceptionForObject(nameof(UpdateAssignment), nameof(assignment));
-            try
+            var validation = Validation.ValidateAssignment(assignment);
+            if (validation.ContainsKey("IsValid"))
             {
-                prepareAssignment(assignment);
-                _context.Update(assignment);
-                _context.SaveChanges();
-                return true;
+                var dbAssignment = _context.Assignments.Find(assignment.Id);
+                if (dbAssignment != null)
+                {
+                    try
+                    {
+                        var result = _context.Assignments.Any(a => a.TopicId == assignment.TopicId && a.OwnerId == assignment.OwnerId);
+                        if (result)
+                        {
+                            prepareAssignment(assignment, dbAssignment);
+                            _context.Update(dbAssignment);
+                            _context.SaveChanges();
+                        }
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(CreateAssignment));
+                        throw;
+                    }
+                    catch (Exception ex)
+                    {
+                        TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateAssignment));
+                        throw;
+                    }
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(UpdateAssignment));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(UpdateAssignment));
-                throw;
-            }
+            return validation;
         }
     }
 }

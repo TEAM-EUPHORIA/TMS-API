@@ -24,24 +24,24 @@ namespace TMS.API.Controllers
         /// <param name="cid">object</param>
         /// <param name="tid">object</param>
         /// <returns>returns bad request when object is null</returns>
-        [HttpGet ("GetCourseFeedbackBy/{cid:int},{tid:int}") ]
-        public IActionResult GetTraineeFeedback(int cid,int tid)
+        [HttpGet("GetCourseFeedbackBy/{cid:int},{tid:int}")]
+        public IActionResult GetTraineeFeedback(int cid, int tid)
         {
-            if (cid ==0 || tid==0 ) return BadId();
+            if (cid == 0 || tid == 0) return BadId();
             try
             {
-                var result = _traineefeedbackservice.GetTraineeFeedbackByID(cid,tid);
+                var result = _traineefeedbackservice.GetTraineeFeedbackByID(cid, tid);
                 if (result != null) return Ok(result);
                 return NotFound();
             }
-             catch (InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(TraineeFeedbackController), nameof(GetTraineeFeedback));
                 return Problem(ProblemResponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(TraineeFeedbackService),nameof(GetTraineeFeedback));
+                TMSLogger.GeneralException(ex, _logger, nameof(TraineeFeedbackService), nameof(GetTraineeFeedback));
                 return Problem(ProblemResponse);
             }
             return Problem(ProblemResponse);
@@ -64,17 +64,17 @@ namespace TMS.API.Controllers
         //         return Problem("we are sorry, some thing went wrong");
         //     }
         // }
-    /// <summary>
-    /// This method is invoked when the trainer wants to create a feedback
-    /// </summary>
-    /// <param name="traineeFeedback">object</param>
-    /// <returns>returns bad request when object is null</returns>
+        /// <summary>
+        /// This method is invoked when the trainer wants to create a feedback
+        /// </summary>
+        /// <param name="traineeFeedback">object</param>
+        /// <returns>returns bad request when object is null</returns>
         [HttpPost("Create")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback traineeFeedback)
         {
             if (traineeFeedback == null) return BadId();
-            
-            
+
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
@@ -97,9 +97,9 @@ namespace TMS.API.Controllers
         [HttpPut("Update")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback traineeFeedback)
         {
-            if (traineeFeedback == null ) return BadRequest("Feedback is required");
-           
-           
+            if (traineeFeedback == null) return BadRequest("Feedback is required");
+
+
             if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
             try
             {
@@ -114,6 +114,6 @@ namespace TMS.API.Controllers
             }
 
         }
-       
+
     }
 }

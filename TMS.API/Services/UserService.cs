@@ -148,52 +148,59 @@ namespace TMS.API.Services
                 throw;
             }
         }
-        public bool CreateUser(User user)
+        public Dictionary<string, string> CreateUser(User user)
         {
             if (user == null) ServiceExceptions.throwArgumentExceptionForObject(nameof(CreateUser), nameof(user));
-            try
+            var validation = Validation.ValidateUser(user);
+            if (validation.ContainsKey("IsValid"))
             {
-                SetUpUserDetails(user);
-                CreateAndSaveUser(user);
-                return true;
+                try
+                {
+                    SetUpUserDetails(user);
+                    CreateAndSaveUser(user);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(CreateUser));
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateUser));
+                    throw;
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(CreateUser));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateUser));
-                throw;
-            }
-
+            return validation;
         }
 
-        public bool UpdateUser(User user)
+        public Dictionary<string,string> UpdateUser(User user)
         {
             if (user == null) ServiceExceptions.throwArgumentExceptionForObject(nameof(UpdateUser), nameof(user));
-            try
+            var validation = Validation.ValidateUser(user);
+            if (validation.ContainsKey("IsValid"))
             {
-                var dbUser = _context.Users.Find(user.Id);
-                if (dbUser != null)
+                try
                 {
-                    SetUpUserDetails(user, dbUser);
-                    UpdateAndSaveUser(dbUser);
-                    return true;
+                    var dbUser = _context.Users.Find(user.Id);
+                    if (dbUser != null)
+                    {
+                        SetUpUserDetails(user, dbUser);
+                        UpdateAndSaveUser(dbUser);
+                    }
+                    validation.Add("Invalid Id","Not Found");
                 }
-                return false;
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(UpdateUser));
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(UpdateUser));
+                    throw;
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(UserService), nameof(UpdateUser));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(UpdateUser));
-                throw;
-            }
+            return validation;
         }
 
         public bool DisableUser(int userId)

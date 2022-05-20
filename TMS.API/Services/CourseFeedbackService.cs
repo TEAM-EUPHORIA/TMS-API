@@ -11,7 +11,7 @@ namespace TMS.API.Services
 
         public CourseFeedbackService(AppDbContext context, ILogger<CourseFeedback> logger)
         {
-           _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         /// <summary>
@@ -25,9 +25,9 @@ namespace TMS.API.Services
             if (cid == 0 || oid == 0) throw new ArgumentException("GetFeedbackByCourseandUserId requires a vaild Id not zero");
             try
             {
-                
-                    return _context.CourseFeedbacks.Where(cf => cf.CourseId == cid && cf.OwnerId == oid).Include(cf=>cf.Course).ThenInclude(c=>c.Users).FirstOrDefault();
-              
+
+                return _context.CourseFeedbacks.Where(cf => cf.CourseId == cid && cf.OwnerId == oid).Include(cf => cf.Course).ThenInclude(c => c.Users).FirstOrDefault();
+
             }
             catch (InvalidOperationException ex)
             {
@@ -36,12 +36,12 @@ namespace TMS.API.Services
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(CourseFeedbackService), nameof(GetFeedbackByID));
+                TMSLogger.GeneralException(ex, _logger, nameof(CourseFeedbackService), nameof(GetFeedbackByID));
                 throw ex;
             }
         }
 
-       
+
         /// <summary>
         /// 
         /// </summary>
@@ -51,20 +51,22 @@ namespace TMS.API.Services
             if (courseFeedback == null) throw new ArgumentException("CreateFeedback requires a vaild Object");
 
             try
-            {               
+            {
                 var cl = _context.CourseFeedbacks.ToList();
-                var res = cl.Where(u=>u.CourseId==courseFeedback.CourseId&&u.OwnerId==courseFeedback.OwnerId).Count();
-               if(res==0){
-                   courseFeedback.CreatedOn=DateTime.Now;
-                   _context.CourseFeedbacks.Add(courseFeedback);
-                   _context.SaveChanges();
-                   return true;
+                var res = cl.Where(u => u.CourseId == courseFeedback.CourseId && u.OwnerId == courseFeedback.OwnerId).Count();
+                if (res == 0)
+                {
+                    courseFeedback.CreatedOn = DateTime.Now;
+                    _context.CourseFeedbacks.Add(courseFeedback);
+                    _context.SaveChanges();
+                    return true;
 
-               }
-               else{
-                   return false;
-               }         
-                 
+                }
+                else
+                {
+                    return false;
+                }
+
 
             }
             catch (InvalidOperationException ex)
@@ -74,7 +76,7 @@ namespace TMS.API.Services
             }
             catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex, _logger, nameof(CourseFeedbackService), nameof(CreateCFeedback));
+                TMSLogger.GeneralException(ex, _logger, nameof(CourseFeedbackService), nameof(CreateCFeedback));
                 throw ex;
             }
         }

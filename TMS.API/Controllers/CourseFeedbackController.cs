@@ -42,13 +42,13 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseFeedbackController), nameof(GetCourseFeedback));
                 return Problem(ProblemResponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(CourseFeedbackService),nameof(GetCourseFeedback));
+                TMSLogger.GeneralException(ex, _logger, nameof(CourseFeedbackService), nameof(GetCourseFeedback));
                 return Problem(ProblemResponse);
             }
             return Problem(ProblemResponse);
-        }        
+        }
         /// <summary>
         /// This method is invoked when the trainee wants to create a feedback
         /// </summary>
@@ -63,21 +63,21 @@ namespace TMS.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-               var res = _coursefeedbackservice.CreateCFeedback(courseFeedback);
-                if(res) return Ok("The CourseFeedback was created Successfully");
-                return StatusCode(409,$"User Feedback already exist");
+                var res = _coursefeedbackservice.CreateCFeedback(courseFeedback);
+                if (res) return Ok("The CourseFeedback was created Successfully");
+                return StatusCode(409, $"User Feedback already exist");
             }
-             catch (InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseFeedbackController), nameof(CreateCourseFeedback));
                 return Problem(ProblemResponse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TMSLogger.EfCoreExceptions(ex,_logger,nameof(CourseFeedbackService),nameof(CreateCourseFeedback));
+                TMSLogger.GeneralException(ex, _logger, nameof(CourseFeedbackService), nameof(CreateCourseFeedback));
                 return Problem(ProblemResponse);
             }
-            
+
 
         }
         // /// <summary>
@@ -105,6 +105,6 @@ namespace TMS.API.Controllers
         //     }
 
         // }
-       
+
     }
 }

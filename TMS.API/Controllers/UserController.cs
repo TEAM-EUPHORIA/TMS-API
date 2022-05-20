@@ -109,8 +109,14 @@ namespace TMS.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
+                var IsValid = Validation.ValidateUser(user);
+                if (IsValid.ContainsKey("IsValid"))
+                {
                 var res = _userService.CreateUser(user);
-                if (res) return Ok(new { Response = "The User was Created successfully" });
+                if (res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Created successfully" });
+                return BadRequest(res);
+                }
+                return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
@@ -130,9 +136,14 @@ namespace TMS.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
+                var IsValid = Validation.ValidateUser(user);
+                if (IsValid.ContainsKey("IsValid"))
+                {
                 var res = _userService.UpdateUser(user);
-                if (res) return Ok(new { Response = "The User was Updated successfully" });
-                return BadId();
+                if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Updated successfully" });
+                return NotFound();
+                }
+                return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
