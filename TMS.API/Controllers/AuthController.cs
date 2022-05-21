@@ -1,53 +1,45 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using TMS.API.Controllers;
+using TMS.API.Services;
 using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
 
 namespace TMS.API
 {
-    public class AuthController : ControllerBase
+    public class AuthController : MyBaseController
     {
         private readonly ILogger<AuthController> _logger;
-        private readonly AppDbContext _context;
+        private readonly AuthService _authService;
 
-        public AuthController(AppDbContext context, ILogger<AuthController> logger)
+        public AuthController(AuthService authService, ILogger<AuthController> logger,AppDbContext dbContext):base(dbContext)
         {
             _logger = logger;
-            _context = context;
+            _authService = authService;
         }
         [HttpPost("/login")]
         public IActionResult Login(LoginModel user)
         {
-            if (user == null) return BadRequest();
-
-            var dbUser = _context.Users.Where(u => u.Email == user.Email && u.Password == HashPassword.Sha256(user.Password)).Include(u => u.Role).FirstOrDefault();
-            if (dbUser != null)
+            var validation = Validation.ValidateLoginDetails(user,_context);
+            try
             {
-                var claims = new List<Claim>
+
+                if(validation.ContainsKey("IsValid"))
                 {
-                    new Claim("Email",dbUser.Email),
-                    new Claim("Name", dbUser.FullName),
-                    new Claim("Role", dbUser.Role.Name),
-                    new Claim("RoleId", dbUser.RoleId.ToString()),
-                    new Claim("UserId", dbUser.Id.ToString())
-                };
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                var tokeOptions = new JwtSecurityToken(
-                    issuer: "https://localhost:5001",
-                    audience: "https://localhost:5001",
-                    claims: claims,
-                    expires: DateTime.Now.AddDays(1),
-                    signingCredentials: signinCredentials
-                );
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return Ok(new { token = tokenString });
+                    var result = _authService.Login(user);
+                    if(result.ContainsKey("IsValid")) return (Ok(result));
+                }
+
+                return Unauthorized();
             }
-            return Unauthorized();
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(AuthController), nameof(Login));
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(AuthService), nameof(Login));
+            }
+            return Problem(ProblemResponse);
         }
     }
 }

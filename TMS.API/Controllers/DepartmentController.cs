@@ -1,117 +1,134 @@
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
+using TMS.API.UtilityFunctions;
 using TMS.BAL;
 namespace TMS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DepartmentController : ControllerBase
+    public class DepartmentController : MyBaseController
     {
         private readonly ILogger<DepartmentController> _logger;
-        private readonly AppDbContext _context;
+        private readonly DepartmentService  _departmentService;
 
-         private readonly DepartmentService  _departmentService;
-
-        public DepartmentController(ILogger<DepartmentController> logger, AppDbContext context, DepartmentService departmentService)
+        public DepartmentController(ILogger<DepartmentController> logger, DepartmentService departmentService,AppDbContext dbContext):base(dbContext)
         {
             _logger = logger;
-            _context = context;
             _departmentService= departmentService;
         }
 
-        [HttpGet("GetAllDepartments")]
-        [ActionName("GetAllDepartments")]
-        public IActionResult GetAllDepartments()
+        [HttpGet("/Departments")]
+        public IActionResult GetDepartments()
         {
             try
             {
-                var result = _context.Departments.ToList();
-                if (result != null) return Ok(result);
-                return NotFound("we are sorry, the thing you requested was not found");
+                return Ok(_departmentService.GetDepartments());
             }
-            catch (System.Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("There was an error in getting all Departments. please check the db for more information");
-                _logger.LogError($"error:  " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(GetDepartments));
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(DepartmentService), nameof(GetDepartments));
+            }
+            return Problem(ProblemResponse);
+        }
+
+        [HttpGet("/Department/{departmentId:int}")]
+        public IActionResult GetDepartmentById(int departmentId)
+        {
+            if (departmentId == 0) return BadId();
+            try
+            {
+                var result = _departmentService.GetDepartmentById(departmentId);
+                if (result != null) return Ok(result);
+                return NotFound();
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(GetDepartmentById));
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(DepartmentService), nameof(GetDepartmentById));
+            }
+            return Problem(ProblemResponse);
         }
         
-         [HttpGet("GetDepartmentNameByUserId/{id:int}")]
-        public IActionResult GetDepartmentNameByUserId(int id)
-        {
-            if (id == 0) return BadRequest("Please provide a valid Depatment id");
-            try
-            {
-                var result = _departmentService.GetDepartmentByUserId(id);
-                if (result != "not found") return Ok(result);
-                return NotFound("we are sorry, the thing you requested was not found");
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogWarning("There was an error in getting all user by depatment. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
-            }
-        }
-
-           [HttpPost("Create")]
+        [HttpPost("/Department")]
         public IActionResult CreateDepartment(Department department)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _departmentService.CreateDepartment(department);
-                    return Ok("The Department was Created successfully");
-                }
-                catch (System.Exception ex)
-                {
-                    _logger.LogWarning("There was an error in creating the department. please check the user service for more information");
-                    _logger.LogError($"error thrown by department service " + ex.ToString());
-                }
-            }
- 
-            return Problem("we are sorry, some thing went wrong");
-
-        }
-        [HttpPut("Update")]
-        public IActionResult UpdateDepartment([FromForm] Department department)
-        {
-           
-           
-            if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
+            if (department == null) return BadObject();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                _departmentService.UpdateDepartment(department);
-                return Ok("The departemnt was Updated successfully");
+                var IsValid = Validation.ValidateDepartment(department);
+                if (IsValid.ContainsKey("IsValid"))
+                {
+                    var res = _departmentService.CreateDepartment(department);
+                    if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Department was Created successfully" });
+                    return BadRequest(res);
+                }
+                return BadRequest(IsValid);
             }
-            catch (System.Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("There was an error in Updating the department. please check the departemnt service for more information");
-                _logger.LogError($"error thrown by department service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(CreateDepartment));
             }
-
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(DepartmentService), nameof(CreateDepartment));
+            }
+            return Problem(ProblemResponse);
+        }
+        
+        [HttpPut("/Department")]
+        public IActionResult UpdateDepartment(Department department)
+        {
+           if (department == null) return BadObject();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            try
+            {
+                var IsValid = Validation.ValidateDepartment(department);
+                if (IsValid.ContainsKey("IsValid"))
+                {
+                    var res = _departmentService.UpdateDepartment(department);
+                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Department was Updated successfully" });
+                    return NotFound();
+                }
+                return BadRequest(IsValid);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(UpdateDepartment));
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(DepartmentService), nameof(UpdateDepartment));
+            }
+            return Problem(ProblemResponse);
         }
 
-        [HttpDelete("Disable/{id:int}")]
+        [HttpPut("/Department/Disable/{id:int}")]
         public IActionResult DisableDepartment(int id)
         {
-            if (id == 0) return BadRequest("Department is required");
-            if (!ModelState.IsValid) return BadRequest("Please provide vaild Department");
+            if (id == 0) return BadId();
             try
             {
-                _departmentService.DisableDepartment(id);
-
-                return Ok("The department was Disabled successfully");
+                var res = _departmentService.DisableDepartment(id);
+                if (res) return Ok("The Department was Disabled successfully");
+                return BadId();
             }
-            catch (System.Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("There was an error in Disabling the department. please check the department service for more information");
-                _logger.LogError($"error thrown by department service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(DisableDepartment));
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(DepartmentService), nameof(DisableDepartment));
+            }
+            return Problem(ProblemResponse);
 
         }
     }

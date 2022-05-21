@@ -1,176 +1,233 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using TMS.API.ViewModels;
 using TMS.BAL;
 
 namespace TMS.API
 {
-    public static class Validation
+    public static partial class Validation
     {
+        static Dictionary<string,string> result = new Dictionary<string, string>();
+        static string fullNameValidation = @"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z\s]*$";
+        static string nameValidation = @"^(?!([ ])\1)(?!.*([A-Za-z0\d])\2{2})\w[a-zA-Z&.\d\s]*$";
+        static string emailValidation = @"^([0-9a-zA-Z.]){3,}@[a-zA-z]{3,}(.[a-zA-Z]{2,}[a-zA-Z]*){0,}$";
+        static string passwordValidation = @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$";
+        static string Image = @"^data:image\/[a-zA-Z]+;base64,";
+        static string dateValidation = @"^\d{2}-[a-zA-Z]{3}-\d{4}$";
+        static string timeValidation = @"^(1[0-2]|0?[1-9]):([0-5]?[0-9])(●?[AP]M)?$";
+        static string modeValidation = @"^((online)|(offline)){1}$";
+        static string durationValidation = @"^\d+ ((hr)|(hrs)|(mins)){1}$";
+        static string contentValidation = @"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$";
+        static string feedbackValidation = @"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z.,\s]{5,100}$";
+        static string base64Validation = @"^data:application/pdf;base64,";
         private static void AddErrors(Dictionary<string, string> result, string propertyName)
         {
             result.Add($"{propertyName}", $"Invalid data.");
         }
-        public static Dictionary<string, string> ValidateAssignment(Assignment assignment)
+        public static Dictionary<string, string> ValidateAssignment(Assignment assignment,AppDbContext dbContext)
         {
-            var result = new Dictionary<string, string>();
-            var base64Validation = new Regex(@"^data:application/pdf;base64,");
-            if (!base64Validation.IsMatch(assignment.Base64)) AddErrors(result, nameof(assignment.Base64));
+            if (!Regex.Match(assignment.Base64,base64Validation).Success) AddErrors(result, nameof(assignment.Base64));
             if (assignment.TopicId == 0) AddErrors(result, nameof(assignment.TopicId));
             if (assignment.OwnerId == 0) AddErrors(result, nameof(assignment.OwnerId));
-
-            if (result.Count == 0) result.Add("IsValid", "true");
-
+            if (assignment.StatusId<=0 || assignment.StatusId>2) AddErrors(result,nameof(assignment.StatusId));
+            if (result.Count == 0)
+            {
+                var topicExists = TopicExists(dbContext,assignment.TopicId);
+                var userExists = UserExists(dbContext,assignment.OwnerId);
+                if(topicExists && userExists){
+                    result.Add("IsValid", "true");
+                }
+                if(!topicExists) AddErrors(result,nameof(assignment.TopicId));
+                if(!userExists) AddErrors(result,nameof(assignment.OwnerId));
+            }
             return result;
         }
-        public static Dictionary<string, string> ValidateAttendance(Attendance attendance)
+        public static Dictionary<string, string> ValidateAttendance(Attendance attendance,AppDbContext dbContext)
         {
-            var result = new Dictionary<string, string>();
             if (attendance.TopicId == 0) AddErrors(result, nameof(attendance.TopicId));
             if (attendance.OwnerId == 0) AddErrors(result, nameof(attendance.OwnerId));
+            if (attendance.StatusId<=0 || attendance.StatusId>2) AddErrors(result,nameof(attendance.StatusId));
 
-            if (result.Count == 0) result.Add("IsValid", "true");
+            if (result.Count == 0) 
+            {
+                var topicExists = TopicExists(dbContext,attendance.TopicId);
+                var userExists = UserExists(dbContext,attendance.OwnerId);
+                if(topicExists && userExists){
+                    result.Add("IsValid", "true");
+                }
+                if(!topicExists) AddErrors(result,nameof(attendance.TopicId));
+                if(!userExists) AddErrors(result,nameof(attendance.OwnerId));
+            }
+
+            return result;
+        }
+        public static Dictionary<string, string> ValidateLoginDetails(LoginModel user,AppDbContext dbContext)
+        {            
+            if (!Regex.Match(user.Email,emailValidation).Success) AddErrors(result, nameof(user.Email));
+            if (!Regex.Match(user.Password,passwordValidation).Success) AddErrors(result, nameof(user.Password));
+
+            if (result.Count == 0)
+            {
+                var userExists = UserExists(dbContext,user);
+                if(userExists)
+                {
+                    result.Add("IsValid", "true");
+                }
+            } 
 
             return result;
         }
 
-        public static Dictionary<string, string> ValidateCourse(Course course)
-        {
-            var result = new Dictionary<string, string>();
-
-            var nameValidation = new Regex(@"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z&.\s]*$");
-            var durationValidation = new Regex(@"^\d+ ((hr)|(hrs)|(mins)){1}$");
-            var descriptionValidation = new Regex(@"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$");
-            if (!nameValidation.IsMatch(course.Name)) AddErrors(result, nameof(course.Name));
-            if (!descriptionValidation.IsMatch(course.Description)) AddErrors(result, nameof(course.Description));
-            if (!durationValidation.IsMatch(course.Duration)) AddErrors(result, nameof(course.Duration));
-
-            if (result.Count == 0) result.Add("IsValid", "true");
+        public static Dictionary<string, string> ValidateCourse(Course course,AppDbContext dbContext)
+        {       
+            if (!Regex.Match(course.Name,nameValidation).Success) AddErrors(result, nameof(course.Name));
+            if (!Regex.Match(course.Description,contentValidation).Success) AddErrors(result, nameof(course.Description));
+            if (!Regex.Match(course.Duration,durationValidation).Success) AddErrors(result, nameof(course.Duration));
+            if (course.TrainerId == 0) AddErrors(result,nameof(course.TrainerId));
+            if (result.Count == 0)
+            {
+                var userExists = UserExists(dbContext,course.TrainerId);
+                result.Add("IsValid", "true");
+            }
 
             return result;
         }
-        public static Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback)
+        public static Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback,AppDbContext dbContext)
         {
-            var result = new Dictionary<string, string>();
-            var feedbackValidation = new Regex(@"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z.,\s]*{5,100}$");
-            if (!feedbackValidation.IsMatch(feedback.Feedback)) AddErrors(result, nameof(feedback.Feedback));
+            if (!Regex.Match(feedback.Feedback,feedbackValidation).Success) AddErrors(result, nameof(feedback.Feedback));
             if (feedback.Rating <= 0.0 || feedback.Rating > 5) AddErrors(result, nameof(feedback.Rating));
             if (feedback.CourseId == 0) AddErrors(result, nameof(feedback.CourseId));
             if (feedback.OwnerId == 0) AddErrors(result, nameof(feedback.OwnerId));
 
-            if (result.Count == 0) result.Add("IsValid", "true");
+            if (result.Count == 0) 
+            {
+                var courseExists = CourseExists(dbContext,feedback.CourseId);
+                var userExists = UserExists(dbContext,feedback.OwnerId);
+                if(courseExists && userExists)
+                {
+                    result.Add("IsValid", "true");
+                }
+                if(!courseExists) AddErrors(result,nameof(feedback.CourseId));
+                if(!userExists) AddErrors(result,nameof(feedback.OwnerId));
+            }
 
             return result;
         }
         public static Dictionary<string, string> ValidateDepartment(Department dpet)
         {
-            var result = new Dictionary<string, string>();
-            var nameValidation = new Regex(@"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z\s]*$");
-            if (!nameValidation.IsMatch(dpet.Name)) AddErrors(result, nameof(dpet.Name));
-
+            if (!Regex.Match(dpet.Name,nameValidation).Success) AddErrors(result, nameof(dpet.Name));
+            
             if (result.Count == 0) result.Add("IsValid", "true");
-
+            
             return result;
         }
 
-        public static Dictionary<string, string> ValidateMOM(MOM mom)
+        public static Dictionary<string, string> ValidateMOM(MOM mom,AppDbContext dbContext)
         {
-            var result = new Dictionary<string, string>();
-
-            var contentValidation = new Regex(@"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$");
-            if (!contentValidation.IsMatch(mom.Agenda)) AddErrors(result, nameof(mom.Agenda));
-            if (!contentValidation.IsMatch(mom.MeetingNotes)) AddErrors(result, nameof(mom.MeetingNotes));
-            if (!contentValidation.IsMatch(mom.PurposeOfMeeting)) AddErrors(result, nameof(mom.PurposeOfMeeting));
+            if (!Regex.Match(mom.Agenda,contentValidation).Success) AddErrors(result, nameof(mom.Agenda));
+            if (!Regex.Match(mom.MeetingNotes,contentValidation).Success) AddErrors(result, nameof(mom.MeetingNotes));
+            if (!Regex.Match(mom.PurposeOfMeeting,contentValidation).Success) AddErrors(result, nameof(mom.PurposeOfMeeting));
             if (mom.ReviewId == 0) AddErrors(result, nameof(mom.ReviewId));
             if (mom.OwnerId == 0) AddErrors(result, nameof(mom.OwnerId));
-
-            if (result.Count == 0) result.Add("IsValid", "true");
+            if (mom.StatusId <= 0 || mom.StatusId > 2) AddErrors(result,nameof(mom.StatusId));
+            if (result.Count == 0) 
+            {
+                var reviewExists = ReviewExists(dbContext,mom.ReviewId);
+                var ownerExists = UserExists(dbContext,mom.OwnerId);
+                if(reviewExists && ownerExists)
+                {
+                    result.Add("IsValid", "true");
+                }
+                if(!reviewExists) AddErrors(result,nameof(mom.ReviewId));
+                if(!ownerExists)  AddErrors(result,nameof(mom.OwnerId));
+            }
 
             return result;
         }
-        public static Dictionary<string, string> ValidateReview(Review review)
+        public static Dictionary<string, string> ValidateReview(Review review,AppDbContext dbContext)
         {
-            var result = new Dictionary<string, string>();
 
-            var dateValidation = new Regex(@"^\d{2}-[a-zA-Z]{3}-\d{4}$");
-            var timeValidation = new Regex(@"^(1[0-2]|0?[1-9]):([0-5]?[0-9])(●?[AP]M)?$");
-            var modeValidation = new Regex(@"^((online)|(offline)){1}$");
-            if (!dateValidation.IsMatch(review.ReviewDate)) AddErrors(result, nameof(review.ReviewDate));
-            if (!timeValidation.IsMatch(review.ReviewTime)) AddErrors(result, nameof(review.ReviewTime));
-            if (!modeValidation.IsMatch(review.Mode)) AddErrors(result, nameof(review.Mode));
+            if (!Regex.Match(review.ReviewDate,dateValidation).Success) AddErrors(result, nameof(review.ReviewDate));
+            if (!Regex.Match(review.ReviewTime,timeValidation).Success) AddErrors(result, nameof(review.ReviewTime));
+            if (!Regex.Match(review.Mode,modeValidation).Success) AddErrors(result, nameof(review.Mode));
             if (review.ReviewerId == 0) AddErrors(result, nameof(review.ReviewerId));
             if (review.TraineeId == 0) AddErrors(result, nameof(review.TraineeId));
-            if (review.StatusId == 0) AddErrors(result, nameof(review.StatusId));
+            if (review.StatusId <= 0 && review.StatusId > 3) AddErrors(result, nameof(review.StatusId));
 
-            if (result.Count == 0) result.Add("IsValid", "true");
-
+            if (result.Count == 0) 
+            {
+                var reviewerExists = ReviewExists(dbContext,review.ReviewerId);
+                var traineeExists = UserExists(dbContext,review.TraineeId);
+                if(reviewerExists && traineeExists)
+                {
+                    result.Add("IsValid", "true");
+                }
+                if(!reviewerExists) AddErrors(result,nameof(review.ReviewerId));
+                if(!traineeExists)  AddErrors(result,nameof(review.TraineeId));
+            }
+            
             return result;
         }
         public static Dictionary<string, string> ValidateRole(Role role)
         {
-            var result = new Dictionary<string, string>();
-            var nameValidation = new Regex(@"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z\s]*$");
-            if (!nameValidation.IsMatch(role.Name)) AddErrors(result, nameof(role.Name));
+            if (!Regex.Match(role.Name,nameValidation).Success) AddErrors(result, nameof(role.Name));
 
             if (result.Count == 0) result.Add("IsValid", "true");
 
             return result;
         }
-        public static Dictionary<string, string> ValidateTopic(Topic topic)
+        public static Dictionary<string, string> ValidateTopic(Topic topic,AppDbContext dbContext)
         {
-            var result = new Dictionary<string, string>();
+            if (!Regex.Match(topic.Name,nameValidation).Success) AddErrors(result, nameof(topic.Name));
+            if (!Regex.Match(topic.Content,contentValidation).Success) AddErrors(result, nameof(topic.Content));
+            if (!Regex.Match(topic.Duration,durationValidation).Success) AddErrors(result, nameof(topic.Duration));
 
-            var nameValidation = new Regex(@"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z&.\s]*$");
-            var durationValidation = new Regex(@"^\d+ ((hr)|(hrs)|(mins)){1}$");
-            var contentValidation = new Regex(@"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$");
-            if (!nameValidation.IsMatch(topic.Name)) AddErrors(result, nameof(topic.Name));
-            if (!contentValidation.IsMatch(topic.Content)) AddErrors(result, nameof(topic.Content));
-            if (!durationValidation.IsMatch(topic.Duration)) AddErrors(result, nameof(topic.Duration));
-
-            if (result.Count == 0) result.Add("IsValid", "true");
+            if (result.Count == 0) 
+            {
+                var courseExists = CourseExists(dbContext,topic.CourseId);
+                if(courseExists)
+                {
+                    result.Add("IsValid", "true");
+                }
+            }
 
             return result;
         }
-        public static Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback)
+        public static Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback,AppDbContext dbContext)
         {
-            var result = new Dictionary<string, string>();
-            var feedbackValidation = new Regex(@"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z.,\s]*{5,100}$");
-            if (!feedbackValidation.IsMatch(feedback.Feedback)) AddErrors(result, nameof(feedback.Feedback));
+            if (!Regex.Match(feedback.Feedback,feedbackValidation).Success) AddErrors(result, nameof(feedback.Feedback));
             if (feedback.TraineeId == 0 ) AddErrors(result, nameof(feedback.TraineeId));
             if (feedback.TrainerId == 0) AddErrors(result, nameof(feedback.TrainerId));
             if (feedback.CourseId == 0) AddErrors(result, nameof(feedback.CourseId));
+            if (feedback.StatusId <= 0 || feedback.StatusId > 2) AddErrors(result, nameof(feedback.StatusId));
 
-            if (result.Count == 0) result.Add("IsValid", "true");
+            if (result.Count == 0) 
+            {
+                var traineeExists = UserExists(dbContext,feedback.TraineeId);
+                var trainerExists = UserExists(dbContext,feedback.TrainerId);
+                var courseExists = CourseExists(dbContext,feedback.CourseId);
 
-            return result;
-        }
+                if(traineeExists && trainerExists && courseExists)
+                {
+                    result.Add("IsValid", "true");
+                }
 
-        public static Dictionary<string, string> ValidateStatus(IdAndStatus status)
-        {
-            var result = new Dictionary<string, string>();
-            var nameValidation = new Regex(@"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z\s]*$");
-            if (!nameValidation.IsMatch(status.Status)) AddErrors(result, nameof(status.Status));
-
-            if (result.Count == 0) result.Add("IsValid", "true");
+                if(!trainerExists) AddErrors(result,nameof(feedback.TrainerId));
+                if(!traineeExists) AddErrors(result,nameof(feedback.TraineeId));
+                if(!courseExists) AddErrors(result,nameof(feedback.CourseId));
+            }
 
             return result;
         }
         public static Dictionary<string, string> ValidateUser(User user)
         {
-            var result = new Dictionary<string, string>();
-
-            var emailValidation = new Regex(@"^([0-9a-zA-Z.]){3,}@[a-zA-z]{3,}(.[a-zA-Z]{2,}[a-zA-Z]*){0,}$");
-            var fullNameValidation = new Regex(@"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z\s]*$");
-            var userNameValidation = new Regex(@"^(?!.*([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z\s.]*$");
-            var passwordValidation = new Regex(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$");
-            var base64Validation = new Regex(@"^data:image\/[a-zA-Z]+;base64,");
-
-            if (!userNameValidation.IsMatch(user.UserName)) AddErrors(result, nameof(user.UserName));
-            if (!fullNameValidation.IsMatch(user.FullName)) AddErrors(result, nameof(user.FullName));
-            if (!emailValidation.IsMatch(user.Email)) AddErrors(result, nameof(user.Email));
-            if (!passwordValidation.IsMatch(user.Password)) AddErrors(result, nameof(user.Password));
+            if (!Regex.Match(user.UserName,nameValidation).Success) AddErrors(result, nameof(user.UserName));
+            if (!Regex.Match(user.FullName,fullNameValidation).Success) AddErrors(result, nameof(user.FullName));
+            if (!Regex.Match(user.Email,emailValidation).Success) AddErrors(result, nameof(user.Email));
+            if (!Regex.Match(user.Password,passwordValidation).Success) AddErrors(result, nameof(user.Password));
             if (user.RoleId <= 0 || user.RoleId > 6) AddErrors(result, nameof(user.RoleId));
             if (user.DepartmentId != null && (user.DepartmentId <= 0 || user.DepartmentId > 3)) AddErrors(result, nameof(user.DepartmentId));
-            if (!base64Validation.Match(user.Base64).Success) AddErrors(result, nameof(user.Base64));
+            if (!Regex.Match(user.Base64,Image).Success) AddErrors(result, nameof(user.Base64));
 
             if (result.Count == 0) result.Add("IsValid", "true");
 

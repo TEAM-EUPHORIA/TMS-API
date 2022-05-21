@@ -14,6 +14,11 @@ namespace TMS.API.Controllers
             message = "Provide a valid Object"
         };
         protected readonly string ProblemResponse = "we are sorry,some thing went wrong";
+        protected readonly AppDbContext _context;
+        public MyBaseController(AppDbContext context)
+        {
+            _context = context;
+        }
 
         protected IActionResult BadId()
         {

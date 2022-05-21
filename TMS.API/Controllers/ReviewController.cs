@@ -1,118 +1,236 @@
 
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
+using TMS.API.UtilityFunctions;
 using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ReviewController : ControllerBase
+    public class ReviewController : MyBaseController
     {
         private readonly ILogger<ReviewController> _logger;
         private readonly ReviewService _reviewService;
 
-        public ReviewController(ILogger<ReviewController> logger, ReviewService reviewService)
+        public ReviewController(ILogger<ReviewController> logger, ReviewService reviewService,AppDbContext dbContext):base(dbContext)
         {
             _logger = logger;
             _reviewService = reviewService;
         }
 
-        [HttpGet("GetReviewById/{id:int}")]
-        public IActionResult GetReviewById(int id)
+       [HttpGet("/Review/Status/{statusId:int}")]
+        public IActionResult GetReviewByStatusId(int statusId)
         {
-            if (id == 0) return BadRequest("Please provide a valid Review id");
+            if (statusId == 0) BadId();
             try
             {
-                var result = _reviewService.GetReviewById(id);
-                if (result != "not found") return Ok(result);
-                return NotFound("we are sorry, the thing you requested was not found");
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogWarning("There was an error in getting all review by id. please check the user service for more information");
-                _logger.LogError($"error thrown by review service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
-            }
-        }
-        [HttpGet("GetReviewByStatus/{id:int}")]
-        public IActionResult GetReviewByStatus(int id)
-        {
-            if (id == 0) return BadRequest("Please provide a valid status id");
-            try
-            {
-                var result = _reviewService.GetReviewByStatus(id);
+                var result = _reviewService.GetReviewByStatusId(statusId);
                 if (result != null) return Ok(result);
-                return NotFound("we are sorry, the thing you requested was not found");
             }
-            catch (System.Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("There was an error in getting all review by status. please check the user service for more information");
-                _logger.LogError($"error thrown by review service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
+            }
+            return Problem(ProblemResponse);
+        }
+        [HttpGet("/Review/{reviewId:int}")]
+        public IActionResult GetReviewById(int reviewId)
+        {
+            if (reviewId == 0) return BadId();
+            try
+            {
+                var result = _reviewService.GetReviewById(reviewId);
+                if (result != null) return Ok(result);
+                return NotFound();
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(GetReviewById));
+            }
+            return Problem(ProblemResponse);
         }
 
-
-        [HttpPost("Create")]
+        [HttpPost("/Review")]
         public IActionResult CreateReview(Review review)
-
         {
-            if (review == null) return BadRequest("User is required");
-
-            if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
+            if (review == null) return BadObject();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                _reviewService.CreateReview(review);
-                return Ok("The Review was Created successfully");
+                var IsValid = Validation.ValidateReview(review,_context);
+                if (IsValid.ContainsKey("IsValid"))
+                {
+                    var res = _reviewService.CreateReview(review);
+                    if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Created successfully" });
+                    return BadRequest(res);
+                }
+                return BadRequest(IsValid);
             }
-            catch (System.Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("There was an error in creating the user. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateReview));
             }
-
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(CreateReview));
+            }
+            return Problem(ProblemResponse);
         }
-        [HttpPut("Update")]
 
+        [HttpPut("/Review")]
         public IActionResult UpdateReview(Review review)
-
         {
-            if (review == null) return BadRequest("User is required");
-
-            if (!ModelState.IsValid) return BadRequest("Please provide vaild data");
+            if (review == null) return BadObject();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                _reviewService.UpdateReview(review);
-                return Ok("The User was Updated successfully");
+                var IsValid = Validation.ValidateReview(review,_context);
+                if (IsValid.ContainsKey("IsValid"))
+                {
+                    var res = _reviewService.UpdateReview(review);
+                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
+                    return NotFound();
+                }
+                return BadRequest(IsValid);
             }
-            catch (System.Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("There was an error in Updating the user. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(UpdateReview));
+            }
+            return Problem(ProblemResponse);
 
         }
-        [HttpDelete("Disable")]
-        public IActionResult DisableReview(Review review)
+
+        [HttpPut("/Review/Disable/{reviewId:int}")]
+        public IActionResult DisableReview(int reviewId)
         {
-            if (review == null) return BadRequest("User is required");
-            if (!ModelState.IsValid) return BadRequest("Please provide vaild User");
+            if (reviewId == 0) return BadId();
             try
             {
-                _reviewService.DisableReview(review);
-                return Ok("The User was Disabled successfully");
+                var res = _reviewService.DisableReview(reviewId);
+                if (res) return Ok("The Review was Disabled successfully");
+                return BadId();
             }
-            catch (System.Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("There was an error in Disabling the user. please check the user service for more information");
-                _logger.LogError($"error thrown by user service " + ex.ToString());
-                return Problem("we are sorry, some thing went wrong");
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(DisableReview));
             }
-
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(DisableReview));
+            }
+            return Problem(ProblemResponse);
 
         }
+
+        [HttpGet("MOM/User/{userId:int}")]
+        public IActionResult GetListOfMomByUserId(int userId)
+        {
+            if (userId == 0) BadId();
+            try
+            {
+                var result = _reviewService.GetListOfMomByUserId(userId);
+                if (result != null) return Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(GetListOfMomByUserId));
+            }
+            return Problem(ProblemResponse);
+        }
+        [HttpGet("MOM/{momId:int}")]
+        public IActionResult GetMomById(int momId)
+        {
+            if (momId == 0) return BadId();
+            try
+            {
+                var result = _reviewService.GetMomById(momId);
+                if (result != null) return Ok(result);
+                return NotFound();
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetMomById));
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(GetMomById));
+            }
+            return Problem(ProblemResponse);
+        }
+
+        [HttpPost("MOM")]
+        public IActionResult CreateMom(MOM mom)
+        {
+            if (mom == null) return BadObject();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            try
+            {
+                var IsValid = Validation.ValidateMOM(mom,_context);
+                if (IsValid.ContainsKey("IsValid"))
+                {
+                    var res = _reviewService.CreateMom(mom);
+                    if (res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Created successfully" });
+                    return BadRequest(res);
+                }
+                return BadRequest(IsValid);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateMom));
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(CreateMom));
+            }
+            return Problem(ProblemResponse);
+        }
+
+        [HttpPut("MOM")]
+        public IActionResult UpdateMom(MOM mom)
+        {
+            if (mom == null) return BadObject();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            try
+            {
+                var IsValid = Validation.ValidateMOM(mom,_context);
+                if (IsValid.ContainsKey("IsValid"))
+                {
+                    var res = _reviewService.UpdateMom(mom);
+                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Updated successfully" });
+                    return NotFound();
+                }
+                return BadRequest(IsValid);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateMom));
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(UpdateMom));
+            }
+            return Problem(ProblemResponse);
+
+        }
+
+
     }
 }

@@ -41,19 +41,13 @@ builder.Logging.AddSerilog(logger);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Making UserService available for the App
-builder.Services.AddTransient<UserService>();
-
-builder.Services.AddTransient<CourseFeedbackService>();
-builder.Services.AddTransient<TraineeFeedbackService>();
-
-
-builder.Services.AddTransient<ReviewService>();
+builder.Services.AddTransient<AuthService>();
 builder.Services.AddTransient<CourseService>();
-
 builder.Services.AddTransient<DepartmentService>();
-builder.Services.AddTransient<DashboardService>();
-
-builder.Services.AddTransient<AssignmentService>();
+builder.Services.AddTransient<FeedbackService>();
+builder.Services.AddTransient<ReviewService>();
+builder.Services.AddTransient<RoleService>();
+builder.Services.AddTransient<UserService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

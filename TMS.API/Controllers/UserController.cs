@@ -11,7 +11,9 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly UserService _userService;
-        public UserController(ILogger<UserController> logger, UserService userService)
+        private readonly AppDbContext _context;
+
+        public UserController(ILogger<UserController> logger, UserService userService,AppDbContext dbContext):base(dbContext)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
@@ -36,31 +38,7 @@ namespace TMS.API.Controllers
             }
             return Problem(ProblemResponse);
         }
-
-        [HttpGet("GetUsersByDeptandrole/{did:int},{rid:int}")]
-        public IActionResult GetUsersByDeptandrole(int did,int rid)
-        {
-            if (did == 0 || rid==0) BadId();
-            try
-            {
-                var result = _userService.GetUsersByDeptandrole(did,rid);
-                if (result!=null) return Ok(result);
-                return BadId();
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
-            }
-            catch(Exception ex)
-            {
-                
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandrole));
-            }
-            return Problem(ProblemResponse);
-        }
-
-
-
+        
         [HttpGet("Department/{id:int}")]
         public IActionResult GetAllUserByDepartment(int id)
         {
@@ -80,8 +58,30 @@ namespace TMS.API.Controllers
             }
             return Problem(ProblemResponse);
         }
+        
+        [HttpGet("GetUsersByDepartmentAndRole/{departmentId:int},{roleId:int}")]
+        public IActionResult GetUsersByDeptandrole(int departmentId,int roleId)
+        {
+            if (departmentId == 0 || roleId==0) BadId();
+            try
+            {
+                var result = _userService.GetUsersByDeptandrole(departmentId,roleId);
+                if (result!=null) return Ok(result);
+                return BadId();
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
+            }
+            catch(Exception ex)
+            {
+                
+                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandrole));
+            }
+            return Problem(ProblemResponse);
+        }
 
-        [HttpGet("/{id:int}")]
+        [HttpGet("/User/{id:int}")]
         public IActionResult GetUserById(int id)
         {
             if (id == 0) return BadId();
@@ -102,7 +102,7 @@ namespace TMS.API.Controllers
             return Problem(ProblemResponse);
         }
 
-        [HttpPost]
+        [HttpPost("/User")]
         public IActionResult CreateUser(User user)
         {
             if (user == null) return BadObject();
@@ -112,9 +112,9 @@ namespace TMS.API.Controllers
                 var IsValid = Validation.ValidateUser(user);
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                var res = _userService.CreateUser(user);
-                if (res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Created successfully" });
-                return BadRequest(res);
+                    var res = _userService.CreateUser(user);
+                    if (res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Created successfully" });
+                    return BadRequest(res);
                 }
                 return BadRequest(IsValid);
             }
@@ -129,7 +129,7 @@ namespace TMS.API.Controllers
             return Problem(ProblemResponse);
         }
 
-        [HttpPut]
+        [HttpPut("/User")]
         public IActionResult UpdateUser(User user)
         {
             if (user == null) return BadObject();
@@ -139,9 +139,9 @@ namespace TMS.API.Controllers
                 var IsValid = Validation.ValidateUser(user);
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                var res = _userService.UpdateUser(user);
-                if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Updated successfully" });
-                return NotFound();
+                    var res = _userService.UpdateUser(user);
+                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Updated successfully" });
+                    return NotFound();
                 }
                 return BadRequest(IsValid);
             }
@@ -157,7 +157,7 @@ namespace TMS.API.Controllers
 
         }
 
-        [HttpPut("Disable/{id:int}")]
+        [HttpPut("/User/Disable/{id:int}")]
         public IActionResult DisableUser(int id)
         {
             if (id == 0) return BadId();
@@ -178,5 +178,11 @@ namespace TMS.API.Controllers
             return Problem(ProblemResponse);
 
         }
+
+        [HttpGet("/User/Dashboard")]
+        public IActionResult DashboardData()
+        {
+            return Ok(_userService.GetStats());
+        }        
     }
 }

@@ -137,12 +137,12 @@ namespace TMS.API
         //     // Review
         //     modelBuilder.Entity<Review>()
         //             .HasData(
-        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 1, ReviewerId = 11, StatusId = 1, ReviewDate = DateTime.Now.ToShortDateString(), ReviewTime = DateTime.Now.TimeOfDay.ToString(), TraineeId = 13, Mode = "online" },
-        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 2, ReviewerId = 11, StatusId = 2, ReviewDate = DateTime.Now.ToShortDateString(), ReviewTime = DateTime.Now.TimeOfDay.ToString(), TraineeId = 15, Mode = "Offline" },
-        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 3, ReviewerId = 11, StatusId = 3, ReviewDate = DateTime.Now.ToShortDateString(), ReviewTime = DateTime.Now.TimeOfDay.ToString(), TraineeId = 16, Mode = "online" },
-        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 4, ReviewerId = 10, StatusId = 1, ReviewDate = DateTime.Now.ToShortDateString(), ReviewTime = DateTime.Now.TimeOfDay.ToString(), TraineeId = 12, Mode = "online" },
-        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 5, ReviewerId = 9, StatusId = 2, ReviewDate = DateTime.Now.ToShortDateString(), ReviewTime = DateTime.Now.TimeOfDay.ToString(), TraineeId = 12, Mode = "Offline" },
-        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 6, ReviewerId = 10, StatusId = 3, ReviewDate = DateTime.Now.ToShortDateString(), ReviewTime = DateTime.Now.TimeOfDay.ToString(), TraineeId = 17, Mode = "online" }
+        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 1, ReviewerId = 11, StatusId = 1, ReviewDate = DateTime.UtcNow.ToShortDateString(), ReviewTime = DateTime.UtcNow.TimeOfDay.ToString(), TraineeId = 13, Mode = "online" },
+        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 2, ReviewerId = 11, StatusId = 2, ReviewDate = DateTime.UtcNow.ToShortDateString(), ReviewTime = DateTime.UtcNow.TimeOfDay.ToString(), TraineeId = 15, Mode = "Offline" },
+        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 3, ReviewerId = 11, StatusId = 3, ReviewDate = DateTime.UtcNow.ToShortDateString(), ReviewTime = DateTime.UtcNow.TimeOfDay.ToString(), TraineeId = 16, Mode = "online" },
+        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 4, ReviewerId = 10, StatusId = 1, ReviewDate = DateTime.UtcNow.ToShortDateString(), ReviewTime = DateTime.UtcNow.TimeOfDay.ToString(), TraineeId = 12, Mode = "online" },
+        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 5, ReviewerId = 9, StatusId = 2, ReviewDate = DateTime.UtcNow.ToShortDateString(), ReviewTime = DateTime.UtcNow.TimeOfDay.ToString(), TraineeId = 12, Mode = "Offline" },
+        //                 new Review() { isDisabled = false, CreatedOn = createdOn, Id = 6, ReviewerId = 10, StatusId = 3, ReviewDate = DateTime.UtcNow.ToShortDateString(), ReviewTime = DateTime.UtcNow.TimeOfDay.ToString(), TraineeId = 17, Mode = "online" }
         //                 );
         //     // MOM
         //     modelBuilder.Entity<MOM>()

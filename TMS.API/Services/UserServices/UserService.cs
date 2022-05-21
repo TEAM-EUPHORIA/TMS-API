@@ -4,7 +4,7 @@ using TMS.BAL;
 
 namespace TMS.API.Services
 {
-    public class UserService
+    public partial class UserService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<UserService> _logger;
@@ -76,7 +76,6 @@ namespace TMS.API.Services
                 throw;
             }
         }
-
         public IEnumerable<User> GetUsersByDeptandrole(int did,int rid)
         {
             if (did == 0 || rid==0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetUsersByDeptandrole));
@@ -96,7 +95,6 @@ namespace TMS.API.Services
                 throw;
             }
         }
-
         public IEnumerable<User> GetUsersByDepartment(int departmentId)
         {
             if (departmentId == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetUsersByDepartment));
@@ -135,6 +133,7 @@ namespace TMS.API.Services
                         result = _context.Users.Where(u => u.Id == id).Include("Role").FirstOrDefault();
                     }
                 }
+                result.Password = string.Empty;
                 return result;
             }
             catch (InvalidOperationException ex)
@@ -172,7 +171,6 @@ namespace TMS.API.Services
             }
             return validation;
         }
-
         public Dictionary<string,string> UpdateUser(User user)
         {
             if (user == null) ServiceExceptions.throwArgumentExceptionForObject(nameof(UpdateUser), nameof(user));
@@ -202,7 +200,6 @@ namespace TMS.API.Services
             }
             return validation;
         }
-
         public bool DisableUser(int userId)
         {
             if (userId == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(DisableUser));
@@ -212,7 +209,7 @@ namespace TMS.API.Services
                 if (dbUser != null)
                 {
                     dbUser.isDisabled = true;
-                    dbUser.UpdatedOn = DateTime.Now;
+                    dbUser.UpdatedOn = DateTime.UtcNow;
                     UpdateAndSaveUser(dbUser);
                     return true;
                 }
@@ -231,4 +228,3 @@ namespace TMS.API.Services
         }
     }
 }
-

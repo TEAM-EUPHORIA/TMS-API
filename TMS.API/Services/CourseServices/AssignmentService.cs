@@ -4,15 +4,8 @@ using TMS.BAL;
 
 namespace TMS.API.Services
 {
-    public class AssignmentService
+    public partial class CourseService
     {
-        private readonly AppDbContext _context;
-        private readonly ILogger<AssignmentService> _logger;
-        public AssignmentService(AppDbContext context, ILogger<AssignmentService> logger)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
         private static void prepareAssignment(Assignment assignment)
         {
             File PDF = FileService.GetBase64HeaderAndByteArray(assignment.Base64);
@@ -38,12 +31,12 @@ namespace TMS.API.Services
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(AssignmentService), nameof(GetAssignmentsByTopicId));
+                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(CourseService), nameof(GetAssignmentsByTopicId));
                 throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.GeneralException(ex, _logger, nameof(AssignmentService), nameof(GetAssignmentsByTopicId));
+                TMSLogger.GeneralException(ex, _logger, nameof(CourseService), nameof(GetAssignmentsByTopicId));
                 throw;
             }
         }
@@ -57,19 +50,19 @@ namespace TMS.API.Services
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(AssignmentService), nameof(GetAssignmentsByTopicId));
+                TMSLogger.DbContextInjectionFailed(ex, _logger, nameof(CourseService), nameof(GetAssignmentsByTopicId));
                 throw;
             }
             catch (Exception ex)
             {
-                TMSLogger.GeneralException(ex, _logger, nameof(AssignmentService), nameof(GetAssignmentsByTopicId));
+                TMSLogger.GeneralException(ex, _logger, nameof(CourseService), nameof(GetAssignmentsByTopicId));
                 throw;
             }
         }
         public Dictionary<string, string> CreateAssignment(Assignment assignment)
         {
             if (assignment == null) ServiceExceptions.throwArgumentExceptionForObject(nameof(CreateAssignment), nameof(assignment));
-            var validation = Validation.ValidateAssignment(assignment);
+            var validation = Validation.ValidateAssignment(assignment,_context);
             if (validation.ContainsKey("IsValid"))
             {
                 try
@@ -98,7 +91,7 @@ namespace TMS.API.Services
         public Dictionary<string, string> UpdateAssignment(Assignment assignment)
         {
             if (assignment == null) ServiceExceptions.throwArgumentExceptionForObject(nameof(UpdateAssignment), nameof(assignment));
-            var validation = Validation.ValidateAssignment(assignment);
+            var validation = Validation.ValidateAssignment(assignment,_context);
             if (validation.ContainsKey("IsValid"))
             {
                 var dbAssignment = _context.Assignments.Find(assignment.Id);
