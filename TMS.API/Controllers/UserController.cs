@@ -102,7 +102,7 @@ namespace TMS.API.Controllers
             return Problem(ProblemResponse);
         }
 
-        [HttpPost("/User")]
+        [HttpPost("/Create")]
         public IActionResult CreateUser(User user)
         {
             if (user == null) return BadObject();
