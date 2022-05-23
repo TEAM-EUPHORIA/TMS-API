@@ -32,6 +32,7 @@ namespace TMS.API.Services
                         List<Claim> claims = GenerateClaims(dbUser);
                         string tokenString = GetToken(claims);
                         result.Add("token", tokenString);
+                        result.Add("IsValid","true");
                     }
                     return result;
                 }

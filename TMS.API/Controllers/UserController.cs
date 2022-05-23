@@ -193,7 +193,9 @@ namespace TMS.API.Controllers
         
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpPost("/User")]
+       
+
+        [HttpPost("/Create")]
         public IActionResult CreateUser(User user)
         {
             if (user == null) return BadObject();
