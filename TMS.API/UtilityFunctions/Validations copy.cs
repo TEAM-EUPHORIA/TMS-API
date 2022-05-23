@@ -80,6 +80,10 @@ namespace TMS.API
         {
             return dbContext.Users.Any(e=>e.Email==user.Email && e.Password == HashPassword.Sha256(user.Password));
         } 
+        public static bool FeedbackExists(AppDbContext dbContext, int courseId, int ownerId)
+        {
+            return dbContext.CourseFeedbacks.Any(e=>e.CourseId==courseId && e.OwnerId==ownerId);
+        } 
 
     }
 }

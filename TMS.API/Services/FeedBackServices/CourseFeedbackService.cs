@@ -19,8 +19,14 @@ namespace TMS.API.Services
             if (courseId == 0 || ownerId == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetCourseFeedbackByCourseIdAndOwnerId));
             try
             {
+                var ce = Validation.CourseExists(_context,courseId);
+                var oe = Validation.UserExists(_context,ownerId);
+                if(ce&&oe){
+                    return _context.CourseFeedbacks.Where(cf => cf.CourseId == courseId && cf.OwnerId == ownerId).Include(cf => cf.Course).ThenInclude(c => c.Users).FirstOrDefault();
+                }else{
+                    return null;
+                }
 
-                return _context.CourseFeedbacks.Where(cf => cf.CourseId == courseId && cf.OwnerId == ownerId).Include(cf => cf.Course).ThenInclude(c => c.Users).FirstOrDefault();
 
             }
             catch (InvalidOperationException ex)
@@ -71,7 +77,10 @@ namespace TMS.API.Services
                         SetUpCourseFeedbackDetails(courseFeedback, dbCourseFeedback);
                         UpdateAndSaveCourseFeedback(dbCourseFeedback);
                     }
-                    validation.Add("Invalid Id","Not Found");
+                    else 
+                    {
+                        validation.Add("Invalid Id","Not Found");
+                    }
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -88,7 +97,7 @@ namespace TMS.API.Services
         }
         private void UpdateAndSaveCourseFeedback(CourseFeedback courseFeedback)
         {
-            _context.CourseFeedbacks.Add(courseFeedback);
+            _context.CourseFeedbacks.Update(courseFeedback);
             _context.SaveChanges();
         }
         private void CreateAndSaveCourseFeedback(CourseFeedback courseFeedback)
