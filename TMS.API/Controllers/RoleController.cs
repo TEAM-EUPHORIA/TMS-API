@@ -16,7 +16,23 @@ namespace TMS.API.Controllers
             _logger = logger;
             _roleService = roleService;
         }
-
+       /// <summary>
+        /// This method is invoked when the Coordinator/Head wants to view Roles
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetRoles
+        ///     {
+        ///       
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        
+       /// <returns></returns>
         [HttpGet("/Roles")]
         public IActionResult GetRoles()
         {

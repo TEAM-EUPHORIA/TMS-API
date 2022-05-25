@@ -94,6 +94,7 @@ namespace TMS.API
         }
         public static Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback,AppDbContext dbContext)
         {
+            result.Clear();
             if (!Regex.Match(feedback.Feedback,feedbackValidation).Success) AddErrors(result, nameof(feedback.Feedback));
             if (feedback.Rating <= 0.0 || feedback.Rating > 5) AddErrors(result, nameof(feedback.Rating));
             if (feedback.CourseId == 0) AddErrors(result, nameof(feedback.CourseId));
@@ -103,12 +104,26 @@ namespace TMS.API
             {
                 var courseExists = CourseExists(dbContext,feedback.CourseId);
                 var userExists = UserExists(dbContext,feedback.OwnerId);
+                bool feedbackExits = false;
+                if(feedback.Id==0)
+                {
+                  feedbackExits=FeedbackExists(dbContext,feedback.CourseId,feedback.OwnerId);
+                }
+                else
+                {
+                    feedbackExits = false;
+                }
                 if(courseExists && userExists)
                 {
                     result.Add("IsValid", "true");
                 }
                 if(!courseExists) AddErrors(result,nameof(feedback.CourseId));
                 if(!userExists) AddErrors(result,nameof(feedback.OwnerId));
+                if(feedbackExits)
+                {
+                 result.Clear();   
+                 result.Add("Message","Feedback Already Exists");
+                }
             }
 
             return result;
