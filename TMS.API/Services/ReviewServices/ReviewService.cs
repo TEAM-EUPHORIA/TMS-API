@@ -60,7 +60,7 @@ namespace TMS.API.Services
             {
                 try
                 {
-                    SetUpReviewDetails(review);
+                     SetUpReviewDetails(review);
                     CreateAndSaveReview(review);
                 }
                 catch (InvalidOperationException ex)
@@ -87,10 +87,13 @@ namespace TMS.API.Services
                     var dbReview = _context.Reviews.Where(r=>r.Id==review.Id).FirstOrDefault();
                     if (dbReview != null)
                     {
-                        SetUpReviewDetails(review, dbReview);
+                         SetUpReviewDetails(review, dbReview);
                         UpdateAndSaveReview(dbReview);
                     }
-                    validation.Add("Invalid Id","Not Found");
+                    else{
+                            validation.Add("Invalid Id","Not Found");
+                    }
+                    
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -151,8 +154,8 @@ namespace TMS.API.Services
             dbReview.Mode = review.Mode;
             dbReview.ReviewerId = review.ReviewerId;
             dbReview.TraineeId = review.TraineeId;
-            dbReview.ReviewDate = review.ReviewDate;
-            dbReview.ReviewTime = review.ReviewTime;
+            // dbReview.ReviewDate = review.ReviewDate;
+            // dbReview.ReviewTime = review.ReviewTime;
             dbReview.StatusId = review.StatusId;
         }
     }

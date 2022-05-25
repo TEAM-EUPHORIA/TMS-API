@@ -86,7 +86,7 @@ namespace TMS.API.Controllers
             return Problem(ProblemResponse);
         }
 
-        [HttpPut("/Review")]
+        [HttpPut("/Update")]
         public IActionResult UpdateReview(Review review)
         {
             if (review == null) return BadObject();
