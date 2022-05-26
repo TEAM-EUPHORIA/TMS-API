@@ -13,8 +13,8 @@ namespace TMS.API
         static string emailValidation = @"^([0-9a-zA-Z.]){3,}@[a-zA-z]{3,}(.[a-zA-Z]{2,}[a-zA-Z]*){0,}$";
         static string passwordValidation = @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$";
         static string Image = @"^data:image\/[a-zA-Z]+;base64,";
-        static string dateValidation = @"^\d{2}-[a-zA-Z]{3}-\d{4}$";
-        static string timeValidation = @"^(1[0-2]|0?[1-9]):([0-5]?[0-9])(●?[AP]M)?$";
+        static string dateValidation = @"^\d{2}-\d{2}-\d{4}$";
+        static string timeValidation = @"^(1[0-2]";
         static string modeValidation = @"^((online)|(offline)){1}$";
         static string durationValidation = @"^\d+ ((hr)|(hrs)|(mins)){1}$";
         static string contentValidation = @"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$";
@@ -163,8 +163,8 @@ namespace TMS.API
         public static Dictionary<string, string> ValidateReview(Review review,AppDbContext dbContext)
         {
 
-            if (!Regex.Match(review.ReviewDate,dateValidation).Success) AddErrors(result, nameof(review.ReviewDate));
-            if (!Regex.Match(review.ReviewTime,timeValidation).Success) AddErrors(result, nameof(review.ReviewTime));
+            //if (!Regex.Match(review.ReviewDate,dateValidation).Success) AddErrors(result, nameof(review.ReviewDate));
+            //if (!Regex.Match(review.ReviewTime,timeValidation).Success) AddErrors(result, nameof(review.ReviewTime));
             if (!Regex.Match(review.Mode,modeValidation).Success) AddErrors(result, nameof(review.Mode));
             if (review.ReviewerId == 0) AddErrors(result, nameof(review.ReviewerId));
             if (review.TraineeId == 0) AddErrors(result, nameof(review.TraineeId));
@@ -172,7 +172,7 @@ namespace TMS.API
 
             if (result.Count == 0) 
             {
-                var reviewerExists = ReviewExists(dbContext,review.ReviewerId);
+                var reviewerExists = UserExists(dbContext,review.ReviewerId);
                 var traineeExists = UserExists(dbContext,review.TraineeId);
                 if(reviewerExists && traineeExists)
                 {

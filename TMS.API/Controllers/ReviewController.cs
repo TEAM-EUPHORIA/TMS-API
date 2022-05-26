@@ -141,6 +141,7 @@ namespace TMS.API.Controllers
             }
             return Problem(ProblemResponse);
         }
+
         /// <summary>
         /// This method is invoked when the Coordinator wants to Update Review
         /// </summary>
@@ -165,7 +166,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="review"></param>
        /// <returns></returns>
-        [HttpPut("/Review")]
+        [HttpPut("/Update")]
         public IActionResult UpdateReview(Review review)
         {
             if (review == null) return BadObject();
