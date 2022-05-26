@@ -92,6 +92,7 @@ namespace TMS.API
 
             return result;
         }
+       
         public static Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback,AppDbContext dbContext)
         {
             result.Clear();
@@ -210,17 +211,25 @@ namespace TMS.API
         }
         public static Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback,AppDbContext dbContext)
         {
+            result.Clear();
             if (!Regex.Match(feedback.Feedback,feedbackValidation).Success) AddErrors(result, nameof(feedback.Feedback));
             if (feedback.TraineeId == 0 ) AddErrors(result, nameof(feedback.TraineeId));
             if (feedback.TrainerId == 0) AddErrors(result, nameof(feedback.TrainerId));
             if (feedback.CourseId == 0) AddErrors(result, nameof(feedback.CourseId));
-            if (feedback.StatusId <= 0 || feedback.StatusId > 2) AddErrors(result, nameof(feedback.StatusId));
+            //if (feedback.StatusId >= 0 || feedback.StatusId > 2) AddErrors(result, nameof(feedback.StatusId));
 
             if (result.Count == 0) 
             {
                 var traineeExists = UserExists(dbContext,feedback.TraineeId);
                 var trainerExists = UserExists(dbContext,feedback.TrainerId);
                 var courseExists = CourseExists(dbContext,feedback.CourseId);
+                bool traineeFeedbackExists=false;
+                if(feedback.Id==0){
+                    traineeFeedbackExists=TraineeFeedbackExists(dbContext,feedback.CourseId,feedback.TraineeId,feedback.TrainerId);
+                }
+                else{
+                    traineeFeedbackExists=false;
+                }
 
                 if(traineeExists && trainerExists && courseExists)
                 {
@@ -230,9 +239,14 @@ namespace TMS.API
                 if(!trainerExists) AddErrors(result,nameof(feedback.TrainerId));
                 if(!traineeExists) AddErrors(result,nameof(feedback.TraineeId));
                 if(!courseExists) AddErrors(result,nameof(feedback.CourseId));
+                if(traineeFeedbackExists){
+                    result.Clear();   
+                    result.Add("Message","Feedback Already Exists");
+                }
             }
 
             return result;
+            
         }
         public static Dictionary<string, string> ValidateUser(User user)
         {

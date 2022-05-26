@@ -84,6 +84,10 @@ namespace TMS.API
         {
             return dbContext.CourseFeedbacks.Any(e=>e.CourseId==courseId && e.OwnerId==ownerId);
         } 
+        public static bool TraineeFeedbackExists(AppDbContext dbContext, int courseId, int traineeId, int trainerId)
+        {
+            return dbContext.TraineeFeedbacks.Any(e=>e.CourseId==courseId && e.TraineeId==traineeId && e.TrainerId==trainerId);
+        } 
 
     }
 }

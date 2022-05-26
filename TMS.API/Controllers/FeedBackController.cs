@@ -38,10 +38,11 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="ownwerId"></param>
         /// <returns>Returns the Course feedback when the given input isvalid</returns>
-        [HttpGet("/Feedback/Course/{courseId:int},{ownwerId:int}")]
+       // [HttpGet("/Feedback/{courseId:int},{ownwerId:int}")]
+        [HttpGet("GetCourseFeedback/{courseId:int},{ownwerId:int}")]
         public IActionResult GetCourseFeedbackByCourseIdAndOwnerId(int courseId, int ownwerId)
         {
-            if (courseId == 0 || ownwerId == 0) BadId();
+            if (courseId == 0 || ownwerId == 0) return BadId();
             try
             {
                 var result = _feedbackService.GetCourseFeedbackByCourseIdAndOwnerId(courseId, ownwerId);
@@ -79,7 +80,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
-        [HttpPost("/Feedback/Course/")]
+        [HttpPost("Create")]
         public IActionResult CreateCourseFeedback(CourseFeedback feedback)
         {
             if (feedback == null) return BadObject();
@@ -126,7 +127,8 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="feedback"></param>
        /// <returns></returns>
-        [HttpPut("/Feedback/Course/")]
+        //[HttpPut("/Feedback/Course/Update")]
+         [HttpPut("Update")]
         public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
         {
             if (feedback == null) return BadObject();
@@ -173,10 +175,12 @@ namespace TMS.API.Controllers
        /// <param name="traineeId"></param>
        /// <param name="trainerId"></param>
        /// <returns></returns>
-        [HttpGet("/Feedback/Trainee/{traineeId:int},{trainerId:int}")]
+       ///         [HttpGet("GetCourseFeedbackBy/{courseId:int},{ownwerId:int}")]
+
+        [HttpGet("GetTraineeFeedback/{traineeId:int},{trainerId:int}")]
         public IActionResult GetTraineeFeedbackByTrainerIdAndTraineeId(int traineeId, int trainerId)
         {
-            if (traineeId == 0 || trainerId == 0) BadId();
+            if (traineeId == 0 || trainerId == 0) return BadId();
             try
             {
                 var result = _feedbackService.GetTraineeFeedbackByTrainerIdAndTraineeId(traineeId, trainerId);
@@ -215,7 +219,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
-        [HttpPost("/Feedback/Trainee/")]
+        [HttpPost("Trainee/Create")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback feedback)
         {
             if (feedback == null) return BadObject();
@@ -229,7 +233,9 @@ namespace TMS.API.Controllers
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                     return BadRequest(res);
                 }
-                return BadRequest(IsValid);
+                else{
+                     return BadRequest(IsValid);
+                }
             }
             catch (InvalidOperationException ex)
             {
@@ -265,7 +271,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
-        [HttpPut("/Feedback/Trainee/")]
+        [HttpPut("Trainee/Update")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
         {
             if (feedback == null) return BadObject();
@@ -279,7 +285,9 @@ namespace TMS.API.Controllers
                     if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     return NotFound();
                 }
-                return BadRequest(IsValid);
+                else{
+                    return BadRequest(IsValid);
+                }
             }
             catch (InvalidOperationException ex)
             {

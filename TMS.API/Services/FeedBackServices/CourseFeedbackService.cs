@@ -17,14 +17,16 @@ namespace TMS.API.Services
         public CourseFeedback GetCourseFeedbackByCourseIdAndOwnerId(int courseId, int ownerId)
         {
             if (courseId == 0 || ownerId == 0) ServiceExceptions.throwArgumentExceptionForId(nameof(GetCourseFeedbackByCourseIdAndOwnerId));
+           
             try
             {
                 var ce = Validation.CourseExists(_context,courseId);
                 var oe = Validation.UserExists(_context,ownerId);
                 if(ce&&oe){
                     return _context.CourseFeedbacks.Where(cf => cf.CourseId == courseId && cf.OwnerId == ownerId).Include(cf => cf.Course).ThenInclude(c => c.Users).FirstOrDefault();
-                }else{
-                    return null;
+                }
+                else{
+                    return null;                  
                 }
 
 

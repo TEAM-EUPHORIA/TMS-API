@@ -63,7 +63,9 @@ namespace TMS.API.Services
                         SetUpTraineeFeedbackDetails(traineeFeedback, dbTraineeFeedback);
                         UpdateAndSaveTraineeFeedback(dbTraineeFeedback);
                     }
-                    validation.Add("Invalid Id","Not Found");
+                    else{
+                        validation.Add("Invalid Id","Not Found");
+                    }
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -80,17 +82,19 @@ namespace TMS.API.Services
         }
         private void UpdateAndSaveTraineeFeedback(TraineeFeedback traineeFeedback)
         {
-            _context.TraineeFeedbacks.Add(traineeFeedback);
+            _context.TraineeFeedbacks.Update(traineeFeedback);
             _context.SaveChanges();
         }
         private void CreateAndSaveTraineeFeedback(TraineeFeedback traineeFeedback)
         {
+            traineeFeedback.StatusId=1;
             traineeFeedback.CreatedOn = DateTime.UtcNow;
             _context.TraineeFeedbacks.Add(traineeFeedback);
             _context.SaveChanges();
         }
         private void SetUpTraineeFeedbackDetails(TraineeFeedback traineeFeedback,TraineeFeedback dbTraineeFeedback)
         {
+            dbTraineeFeedback.StatusId=1;
             dbTraineeFeedback.Feedback = traineeFeedback.Feedback;
             dbTraineeFeedback.UpdatedOn = DateTime.UtcNow;
         }    
