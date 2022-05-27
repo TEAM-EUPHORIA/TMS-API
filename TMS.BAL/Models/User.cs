@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace TMS.BAL
 {
-    public class User
+    public class User:AuditFields
     {
         public int Id { get; set; }
         [Required]
@@ -25,16 +23,9 @@ namespace TMS.BAL
         public byte[]? Image { get; set; }
         public string? EmployeeId { get; set; }
         public bool? isDisabled { get; set; }
-
-        //Audit fields
-        public DateTime? CreatedOn { get; set; }
-        public int? CreatedBy { get; set; }
-        public DateTime? UpdatedOn { get; set; }
-        public int? UpdatedBy { get; set; }
-
         // virtual navigation properties
         public virtual Role? Role { get; set; }
         public virtual Department? Department { get; set; }
-        public virtual List<Course>? Courses { get; set; }
+        public virtual List<CourseUsers>? CourseMapping { get; set; }
     }
 }

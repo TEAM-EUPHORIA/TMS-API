@@ -1,26 +1,20 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TMS.BAL
 {
-    public class Attendance
+    public class Attendance:AuditFields
     {
-        public int Id { get; set; }
-        [Required]
+        [Key,Column(Order=0)]
+        public int CourseId { get; set; }
+        [Key,Column(Order=1)]
         public int TopicId { get; set; }
-        [Required]
-        public int StatusId { get; set; }
-        [Required]
+        [Key,Column(Order=2)]
         public int OwnerId { get; set; }
-
-        //Audit fields
-        public DateTime? CreatedOn { get; set; }
-        public int? CreatedBy { get; set; }
-        public DateTime? UpdatedOn { get; set; }
-        public int? UpdatedBy { get; set; }
-
+        [Required]
+        public bool Status { get; set; }
         // virtual navigation properties
-        public virtual AttendanceStatus? Status { get; set; }
+        public virtual Course? Course { get; set; }
         public virtual Topic? Topic { get; set; }
         public virtual User? Owner { get; set; }
     }
