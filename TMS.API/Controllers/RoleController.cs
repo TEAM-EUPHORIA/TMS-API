@@ -17,18 +17,18 @@ namespace TMS.API.Controllers
             _roleService = roleService;
         }
 
-        [HttpGet("/Roles")]
+        [HttpGet("roles")]
         public IActionResult GetRoles()
         {
             try
             {
-                return Ok(_roleService.GetRoles());
+                return Ok(_roleService.GetRoles(_context));
             }
-            catch (System.Exception ex)
+            catch (InvalidOperationException ex)
             {
-                TMSLogger.GeneralException(ex, _logger, nameof(RoleService), nameof(GetRoles));
+                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(RoleService), nameof(GetRoles));
+                return Problem(ProblemResponse);
             }
-            return Problem(ProblemResponse);
         }
     }
 }

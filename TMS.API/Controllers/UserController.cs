@@ -11,178 +11,166 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly UserService _userService;
-        private readonly AppDbContext _context;
-
         public UserController(ILogger<UserController> logger, UserService userService,AppDbContext dbContext):base(dbContext)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
-        [HttpGet("Role/{id:int}")]
-        public IActionResult GetAllUserByRole(int id)
+        [HttpGet("role/{roleId:int}")]
+        public IActionResult GetAllUserByRole(int roleId)
         {
-            if (id == 0) BadId();
-            try
+            var roleExists = Validation.RoleExists(_context,roleId);
+            if(roleExists)
             {
-                var result = _userService.GetUsersByRole(id);
-                if (result != null) return Ok(result);
+                try
+                {
+                    var result = _userService.GetUsersByRole(roleId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetAllUserByRole));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
         
-        [HttpGet("Department/{id:int}")]
-        public IActionResult GetAllUserByDepartment(int id)
+        [HttpGet("department/{departmentId:int}")]
+        public IActionResult GetAllUserByDepartment(int departmentId)
         {
-            if (id == 0) return BadId();
-            try
+            var departmentExists = Validation.DepartmentExists(_context,departmentId);
+            if(departmentExists)
             {
-                var result = _userService.GetUsersByDepartment(id);
-                if (result != null) return Ok(result);
+                try
+                {
+                    var result = _userService.GetUsersByDepartment(departmentId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetAllUserByDepartment));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
         
-        [HttpGet("GetUsersByDepartmentAndRole/{departmentId:int},{roleId:int}")]
+        [HttpGet("getUsersByDepartmentAndRole/{departmentId:int},{roleId:int}")]
         public IActionResult GetUsersByDeptandrole(int departmentId,int roleId)
         {
-            if (departmentId == 0 || roleId==0) BadId();
-            try
+            var departmentExists = Validation.DepartmentExists(_context,departmentId);
+            var roleExists = Validation.RoleExists(_context,roleId);
+            if(departmentExists && roleExists)
             {
-                var result = _userService.GetUsersByDeptandrole(departmentId,roleId);
-                if (result!=null) return Ok(result);
-                return BadId();
+                try
+                {
+                    var result = _userService.GetUsersByDeptandrole(departmentId,roleId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
-            }
-            catch(Exception ex)
-            {
-                
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandrole));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
 
-        [HttpGet("/User/{id:int}")]
-        public IActionResult GetUserById(int id)
+        [HttpGet("{userId:int}")]
+        public IActionResult GetUserById(int userId)
         {
-            if (id == 0) return BadId();
-            try
+            var userExists = Validation.UserExists(_context,userId);
+            if(userExists)
             {
-                var result = _userService.GetUserById(id);
-                if (result != null) return Ok(result);
-                return NotFound();
+                try
+                {
+                    var result = _userService.GetUserById(userId,_context);
+                    if (result is not null) return Ok(result);
+                    return NotFound();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUserById));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUserById));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(GetUserById));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
 
-        [HttpPost("/User")]
+        [HttpPost("user")]
         public IActionResult CreateUser(User user)
         {
-            if (user == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = Validation.ValidateUser(user);
+                var IsValid = Validation.ValidateUser(user,_context);
+                if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the user. The user Already exists.");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    var res = _userService.CreateUser(user);
+                    var res = _userService.CreateUser(user,_context);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Created successfully" });
-                    return BadRequest(res);
                 }
                 return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(CreateUser));
+                return Problem(ProblemResponse);
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(CreateUser));
-            }
-            return Problem(ProblemResponse);
         }
 
-        [HttpPut("/User")]
+        [HttpPut("user")]
         public IActionResult UpdateUser(User user)
         {
-            if (user == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            try
+            var userExists = Validation.UserExists(_context,user.Id);
+            if(userExists)
             {
-                var IsValid = Validation.ValidateUser(user);
-                if (IsValid.ContainsKey("IsValid"))
+                try
                 {
-                    var res = _userService.UpdateUser(user);
-                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Updated successfully" });
-                    return NotFound();
+                    var IsValid = Validation.ValidateUser(user,_context);
+                    if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
+                    {
+                        var res = _userService.UpdateUser(user,_context);
+                        if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The User was Updated successfully" });
+                    }
+                    return BadRequest(IsValid);
                 }
-                return BadRequest(IsValid);
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(UpdateUser));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(UpdateUser));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(UpdateUser));
-            }
-            return Problem(ProblemResponse);
-
+            return NotFound();
         }
 
-        [HttpPut("/User/Disable/{id:int}")]
-        public IActionResult DisableUser(int id)
+        [HttpPut("disable/{userId:int}")]
+        public IActionResult DisableUser(int userId)
         {
-            if (id == 0) return BadId();
-            try
+            var userExists = Validation.UserExists(_context,userId);
+            if(userExists)
             {
-                var res = _userService.DisableUser(id);
-                if (res) return Ok("The User was Disabled successfully");
-                return BadId();
+                try
+                {
+                    var res = _userService.DisableUser(userId,_context);
+                    if (res) return Ok("The User was Disabled successfully");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(DisableUser));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(DisableUser));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UserService), nameof(DisableUser));
-            }
-            return Problem(ProblemResponse);
-
+            return NotFound();
         }
 
-        [HttpGet("/User/Dashboard")]
+        [HttpGet("User/Dashboard")]
         public IActionResult DashboardData()
         {
-            return Ok(_userService.GetStats());
+            return Ok(_userService.HeadDashboard(_context));
         }        
     }
 }

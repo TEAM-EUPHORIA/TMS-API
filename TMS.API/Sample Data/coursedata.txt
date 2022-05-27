@@ -1,0 +1,8 @@
+{
+    "id": 1,
+    "trainerId": 5,
+    "departmentId": 1,
+    "name": "C# Fundamentals",
+    "duration": "7 hrs",
+    "description": "C# 10 offers an extended set of tools to build all types of applications, including web, mobile, and cloud-based applications. In this course, C# 10 Fundamentals, you’ll learn the fundamentals of C# application development. First, you’ll see the syntax of the C# language including decision and iteration statements, methods, and operators. Next, you’ll explore object-oriented development with the C# language with classes and objects. Finally, you’ll learn how to work with classes of the .NET class library including how to work with files and handle exceptions. When you’re finished with this course, you’ll have the skills and knowledge of C# 10 needed to build real C#-based applications.",
+}

@@ -16,30 +16,24 @@ namespace TMS.API
             _logger = logger;
             _authService = authService;
         }
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public IActionResult Login(LoginModel user)
         {
             var validation = Validation.ValidateLoginDetails(user,_context);
             try
             {
-
                 if(validation.ContainsKey("IsValid"))
                 {
-                    var result = _authService.Login(user);
-                    if(result.ContainsKey("IsValid")) return (Ok(result));
+                    var result = _authService.Login(user,_context);
+                    if(result is not null) return (Ok(result));
                 }
-
                 return Unauthorized();
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(AuthController), nameof(Login));
+                return Problem(ProblemResponse);
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(AuthService), nameof(Login));
-            }
-            return Problem(ProblemResponse);
         }
     }
 }

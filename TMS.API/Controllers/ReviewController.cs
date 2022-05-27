@@ -19,216 +19,179 @@ namespace TMS.API.Controllers
             _reviewService = reviewService;
         }
 
-       [HttpGet("/Review/Status/{statusId:int}")]
+       [HttpGet("status/{statusId:int}")]
         public IActionResult GetReviewByStatusId(int statusId)
         {
-            if (statusId == 0) BadId();
-            try
+            var statusExists = Validation.ReviewStatusExists(_context,statusId);
+            if(statusExists)
             {
-                var result = _reviewService.GetReviewByStatusId(statusId);
-                if (result != null) return Ok(result);
+                try
+                {
+                    var result = _reviewService.GetReviewByStatusId(statusId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
-        [HttpGet("/Review/{reviewId:int}")]
+        [HttpGet("{reviewId:int}")]
         public IActionResult GetReviewById(int reviewId)
         {
-            if (reviewId == 0) return BadId();
-            try
+            var reviewExists = Validation.ReviewExists(_context,reviewId);
+            if(reviewExists)
             {
-                var result = _reviewService.GetReviewById(reviewId);
-                if (result != null) return Ok(result);
-                return NotFound();
+                try
+                {
+                    var result = _reviewService.GetReviewById(reviewId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(GetReviewById));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
 
-        [HttpPost("/Review")]
+        [HttpPost("review")]
         public IActionResult CreateReview(Review review)
         {
-            if (review == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
                 var IsValid = Validation.ValidateReview(review,_context);
+                if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the review. the review already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    var res = _reviewService.CreateReview(review);
+                    var res = _reviewService.CreateReview(review,_context);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Created successfully" });
-                    return BadRequest(res);
                 }
                 return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateReview));
+                return Problem(ProblemResponse);
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(CreateReview));
-            }
-            return Problem(ProblemResponse);
         }
 
-        [HttpPut("/Review")]
+        [HttpPut("review")]
         public IActionResult UpdateReview(Review review)
         {
-            if (review == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            try
+            var reviewExists = Validation.ReviewExists(_context,review.Id);
+            if(reviewExists)
             {
-                var IsValid = Validation.ValidateReview(review,_context);
-                if (IsValid.ContainsKey("IsValid"))
+                try
                 {
-                    var res = _reviewService.UpdateReview(review);
-                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
-                    return NotFound();
+                    var IsValid = Validation.ValidateReview(review,_context);
+                    if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
+                    {
+                        var res = _reviewService.UpdateReview(review,_context);
+                        if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
+                    }
+                    return BadRequest(IsValid);
                 }
-                return BadRequest(IsValid);
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(UpdateReview));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
 
         }
 
-        [HttpPut("/Review/Disable/{reviewId:int}")]
-        public IActionResult DisableReview(int reviewId)
-        {
-            if (reviewId == 0) return BadId();
-            try
-            {
-                var res = _reviewService.DisableReview(reviewId);
-                if (res) return Ok("The Review was Disabled successfully");
-                return BadId();
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(DisableReview));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(DisableReview));
-            }
-            return Problem(ProblemResponse);
-
-        }
-
-        [HttpGet("MOM/User/{userId:int}")]
+        [HttpGet("mom/user/{userId:int}")]
         public IActionResult GetListOfMomByUserId(int userId)
         {
-            if (userId == 0) BadId();
-            try
+            var userExists = Validation.UserExists(_context,userId);
+            if(userExists)
             {
-                var result = _reviewService.GetListOfMomByUserId(userId);
-                if (result != null) return Ok(result);
+                try
+                {
+                    var result = _reviewService.GetListOfMomByUserId(userId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(GetListOfMomByUserId));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
-        [HttpGet("MOM/{momId:int}")]
-        public IActionResult GetMomById(int momId)
+        [HttpGet("mom/{reviewId:int},{traineeId:int}")]
+        public IActionResult GetMomByReviewIdAndTraineeId(int reviewId,int traineeId)
         {
-            if (momId == 0) return BadId();
-            try
+            var momExists = Validation.MOMExists(_context,reviewId,traineeId);
+            if(momExists)
             {
-                var result = _reviewService.GetMomById(momId);
-                if (result != null) return Ok(result);
-                return NotFound();
+                try
+                {
+                    var result = _reviewService.GetMomByReviewIdAndTraineeId(reviewId,traineeId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetMomByReviewIdAndTraineeId));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetMomById));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(GetMomById));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
 
-        [HttpPost("MOM")]
+        [HttpPost("mom")]
         public IActionResult CreateMom(MOM mom)
         {
-            if (mom == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
                 var IsValid = Validation.ValidateMOM(mom,_context);
+                if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the mom. The Mom Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    var res = _reviewService.CreateMom(mom);
+                    var res = _reviewService.CreateMom(mom,_context);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Created successfully" });
-                    return BadRequest(res);
                 }
                 return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateMom));
+                return Problem(ProblemResponse);
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(CreateMom));
-            }
-            return Problem(ProblemResponse);
         }
 
-        [HttpPut("MOM")]
+        [HttpPut("mom")]
         public IActionResult UpdateMom(MOM mom)
         {
-            if (mom == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            try
+            var momExists = Validation.MOMExists(_context,mom.ReviewId,mom.TraineeId);
+            if(momExists)
             {
-                var IsValid = Validation.ValidateMOM(mom,_context);
-                if (IsValid.ContainsKey("IsValid"))
+                try
                 {
-                    var res = _reviewService.UpdateMom(mom);
-                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Updated successfully" });
-                    return NotFound();
+                    var IsValid = Validation.ValidateMOM(mom,_context);
+                    if (IsValid.ContainsKey("IsValid"))
+                    {
+                        var res = _reviewService.UpdateMom(mom,_context);
+                        if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Updated successfully" });
+                    }
+                    return BadRequest(IsValid);
                 }
-                return BadRequest(IsValid);
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateMom));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateMom));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(ReviewService), nameof(UpdateMom));
-            }
-            return Problem(ProblemResponse);
-
+            return NotFound();
         }
 
 

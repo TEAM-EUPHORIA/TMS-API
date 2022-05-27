@@ -19,150 +19,137 @@ namespace TMS.API.Controllers
             _feedbackService = feedbackService;
         }
 
-       [HttpGet("/Feedback/Course/{courseId:int},{ownwerId:int}")]
-        public IActionResult GetCourseFeedbackByCourseIdAndOwnerId(int courseId,int ownwerId)
+       [HttpGet("course/{courseId:int},{traineeId:int}")]
+        public IActionResult GetCourseFeedbackByCourseIdAndTraineeId(int courseId,int traineeId)
         {
-            if (courseId == 0||ownwerId==0) BadId();
-            try
+            var feedbackExists = Validation.CourseFeedbackExists(_context,courseId,traineeId);
+            if(feedbackExists)
             {
-                var result = _feedbackService.GetCourseFeedbackByCourseIdAndOwnerId(courseId,ownwerId);
-                if (result != null) return Ok(result);
+                try
+                {
+                    var result = _feedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(GetCourseFeedbackByCourseIdAndTraineeId));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(GetCourseFeedbackByCourseIdAndOwnerId));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(FeedbackService), nameof(GetCourseFeedbackByCourseIdAndOwnerId));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
-        [HttpPost("/Feedback/Course/")]
+        [HttpPost("course")]
         public IActionResult CreateCourseFeedback(CourseFeedback feedback)
         {
-            if (feedback == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
                 var IsValid = Validation.ValidateCourseFeedback(feedback,_context);
+                if(IsValid.ContainsKey("Exists")) return BadRequest("Can't submit the feedback. The feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    var res = _feedbackService.CreateCourseFeedback(feedback);
+                    var res = _feedbackService.CreateCourseFeedback(feedback,_context);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
-                    return BadRequest(res);
                 }
                 return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(CreateCourseFeedback));
+                return Problem(ProblemResponse);
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(FeedbackService), nameof(CreateCourseFeedback));
-            }
-            return Problem(ProblemResponse);
         }
 
-        [HttpPut("/Feedback/Course/")]
+        [HttpPut("course")]
         public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
         {
-            if (feedback == null) return BadObject();
+            var feedbackExists = Validation.CourseFeedbackExists(_context,feedback.CourseId,feedback.TraineeId);
+            if(feedbackExists)
+            {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            try
-            {
-                var IsValid = Validation.ValidateCourseFeedback(feedback,_context);
-                if (IsValid.ContainsKey("IsValid"))
+                try
                 {
-                    var res = _feedbackService.UpdateCourseFeedback(feedback);
-                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
-                    return NotFound();
+                    var IsValid = Validation.ValidateCourseFeedback(feedback,_context);
+                    if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
+                    {
+                        var res = _feedbackService.UpdateCourseFeedback(feedback,_context);
+                        if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
+                    }
+                    return BadRequest(IsValid);
                 }
-                return BadRequest(IsValid);
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(FeedbackService), nameof(UpdateCourseFeedback));
-            }
-            return Problem(ProblemResponse);
-
+            return NotFound();
         }
-       [HttpGet("/Feedback/Trainee/{traineeId:int},{trainerId:int}")]
-        public IActionResult GetTraineeFeedbackByTrainerIdAndTraineeId(int traineeId,int trainerId)
+       [HttpGet("trainee/{traineeId:int},{trainerId:int}")]
+        public IActionResult GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(int courseId,int traineeId,int trainerId)
         {
-            if (traineeId == 0||trainerId==0) BadId();
-            try
+            var feedbackExists = Validation.TraineeFeedbackExists(_context,courseId,traineeId,trainerId);
+            if(feedbackExists)
             {
-                var result = _feedbackService.GetTraineeFeedbackByTrainerIdAndTraineeId(traineeId,trainerId);
-                if (result != null) return Ok(result);
+                try
+                {
+                    var result = _feedbackService.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(courseId,traineeId,trainerId,_context);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(GetTraineeFeedbackByTrainerIdAndTraineeId));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(FeedbackService), nameof(GetTraineeFeedbackByTrainerIdAndTraineeId));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
         }
-        [HttpPost("/Feedback/Trainee/")]
+        [HttpPost("trainee")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback feedback)
         {
-            if (feedback == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
                 var IsValid = Validation.ValidateTraineeFeedback(feedback,_context);
+                if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create feedback. the feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    var res = _feedbackService.CreateTraineeFeedback(feedback);
+                    var res = _feedbackService.CreateTraineeFeedback(feedback,_context);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
-                    return BadRequest(res);
                 }
                 return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(CreateTraineeFeedback));
+                return Problem(ProblemResponse);
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(FeedbackService), nameof(CreateTraineeFeedback));
-            }
-            return Problem(ProblemResponse);
         }
 
-        [HttpPut("/Feedback/Trainee/")]
+        [HttpPut("trainee")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
         {
-            if (feedback == null) return BadObject();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            try
+            var feedbackExists = Validation.TraineeFeedbackExists(_context,feedback.CourseId,feedback.TraineeId,feedback.TrainerId);
+            if(feedbackExists)
             {
-                var IsValid = Validation.ValidateTraineeFeedback(feedback,_context);
-                if (IsValid.ContainsKey("IsValid"))
+                try
                 {
-                    var res = _feedbackService.UpdateTraineeFeedback(feedback);
-                    if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
-                    return NotFound();
+                    var IsValid = Validation.ValidateTraineeFeedback(feedback,_context);
+                    if (IsValid.ContainsKey("IsValid"))
+                    {
+                        var res = _feedbackService.UpdateTraineeFeedback(feedback,_context);
+                        if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
+                    }
+                    return BadRequest(IsValid);
                 }
-                return BadRequest(IsValid);
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
+                    return Problem(ProblemResponse);
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(FeedbackService), nameof(UpdateCourseFeedback));
-            }
-            return Problem(ProblemResponse);
+            return NotFound();
 
         }
     }
