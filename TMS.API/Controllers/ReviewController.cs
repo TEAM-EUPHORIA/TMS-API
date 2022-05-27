@@ -35,7 +35,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="statusId"></param>
        /// <returns></returns>
-       [HttpGet("/Review/Status/{statusId:int}")]
+       [HttpGet("review/status/{statusId:int}")]
         public IActionResult GetReviewByStatusId(int statusId)
         {
             var statusExists = Validation.ReviewStatusExists(_context,statusId);
@@ -72,7 +72,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="reviewId"></param>
        /// <returns></returns>
-        [HttpGet("/Review/{reviewId:int}")]
+        [HttpGet("{reviewId:int}")]
         public IActionResult GetReviewById(int reviewId)
         {
             var reviewExists = Validation.ReviewExists(_context,reviewId);
@@ -114,7 +114,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="review"></param>
         /// <returns></returns>
-        [HttpPost("/Review")]
+        [HttpPost("review")]
         public IActionResult CreateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -160,7 +160,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="review"></param>
        /// <returns></returns>
-        [HttpPut("/Update")]
+        [HttpPut("review")]
         public IActionResult UpdateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -203,7 +203,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="userId"></param>
        /// <returns></returns>
-        [HttpGet("MOM/User/{userId:int}")]
+        [HttpGet("mom/user/{userId:int}")]
         public IActionResult GetListOfMomByUserId(int userId)
         {
             var userExists = Validation.UserExists(_context,userId);
@@ -237,10 +237,11 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <param name="momId"></param>
+        /// <param name="reviewId"></param>
+        /// <param name="traineeId"></param>
         /// <returns></returns>
-        [HttpGet("MOM/{momId:int}")]
-        public IActionResult GetMomById(int momId)
+        [HttpGet("mom/{reviewId:int},{traineeId:int}")]
+        public IActionResult GetMomByReviewIdAndTraineeId(int reviewId,int traineeId)
         {
             var momExists = Validation.MOMExists(_context,reviewId,traineeId);
             if(momExists)
@@ -280,7 +281,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="mom"></param>
         /// <returns></returns>
-        [HttpPost("MOM")]
+        [HttpPost("mom")]
         public IActionResult CreateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -325,7 +326,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="mom"></param>
         /// <returns></returns>
-        [HttpPut("MOM")]
+        [HttpPut("mom")]
         public IActionResult UpdateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

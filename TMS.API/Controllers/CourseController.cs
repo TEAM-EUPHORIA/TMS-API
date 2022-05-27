@@ -36,7 +36,7 @@ namespace TMS.API.Controllers
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <returns></returns>
-        [HttpGet")]
+        [HttpGet]
         public IActionResult GetCourses()
         {
             try
@@ -67,7 +67,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="userId"></param>
        /// <returns></returns>
-        [HttpGet("/Courses/Users/{userId:int}")]
+        [HttpGet("users/{userId:int}")]
         public IActionResult GetCoursesByUserId(int userId)
         {
             var userExists = Validation.UserExists(_context,userId);
@@ -104,7 +104,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="departmentId"></param>
        /// <returns></returns>
-        [HttpGet("/Courses/Departments/{departmentId:int}")]
+        [HttpGet("departments/{departmentId:int}")]
         public IActionResult GetCoursesByDepartmentId(int departmentId)
         {
             var departmentExists = Validation.DepartmentExists(_context,departmentId);
@@ -141,7 +141,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="courseId"></param>
         /// <returns></returns>
-        [HttpGet("/Courses/{courseId:int}")]
+        [HttpGet("{courseId:int}")]
         public IActionResult GetCourseById(int courseId)
         {
             var courseExists = Validation.CourseExists(_context,courseId);
@@ -183,7 +183,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="course"></param>
         /// <returns></returns>
-        [HttpPost("Course")]
+        [HttpPost("coures")]
         public IActionResult CreateCourse(Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -228,7 +228,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="course"></param>
         /// <returns></returns>
-        [HttpPut("Course")]
+        [HttpPut("course")]
         public IActionResult UpdateCourse(Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -269,10 +269,9 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        
         /// <param name="courseId"></param>
         /// <returns></returns>
-        [HttpPut("/Courses/Disable/{courseId:int}")]
+        [HttpPut("disable/{courseId:int}")]
         public IActionResult DisableCourse(int courseId)
         {
             var courseExists = Validation.CourseExists(_context,courseId);
@@ -310,7 +309,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="courseId"></param>
        /// <returns></returns>
-        [HttpGet("/Courses/{courseId:int}/Topics")]
+        [HttpGet("{courseId:int}/topics")]
         public IActionResult GetTopicsByCourseId(int courseId)
         {
             var courseExists = Validation.CourseExists(_context,courseId);
@@ -344,10 +343,9 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        
        /// <param name="topicId"></param>
        /// <returns></returns>
-        [HttpGet("Topics/{topicId:int}")]
+        [HttpGet("topics/{topicId:int}")]
         public IActionResult GetTopicById(int topicId)
         {
             var topicExists = Validation.TopicExists(_context,topicId);
@@ -386,7 +384,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="topic"></param>
         /// <returns></returns>
-        [HttpPost("Topic")]
+        [HttpPost("topic")]
         public IActionResult CreateTopic(Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -428,7 +426,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="topic"></param>
         /// <returns></returns>
-        [HttpPut("Topic")]
+        [HttpPut("topic")]
         public IActionResult UpdateTopic(Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -469,10 +467,9 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       
         /// <param name="topicId"></param>
         /// <returns></returns>
-        [HttpPut("Topics/Disable/{topicId:int}")]
+        [HttpPut("topics/disable/{topicId:int}")]
         public IActionResult DisableTopic(int topicId)
         {
             var topicExists = Validation.TopicExists(_context,topicId);
@@ -531,10 +528,9 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       
         /// <param name="topicId"></param>
         /// <returns></returns>
-        [HttpGet("Topics/{topicId:int}/Assignments")]
+        [HttpGet("topics/{topicId:int}/assignments")]
         public IActionResult GetAssignmentsByTopicId(int topicId)
         {
             var topicExists = Validation.TopicExists(_context,topicId);
@@ -569,11 +565,12 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         /// <param name="ownerId"></param>
         /// <returns></returns>
-        [HttpGet("Topics/Assignments/{topicId:int},{ownerId:int}")]
-        public IActionResult GetAssignmentByTopicIdAndOwnerId(int topicId,int ownerId)
+        [HttpGet("topics/assignments/{courseId:int},{topicId:int},{ownerId:int}")]
+        public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId,int topicId,int ownerId)
         {
             var assignmentExists = Validation.AssignmentExists(_context,courseId,topicId,ownerId);
             if(assignmentExists)
@@ -614,7 +611,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="assignment"></param>
         /// <returns></returns>
-        [HttpPost("Assignment")]
+        [HttpPost("assignment")]
         public IActionResult CreateAssignment(Assignment assignment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -659,7 +656,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="assignment"></param>
         /// <returns></returns>
-        [HttpPut("Assignment")]
+        [HttpPut("assignment")]
         public IActionResult UpdateAssignment(Assignment assignment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

@@ -31,7 +31,7 @@ namespace TMS.API.Controllers
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <returns></returns>
-        [HttpGet("/Departments")]
+        [HttpGet("departments")]
         public IActionResult GetDepartments()
         {
             try
@@ -61,7 +61,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="departmentId"></param>
        /// <returns></returns>
-        [HttpGet("/Department/{departmentId:int}")]
+        [HttpGet("{departmentId:int}")]
         public IActionResult GetDepartmentById(int departmentId)
         {
             var departmentExists = Validation.DepartmentExists(_context,departmentId);
@@ -100,7 +100,7 @@ namespace TMS.API.Controllers
         
         /// <param name="department"></param>
         /// <returns></returns>
-        [HttpPost("/Department")]
+        [HttpPost("department")]
         public IActionResult CreateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -140,7 +140,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="department"></param>
        /// <returns></returns>
-        [HttpPut("/Department")]
+        [HttpPut("department")]
         public IActionResult UpdateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -181,10 +181,10 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <param name="id"></param>
+        /// <param name="departmentId"></param>
         /// <returns></returns>
-        [HttpPut("/Department/Disable/{id:int}")]
-        public IActionResult DisableDepartment(int id)
+        [HttpPut("disable/{departmentId:int}")]
+        public IActionResult DisableDepartment(int departmentId)
         {
             var departmentExists = Validation.DepartmentExists(_context,departmentId);
             if(departmentExists)

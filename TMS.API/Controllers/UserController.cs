@@ -31,10 +31,10 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <param name="id"></param>
+        /// <param name="roleId"></param>
         /// <returns></returns>
-        [HttpGet("Role/{id:int}")]
-        public IActionResult GetAllUserByRole(int id)
+        [HttpGet("role/{roleId:int}")]
+        public IActionResult GetAllUserByRole(int roleId)
         {
             var roleExists = Validation.RoleExists(_context,roleId);
             if(roleExists)
@@ -67,10 +67,10 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <param name="id"></param>
+        /// <param name="departmentId"></param>
         /// <returns></returns>
-        [HttpGet("Department/{id:int}")]
-        public IActionResult GetAllUserByDepartment(int id)
+        [HttpGet("department/{departmentId:int}")]
+        public IActionResult GetAllUserByDepartment(int departmentId)
         {
             var departmentExists = Validation.DepartmentExists(_context,departmentId);
             if(departmentExists)
@@ -143,10 +143,10 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <param name="id"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        [HttpGet("/User/{id:int}")]
-        public IActionResult GetUserById(int id)
+        [HttpGet("{userId:int}")]
+        public IActionResult GetUserById(int userId)
         {
             var userExists = Validation.UserExists(_context,userId);
             if(userExists)
@@ -187,12 +187,11 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        
         /// <param name="user"></param>
         /// <returns></returns>
        
 
-        [HttpPost("/Create")]
+        [HttpPost("user")]
         public IActionResult CreateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -239,7 +238,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="user"></param>
        /// <returns></returns>
-        [HttpPut("/User")]
+        [HttpPut("user")]
         public IActionResult UpdateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -280,10 +279,10 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="id"></param>
+       /// <param name="userId"></param>
        /// <returns></returns>
-        [HttpPut("/User/Disable/{id:int}")]
-        public IActionResult DisableUser(int id)
+        [HttpPut("disable/{userId:int}")]
+        public IActionResult DisableUser(int userId)
         {
             var userExists = Validation.UserExists(_context,userId);
             if(userExists)
@@ -316,7 +315,7 @@ namespace TMS.API.Controllers
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <returns></returns>
-        [HttpGet("/User/Dashboard")]
+        [HttpGet("user/Dashboard")]
         public IActionResult DashboardData()
         {
             return Ok(_userService.HeadDashboard(_context));

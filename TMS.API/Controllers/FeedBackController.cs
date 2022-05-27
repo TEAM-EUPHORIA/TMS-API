@@ -36,20 +36,13 @@ namespace TMS.API.Controllers
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="courseId"></param>
-        /// <param name="ownwerId"></param>
+        /// <param name="traineeId"></param>
         /// <returns>Returns the Course feedback when the given input isvalid</returns>
-       // [HttpGet("/Feedback/{courseId:int},{ownwerId:int}")]
-        [HttpGet("GetCourseFeedback/{courseId:int},{ownwerId:int}")]
-        public IActionResult GetCourseFeedbackByCourseIdAndOwnerId(int courseId, int ownwerId)
+       [HttpGet("course/{courseId:int},{traineeId:int}")]
+        public IActionResult GetCourseFeedbackByCourseIdAndTraineeId(int courseId,int traineeId)
         {
-            if (courseId == 0 || ownwerId == 0) return BadId();
-            try
-            {
-                var result = _feedbackService.GetCourseFeedbackByCourseIdAndOwnerId(courseId, ownwerId);
-                if (result != null) return Ok(result);
-                return NotFound();
-            }
-            catch (InvalidOperationException ex)
+            var feedbackExists = Validation.CourseFeedbackExists(_context,courseId,traineeId);
+            if(feedbackExists)
             {
                 try
                 {
@@ -85,7 +78,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
-        [HttpPost("Create")]
+        [HttpPost("course/feedback")]
         public IActionResult CreateCourseFeedback(CourseFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -127,14 +120,13 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
        /// <param name="feedback"></param>
        /// <returns></returns>
-        //[HttpPut("/Feedback/Course/Update")]
-         [HttpPut("Update")]
+         [HttpPut("course/feedback")]
         public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             var feedbackExists = Validation.CourseFeedbackExists(_context,feedback.CourseId,feedback.TraineeId);
             if(feedbackExists)
             {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
                 try
                 {
                     var IsValid = Validation.ValidateCourseFeedback(feedback,_context);
@@ -170,10 +162,11 @@ namespace TMS.API.Controllers
         /// <response code="500">something has gone wrong on the website's server</response>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="courseId"></param>
        /// <param name="traineeId"></param>
        /// <param name="trainerId"></param>
        /// <returns></returns>
-       [HttpGet("trainee/{traineeId:int},{trainerId:int}")]
+       [HttpGet("trainee/{courseId:int},{traineeId:int},{trainerId:int}")]
         public IActionResult GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(int courseId,int traineeId,int trainerId)
         {
             var feedbackExists = Validation.TraineeFeedbackExists(_context,courseId,traineeId,trainerId);
@@ -215,7 +208,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
-        [HttpPost("Trainee/Create")]
+        [HttpPost("trainee/feedback")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -228,9 +221,7 @@ namespace TMS.API.Controllers
                     var res = _feedbackService.CreateTraineeFeedback(feedback,_context);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                 }
-                else{
-                     return BadRequest(IsValid);
-                }
+                return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
@@ -262,7 +253,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
-        [HttpPut("Trainee/Update")]
+        [HttpPut("trainee/feedback")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

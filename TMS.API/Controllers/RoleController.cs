@@ -33,7 +33,7 @@ namespace TMS.API.Controllers
         /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         
        /// <returns></returns>
-        [HttpGet("/Roles")]
+        [HttpGet("roles")]
         public IActionResult GetRoles()
         {
             try
