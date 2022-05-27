@@ -16,8 +16,22 @@ namespace TMS.API.Controllers
             _logger = logger;
             _departmentService= departmentService;
         }
-
-        [HttpGet("departments")]
+        /// <summary>
+        /// This method is invoked when the Coordinator/Head wants to view a Departments
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetDepartments
+        ///     {    
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <returns></returns>
+        [HttpGet("/Departments")]
         public IActionResult GetDepartments()
         {
             try
@@ -30,8 +44,24 @@ namespace TMS.API.Controllers
                 return Problem(ProblemResponse);
             }
         }
-
-        [HttpGet("{departmentId:int}")]
+          /// <summary>
+        /// This method is invoked when the Coordinator/Head wants to view all Departments
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetDepartmentById
+        ///     {
+        ///        "departmentId": 1 
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="departmentId"></param>
+       /// <returns></returns>
+        [HttpGet("/Department/{departmentId:int}")]
         public IActionResult GetDepartmentById(int departmentId)
         {
             var departmentExists = Validation.DepartmentExists(_context,departmentId);
@@ -51,8 +81,26 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+        /// <summary>
+        /// This method is invoked when the Coordinator wants to create a Department
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /CreateDepartment
+        ///     {
+        ///          "name": "SQL"
+        ///          
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
         
-        [HttpPost("department")]
+        /// <param name="department"></param>
+        /// <returns></returns>
+        [HttpPost("/Department")]
         public IActionResult CreateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -73,8 +121,26 @@ namespace TMS.API.Controllers
                 return Problem(ProblemResponse);
             }
         }
-        
-        [HttpPut("department")]
+        /// <summary>
+        /// This method is invoked when the Coordinator wants to Update Department
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /UpdateDepartment
+        ///     {
+        ///         "id": 1,
+        ///         "name": "B",
+        ///         
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="department"></param>
+       /// <returns></returns>
+        [HttpPut("/Department")]
         public IActionResult UpdateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -99,9 +165,26 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-
-        [HttpPut("disable/{departmentId:int}")]
-        public IActionResult DisableDepartment(int departmentId)
+        /// <summary>
+        /// This method is invoked when the Coordinator wants to Disable Department
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /DisableDepartment
+        ///     {
+        ///        "departmentId": 1
+        ///       
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPut("/Department/Disable/{id:int}")]
+        public IActionResult DisableDepartment(int id)
         {
             var departmentExists = Validation.DepartmentExists(_context,departmentId);
             if(departmentExists)

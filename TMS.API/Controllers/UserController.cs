@@ -16,9 +16,25 @@ namespace TMS.API.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
-
-        [HttpGet("role/{roleId:int}")]
-        public IActionResult GetAllUserByRole(int roleId)
+        /// <summary>
+        /// This method is invoked when the Coordinator/Head wants to view the User by Role
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetAllUserByRole
+        ///     {
+        ///        "userId": 2   
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("Role/{id:int}")]
+        public IActionResult GetAllUserByRole(int id)
         {
             var roleExists = Validation.RoleExists(_context,roleId);
             if(roleExists)
@@ -36,9 +52,25 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-        
-        [HttpGet("department/{departmentId:int}")]
-        public IActionResult GetAllUserByDepartment(int departmentId)
+         /// <summary>
+        /// This method is invoked when the Coordinator/Head wants to view User by Department 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetAllUserByDepartment
+        ///     {
+        ///        "Id": 1
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("Department/{id:int}")]
+        public IActionResult GetAllUserByDepartment(int id)
         {
             var departmentExists = Validation.DepartmentExists(_context,departmentId);
             if(departmentExists)
@@ -56,8 +88,27 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-        
-        [HttpGet("getUsersByDepartmentAndRole/{departmentId:int},{roleId:int}")]
+           /// <summary>
+        /// This method is invoked when the Coordinator/Head wants to view a user based on Department and Role
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetUsersByDeptandrole
+        ///     {
+        ///        "departmentId": 1,
+        ///        "roleId": 3
+        ///       
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="departmentId"></param>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        [HttpGet("GetUsersByDepartmentAndRole/{departmentId:int},{roleId:int}")]
         public IActionResult GetUsersByDeptandrole(int departmentId,int roleId)
         {
             var departmentExists = Validation.DepartmentExists(_context,departmentId);
@@ -77,9 +128,25 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-
-        [HttpGet("{userId:int}")]
-        public IActionResult GetUserById(int userId)
+          /// <summary>
+        /// This method is invoked when the Coordinator/Head wants to view User
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetUserById
+        ///     {
+        ///        "Id": 1
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/User/{id:int}")]
+        public IActionResult GetUserById(int id)
         {
             var userExists = Validation.UserExists(_context,userId);
             if(userExists)
@@ -98,8 +165,34 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+         /// <summary>
+        /// This method is invoked when the Coordinator wants to Create User / Head wants to create Coordinator
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /CreateUser
+        ///     {
+         ///          "roleId": 4,
+        ///          "departmentId": 1,
+        ///          "fullName": "Charles Benny",
+        ///          "userName": "Charles",
+        ///          "password": "password",
+        ///          "email": "charlesb16@gmail.com",
+        ///           "base64": "data:image/jpg;base64,.....",
+        ///          "image": "image"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        
+        /// <param name="user"></param>
+        /// <returns></returns>
+       
 
-        [HttpPost("user")]
+        [HttpPost("/Create")]
         public IActionResult CreateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -120,8 +213,33 @@ namespace TMS.API.Controllers
                 return Problem(ProblemResponse);
             }
         }
-
-        [HttpPut("user")]
+        /// <summary>
+        /// This method is invoked when the Coordinator wants to Update User / Head wants to Update Coordinator
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /UpdateUser
+        ///     {
+        ///          "id": 1,
+        ///          "roleId": 1,
+        ///          "departmentId": null,
+        ///          "fullName": "warren mackenzie",
+        ///          "userName": "warren",
+        ///          "password": "password",
+        ///          "email": "warren88@gmail.com",
+        ///           "base64": "string",
+        ///          "image": "string"
+        ///          
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="user"></param>
+       /// <returns></returns>
+        [HttpPut("/User")]
         public IActionResult UpdateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -146,9 +264,26 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-
-        [HttpPut("disable/{userId:int}")]
-        public IActionResult DisableUser(int userId)
+       /// <summary>
+        /// This method is invoked when the Coordinator wants to Disable User / Head wants to Diable Coordinator
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /DisableUser
+        ///     {
+        ///        "Id": 1
+        ///        
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="id"></param>
+       /// <returns></returns>
+        [HttpPut("/User/Disable/{id:int}")]
+        public IActionResult DisableUser(int id)
         {
             var userExists = Validation.UserExists(_context,userId);
             if(userExists)
@@ -166,8 +301,22 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-
-        [HttpGet("User/Dashboard")]
+         /// <summary>
+        /// This method is invoked when the User wants to view Dashboard
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /DashboardData
+        ///     {
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <returns></returns>
+        [HttpGet("/User/Dashboard")]
         public IActionResult DashboardData()
         {
             return Ok(_userService.HeadDashboard(_context));

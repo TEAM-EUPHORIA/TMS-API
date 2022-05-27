@@ -18,8 +18,24 @@ namespace TMS.API.Controllers
             _logger = logger;
             _reviewService = reviewService;
         }
-
-       [HttpGet("status/{statusId:int}")]
+       /// <summary>
+        /// This method is invoked when the Coorinator wants to view the Reviews based on the status 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetReviewByStatusId
+        ///     {
+        ///        "statusId": 1  (1-Completed; 2-Cancelled; 3-Assigned)
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="statusId"></param>
+       /// <returns></returns>
+       [HttpGet("/Review/Status/{statusId:int}")]
         public IActionResult GetReviewByStatusId(int statusId)
         {
             var statusExists = Validation.ReviewStatusExists(_context,statusId);
@@ -38,7 +54,25 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-        [HttpGet("{reviewId:int}")]
+        /// <summary>
+        /// This method is invoked when the Coordinator/Trainee/Reviewer wants to view the Assigned Reviews
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetReviewById
+        ///     {
+        ///        "reviewId": 4
+        ///   
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="reviewId"></param>
+       /// <returns></returns>
+        [HttpGet("/Review/{reviewId:int}")]
         public IActionResult GetReviewById(int reviewId)
         {
             var reviewExists = Validation.ReviewExists(_context,reviewId);
@@ -57,8 +91,30 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-
-        [HttpPost("review")]
+        /// <summary>
+        /// This method is invoked when the Coordinator wants to Create a Review
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /CreateReview
+        ///     {
+        ///        "reviewerId": 11,
+        ///        "statusId": 1,
+        ///        "traineeId": 15,
+        ///        "reviewDate": "20-07-2022",
+        ///        "reviewTime": "10:40AM",
+        ///        "mode": "online",
+        ///        "isDisabled": "false"   
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="review"></param>
+        /// <returns></returns>
+        [HttpPost("/Review")]
         public IActionResult CreateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -80,7 +136,31 @@ namespace TMS.API.Controllers
             }
         }
 
-        [HttpPut("review")]
+        /// <summary>
+        /// This method is invoked when the Coordinator wants to Update Review
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /UpdateReview
+        ///     {
+        ///        "id": 1,
+        ///        "reviewerId": 11,
+        ///        "statusId": 1,
+        ///        "traineeId": 15,
+        ///        "reviewDate": "20-07-2022",
+        ///        "reviewTime": "10:00AM",
+        ///        "mode": "offline",
+        ///        "isDisabled": "false"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="review"></param>
+       /// <returns></returns>
+        [HttpPut("/Update")]
         public IActionResult UpdateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -106,8 +186,24 @@ namespace TMS.API.Controllers
             return NotFound();
 
         }
-
-        [HttpGet("mom/user/{userId:int}")]
+        /// <summary>
+        /// This method is invoked when the Coordinator/Reviewer wants to view the list of MOM
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetListOfMomByUserId
+        ///     {
+        ///        "userId": 8      
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+       /// <param name="userId"></param>
+       /// <returns></returns>
+        [HttpGet("MOM/User/{userId:int}")]
         public IActionResult GetListOfMomByUserId(int userId)
         {
             var userExists = Validation.UserExists(_context,userId);
@@ -126,8 +222,25 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-        [HttpGet("mom/{reviewId:int},{traineeId:int}")]
-        public IActionResult GetMomByReviewIdAndTraineeId(int reviewId,int traineeId)
+          /// <summary>
+        /// This method is invoked when the Reviewer/Trainee/Coordinator wants to view the MOM
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /GetMomById
+        ///     {
+        ///        "momId": 1    
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="momId"></param>
+        /// <returns></returns>
+        [HttpGet("MOM/{momId:int}")]
+        public IActionResult GetMomById(int momId)
         {
             var momExists = Validation.MOMExists(_context,reviewId,traineeId);
             if(momExists)
@@ -145,8 +258,29 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-
-        [HttpPost("mom")]
+       /// <summary>
+        /// This method is invoked when the trainee wants to create MOM
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /CreateMom
+        ///     {
+       ///       "reviewId": 1,
+        ///       "statusId": 1,
+        ///       "ownerId": 13,
+        ///       "agenda": "Type Meeting Agenda...",
+        ///       "meetingNotes": "Type Meeting Notes...",
+        ///       "purposeOfMeeting": "Type purposeofMetting ..."     
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="mom"></param>
+        /// <returns></returns>
+        [HttpPost("MOM")]
         public IActionResult CreateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -167,8 +301,31 @@ namespace TMS.API.Controllers
                 return Problem(ProblemResponse);
             }
         }
-
-        [HttpPut("mom")]
+          /// <summary>
+        /// This method is invoked when the trainee wants to update MOM
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /UpdateMom
+        ///     {
+        ///       "id": 1,
+        ///       "reviewId": 1,
+        ///       "statusId": 1,
+        ///       "ownerId": 13,
+        ///       "agenda": "Modify the Agenda",
+        ///       "meetingNotes": "Modify the Meeting Notes",
+        ///       "purposeOfMeeting": "Modify the purpose of meeting"
+        ///       
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="500">something has gone wrong on the website's server</response>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <param name="mom"></param>
+        /// <returns></returns>
+        [HttpPut("MOM")]
         public IActionResult UpdateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
