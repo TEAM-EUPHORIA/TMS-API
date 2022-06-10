@@ -77,10 +77,9 @@ namespace TMS.API.Services
             if(courseExists)
             {
                 var dbCourse = dbContext.Courses.Find(courseId);
-                var ab=dbContext.Courses.Where(u=>u.Id==courseId).SingleOrDefault();
                 if(dbCourse is not null)
                 {
-                    dbCourse.isDisabled = !ab.isDisabled;
+                    dbCourse.isDisabled = true;
                     dbCourse.UpdatedOn = DateTime.UtcNow;
                     UpdateAndSaveCourse(dbCourse,dbContext);
                 }  

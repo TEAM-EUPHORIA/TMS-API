@@ -18,7 +18,6 @@ namespace TMS.API.Services
         {
             return dbContext.Users.Where(u => u.RoleId == 3).Count();
         }
-        
         private int ReviewerCount(AppDbContext dbContext)
         {
             return dbContext.Users.Where(u => u.RoleId == 5).Count();

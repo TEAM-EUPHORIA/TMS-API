@@ -25,9 +25,6 @@ namespace TMS.API
         {
             result.Clear();
             assignmentExists=false;
-            checkIdForCourseTopicAndUser(assignment.CourseId,assignment.TopicId,assignment.OwnerId);
-            validateAndAddEntery(assignment.Base64,base64Validation);
-
             if(result.Count == 0)
             {
                 courseExists = CourseExists(dbContext, assignment.CourseId);
