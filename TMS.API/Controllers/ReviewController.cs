@@ -190,23 +190,21 @@ namespace TMS.API.Controllers
 
         }
         /// <summary>
-        /// This method is invoked when the Coordinator/Reviewer wants to view the list of MOM
+        /// Gets list of MOM by UserId
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/Review/mom/user/(userId:int)
         ///
-        ///     GET /GetListOfMomByUserId
-        ///     {
-        ///        "userId": 13      
-        ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">Returns the list of MOM</response>
+        /// <response code="404">If there is problem in server</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
        /// <param name="userId"></param>
-       /// <returns></returns>
+
         [HttpGet("mom/user/{userId:int}")]
         public IActionResult GetListOfMomByUserId(int userId)
         {
@@ -227,25 +225,22 @@ namespace TMS.API.Controllers
             return NotFound();
         }
           /// <summary>
-        /// This method is invoked when the Reviewer/Trainee/Coordinator wants to view the MOM
+        /// Gets the list of MOM
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/Review/mom/(reviewId:int,traineeId:int)
         ///
-        ///     GET /GetMomById
-        ///     {
-        ///        "reviewId": 1,
-        ///        "traineeId":13   
-        ///      }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">Returns list of MOM.</response>
+        /// <response code="200">If the course was created.</response>
+        /// <response code="404">If MOM was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <param name="reviewId"></param>
         /// <param name="traineeId"></param>
-        /// <returns></returns>
+
         [HttpGet("mom/{reviewId:int},{traineeId:int}")]
         public IActionResult GetMomByReviewIdAndTraineeId(int reviewId,int traineeId)
         {
@@ -266,28 +261,31 @@ namespace TMS.API.Controllers
             return NotFound();
         }
        /// <summary>
-        /// This method is invoked when the trainee wants to create MOM
+        /// Create a MOM
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/Review/mom
         ///
-        ///     POST /CreateMom
+        ///     * fields are required
+        ///     body
         ///     {
-       ///       "reviewId": 1,
-        ///       "statusId": 1,
-        ///       "ownerId": 13,
-        ///       "agenda": "Type Meeting Agenda...",
-        ///       "meetingNotes": "Type Meeting Notes...",
-        ///       "purposeOfMeeting": "Type purposeofMetting ..."     
+       ///        reviewId*: int
+        ///       statusId*: int
+        ///       ownerId*: int
+        ///       agenda*: string
+        ///       meetingNotes*: string
+        ///       purposeOfMeeting*: string
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the MOM was created.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If MOM was not found.</response>
         /// <param name="mom"></param>
-        /// <returns></returns>
+
         [HttpPost("mom")]
         public IActionResult CreateMom(MOM mom)
         {
@@ -310,30 +308,34 @@ namespace TMS.API.Controllers
             }
         }
           /// <summary>
-        /// This method is invoked when the trainee wants to update MOM
+        /// Update a MOM
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/Review/mom
         ///
-        ///     PUT /UpdateMom
+        ///    * fields are required
+        /// 
+        ///     body
         ///     {
-        ///       "id": 1,
-        ///       "reviewId": 1,
-        ///       "statusId": 1,
-        ///       "ownerId": 13,
-        ///       "agenda": "Modify the Agenda",
-        ///       "meetingNotes": "Modify the Meeting Notes",
-        ///       "purposeOfMeeting": "Modify the purpose of meeting"
+        ///       id : int
+        ///       reviewId*: int
+        ///       statusId*: int
+        ///       ownerId*: int
+        ///       agenda*: string
+        ///       meetingNotes*: string
+        ///       purposeOfMeeting*: string
         ///       
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the MOM was updated.</response>
+        /// <response code="404">If MOM was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <param name="mom"></param>
-        /// <returns></returns>
+
         [HttpPut("mom")]
         public IActionResult UpdateMom(MOM mom)
         {
