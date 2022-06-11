@@ -11,86 +11,14 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly UserService _userService;
-        public UserController(ILogger<UserController> logger, UserService userService,AppDbContext dbContext):base(dbContext)
+        public UserController(ILogger<UserController> logger, UserService userService,RoleService roleService,AppDbContext dbContext):base(dbContext)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
+        
+
         /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view the User by Role
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     GET /GetAllUserByRole
-        ///     {
-        ///        "userId": 2   
-        ///     }
-        ///
-        /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <param name="roleId"></param>
-        /// <returns></returns>
-        [HttpGet("role/{roleId:int}")]
-        public IActionResult GetAllUserByRole(int roleId)
-        {
-            var roleExists = Validation.RoleExists(_context,roleId);
-            if(roleExists)
-            {
-                try
-                {
-                    var result = _userService.GetUsersByRole(roleId,_context);
-                    if (result is not null) return Ok(result);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
-                    return Problem(ProblemResponse);
-                }
-            }
-            return NotFound();
-        }
-         /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view User by Department 
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     GET /GetAllUserByDepartment
-        ///     {
-        ///        "Id": 1
-        ///     }
-        ///
-        /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <param name="departmentId"></param>
-        /// <returns></returns>
-        [HttpGet("department/{departmentId:int}")]
-        public IActionResult GetAllUserByDepartment(int departmentId)
-        {
-            var departmentExists = Validation.DepartmentExists(_context,departmentId);
-            if(departmentExists)
-            {
-                try
-                {
-                    var result = _userService.GetUsersByDepartment(departmentId,_context);
-                    if (result is not null) return Ok(result);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
-                    return Problem(ProblemResponse);
-                }
-            }
-            return NotFound();
-        }
-           /// <summary>
         /// This method is invoked when the Coordinator/Head wants to view a user based on Department and Role
         /// </summary>
         /// <remarks>

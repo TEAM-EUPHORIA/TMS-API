@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using TMS.API.Repositories;
 using TMS.BAL;
 
 namespace TMS.API.Services
@@ -6,59 +8,64 @@ namespace TMS.API.Services
     {
         public IEnumerable<Department> GetDepartments(AppDbContext dbContext)
         {
-            return dbContext.Departments.ToList();            
+            return dbContext.Departments.ToList();
         }
-
-        public Department GetDepartmentById(int id,AppDbContext dbContext)
+        public IEnumerable<User> GetUsersByDepartment(int departmentId, AppDbContext dbContext)
         {
-            var departmentExists = Validation.DepartmentExists(dbContext,id);
-            if(departmentExists)
+            var departmentExists = Validation.DepartmentExists(dbContext, departmentId);
+            if (departmentExists) return dbContext.Users.Where(u => (u.DepartmentId == departmentId)).Include(u => u.Role).ToList();
+            else throw new ArgumentException("Invalid Id");
+        }
+        public Department GetDepartmentById(int id, AppDbContext dbContext)
+        {
+            var departmentExists = Validation.DepartmentExists(dbContext, id);
+            if (departmentExists)
             {
                 var result = dbContext.Departments.Find(id);
-                if(result is not null) return result;
+                if (result is not null) return result;
             }
             throw new ArgumentException("Invalid Id");
         }
-        
-        public Dictionary<string, string> CreateDepartment(Department department,AppDbContext dbContext)
+
+        public Dictionary<string, string> CreateDepartment(Department department, AppDbContext dbContext)
         {
-            if(department is null) throw new ArgumentNullException(nameof(department));
-            var validation = Validation.ValidateDepartment(department,dbContext);
-            if (validation.ContainsKey("IsValid" )&& !validation.ContainsKey("Exists"))
+            if (department is null) throw new ArgumentNullException(nameof(department));
+            var validation = Validation.ValidateDepartment(department, dbContext);
+            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
                 SetUpDepartmentDetails(department);
-                CreateAndSaveDepartment(department,dbContext);  
+                CreateAndSaveDepartment(department, dbContext);
             }
             return validation;
         }
 
-        public Dictionary<string,string> UpdateDepartment(Department department,AppDbContext dbContext)
+        public Dictionary<string, string> UpdateDepartment(Department department, AppDbContext dbContext)
         {
             if (department is null) throw new ArgumentNullException(nameof(department));
-            var validation = Validation.ValidateDepartment(department,dbContext);
+            var validation = Validation.ValidateDepartment(department, dbContext);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
                 var dbDeparment = dbContext.Departments.Find(department.Id);
-                if(dbDeparment is not null)
+                if (dbDeparment is not null)
                 {
                     SetUpDepartmentDetails(department, dbDeparment);
-                    UpdateAndSaveDepartment(dbDeparment,dbContext);     
+                    UpdateAndSaveDepartment(dbDeparment, dbContext);
                 }
             }
             return validation;
         }
 
-        public bool DisableDepartment(int departmentId,AppDbContext dbContext)
+        public bool DisableDepartment(int departmentId, AppDbContext dbContext)
         {
-            var departmentExists = Validation.DepartmentExists(dbContext,departmentId);
-            if(departmentExists)
+            var departmentExists = Validation.DepartmentExists(dbContext, departmentId);
+            if (departmentExists)
             {
                 var dbDepartment = dbContext.Departments.Find(departmentId);
-                if(dbDepartment is not null)
+                if (dbDepartment is not null)
                 {
                     dbDepartment.isDisabled = true;
                     dbDepartment.UpdatedOn = DateTime.UtcNow;
-                    UpdateAndSaveDepartment(dbDepartment,dbContext);
+                    UpdateAndSaveDepartment(dbDepartment, dbContext);
                 }
             }
             return departmentExists;

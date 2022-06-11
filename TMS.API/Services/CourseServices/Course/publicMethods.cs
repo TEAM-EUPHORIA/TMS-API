@@ -106,7 +106,7 @@ namespace TMS.API.Services
                         validList.Add(courseUser);
                     }
                 }  
-                validList =validList.Distinct().ToList();
+                validList = validList.Distinct().ToList();
                 AddUsersToCourseAndSave(validList,dbContext); 
                 result.Add("the following records are created",validList); 
                 return result;
