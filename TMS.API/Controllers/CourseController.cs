@@ -55,7 +55,7 @@ namespace TMS.API.Controllers
         /// </remarks>
         /// <response code="200">Returns a list of courses assigned to the user. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
-        /// <response code="404">If user was not found. </response>
+        /// <response code="404">If there is problem in server </response>
         /// <response code="500">If there is problem in server. </response>
         /// <param name="userId"></param>
         [HttpGet("users/{userId:int}")]
@@ -168,6 +168,7 @@ namespace TMS.API.Controllers
         /// <response code="200">If the course was created. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="500">If there is problem in server. </response>
+        ///  <response code="404">If user was not found.</response>
         /// <param name="course"></param>
         [HttpPost("course")]
         public IActionResult CreateCourse(Course course)

@@ -17,14 +17,16 @@ namespace TMS.API.Controllers
             _roleService = roleService;
         }
        /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view Roles
+        /// Gets a List of Roles
         /// </summary>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// 
+        /// url : https://localhost:5001/Role/roles
+        /// 
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">Returns the  Roles</response>
+        /// <response code="404">If role was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         
-       /// <returns></returns>
         [HttpGet("roles")]
         public IActionResult GetRoles()
         {
