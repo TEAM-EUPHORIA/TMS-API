@@ -16,29 +16,23 @@ namespace TMS.API.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
-        
-
+       
         /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view a user based on Department and Role
+        /// Gets the list of Users based on Department and Role
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/User/GetUsersByDepartmentAndRole/(departmentId:int,roleId:int)
         ///
-        ///     GET /GetUsersByDeptandrole
-        ///     {
-        ///        "departmentId": 1,
-        ///        "roleId": 3
-        ///       
-        ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">Returns a list of Users. </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="404">If User was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <param name="departmentId"></param>
         /// <param name="roleId"></param>
-        /// <returns></returns>
         [HttpGet("GetUsersByDepartmentAndRole/{departmentId:int},{roleId:int}")]
         public IActionResult GetUsersByDeptandrole(int departmentId,int roleId)
         {
@@ -60,23 +54,20 @@ namespace TMS.API.Controllers
             return NotFound();
         }
           /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view User
+        /// Get list of Users by Id
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /GetUserById
-        ///     {
-        ///        "Id": 1
-        ///     }
+        /// 
+        /// url : https://localhost:5001/User(userId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">Returns a list of Users. </response>
+        /// <response code="404">If user was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <param name="userId"></param>
-        /// <returns></returns>
+        
         [HttpGet("{userId:int}")]
         public IActionResult GetUserById(int userId)
         {
@@ -98,30 +89,32 @@ namespace TMS.API.Controllers
             return NotFound();
         }
          /// <summary>
-        /// This method is invoked when the Coordinator wants to Create User / Head wants to create Coordinator
+        /// Create User
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/User/user
         ///
-        ///     POST /CreateUser
+        ///     * fields are required
+        ///      body
         ///     {
-         ///          "roleId": 4,
-        ///          "departmentId": 1,
-        ///          "fullName": "Charles Benny",
-        ///          "userName": "Charles",
-        ///          "password": "password",
-        ///          "email": "charlesb16@gmail.com",
-        ///           "base64": "data:image/jpg;base64,.....",
-        ///          "image": "image"
+         ///          roleId*: int
+        ///          departmentId: int
+        ///          fullName*: string
+        ///          userName*: string
+        ///          password*: string
+        ///          email*: string
+        ///          base64*: string
+        ///          image*: byte
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the user was created.</response>
+        /// <response code="404">If user was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <param name="user"></param>
-        /// <returns></returns>
        
 
         [HttpPost("user")]
@@ -146,32 +139,35 @@ namespace TMS.API.Controllers
             }
         }
         /// <summary>
-        /// This method is invoked when the Coordinator wants to Update User / Head wants to Update Coordinator
+        /// Update a User
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/User/user
         ///
-        ///     PUT /UpdateUser
+        ///     * fields are required
+        ///     body
         ///     {
-        ///          "id": 1,
-        ///          "roleId": 1,
-        ///          "departmentId": null,
-        ///          "fullName": "warren mackenzie",
-        ///          "userName": "warren",
-        ///          "password": "password",
-        ///          "email": "warren88@gmail.com",
-        ///           "base64": "string",
-        ///          "image": "string"
+        ///          id*: int
+        ///          roleId*: int
+        ///          departmentId: int
+        ///          fullName*: string
+        ///          userName*: string
+        ///          password*: string
+        ///          email*: string
+        ///          base64*: string
+        ///          image*: byte
         ///          
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the user was updated.</response>
+        /// <response code="404">If user was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
        /// <param name="user"></param>
-       /// <returns></returns>
+       
         [HttpPut("user")]
         public IActionResult UpdateUser(User user)
         {
@@ -198,10 +194,12 @@ namespace TMS.API.Controllers
             return NotFound();
         }
        /// <summary>
-        /// This method is invoked when the Coordinator wants to Disable User / Head wants to Diable Coordinator
+        /// To disable a User
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/User/disable/(userId:int)
         ///
         ///     PUT /DisableUser
         ///     {
@@ -210,12 +208,12 @@ namespace TMS.API.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the user was disabled / deleted.</response>
+        /// <response code="404">If User was not found. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
        /// <param name="userId"></param>
-       /// <returns></returns>
+       
         [HttpPut("disable/{userId:int}")]
         public IActionResult DisableUser(int userId)
         {
@@ -236,21 +234,23 @@ namespace TMS.API.Controllers
             return NotFound();
         }
          /// <summary>
-        /// This method is invoked when the User wants to view Dashboard
+        /// Gets a Dashboard
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        /// url : https://localhost:5001/User/user/Dashboard
         ///
         ///     GET /DashboardData
         ///     {
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <returns></returns>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">Returns the Dashboard</response>
+        /// <response code="404">If Dashboard was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        
         [HttpGet("user/Dashboard")]
         public IActionResult DashboardData()
         {
