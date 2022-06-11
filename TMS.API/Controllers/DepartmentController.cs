@@ -17,12 +17,16 @@ namespace TMS.API.Controllers
             _departmentService= departmentService;
         }
         /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view a Departments
+        /// Get all Departments
         /// </summary>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///         url:https://localhost:5001/Department/departments
+        ///</remarks>
+        /// <response code="500">If there is problem in server. </response>
+        /// <response code="200">Returns a list of Departments</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <returns></returns>
         [HttpGet("departments")]
         public IActionResult GetDepartments()
@@ -38,21 +42,18 @@ namespace TMS.API.Controllers
             }
         }
           /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view all Departments
+        /// Gets a single Department by departmentId
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /GetDepartmentById
-        ///     {
-        ///        "departmentId": 1 
-        ///     }
-        ///
+        /// 
+        ///     url:https://localhost:5001/Department/(departmentId:int)
+        ///    
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">Returns a single department. </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="404">If department was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
        /// <param name="departmentId"></param>
        /// <returns></returns>
         [HttpGet("{departmentId:int}")]
@@ -76,22 +77,25 @@ namespace TMS.API.Controllers
             return NotFound();
         }
         /// <summary>
-        /// This method is invoked when the Coordinator wants to create a Department
+        /// Create a department
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /CreateDepartment
+        /// 
+        ///     url:https://localhost:5001/Department/department
+        /// 
+        ///     * fields are required
+        /// 
+        ///     POST /CreateDepartment
         ///     {
-        ///          "name": "SQL"
+        ///          name*: string
         ///          
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the department was created.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         
         /// <param name="department"></param>
         /// <returns></returns>
@@ -117,23 +121,27 @@ namespace TMS.API.Controllers
             }
         }
         /// <summary>
-        /// This method is invoked when the Coordinator wants to Update Department
+        /// Update a department
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /UpdateDepartment
+        /// 
+        ///     url:https://localhost:5001/Department/department
+        /// 
+        ///     * fields are required
+        /// 
+        ///     PUT /UpdateDepartment
         ///     {
-        ///         "id": 1,
-        ///         "name": "B",
+        ///         id*: int,
+        ///         name*: string
         ///         
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the department was updated.</response>
+        /// <response code="404">If Department was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
        /// <param name="department"></param>
        /// <returns></returns>
         [HttpPut("department")]
@@ -162,22 +170,26 @@ namespace TMS.API.Controllers
             return NotFound();
         }
         /// <summary>
-        /// This method is invoked when the Coordinator wants to Disable Department
+        /// To disable the department
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /DisableDepartment
+        /// 
+        ///     url:https://localhost:5001/Department/disable/(departmentId:int)
+        /// 
+        ///     * fields are required
+        /// 
+        ///     PUT /DisableDepartment
         ///     {
-        ///        "departmentId": 1
+        ///        departmentId*: int
         ///       
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <response code="200">If the Department was disabled / deleted.</response>
+        /// <response code="404">If Department was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <param name="departmentId"></param>
         /// <returns></returns>
         [HttpPut("disable/{departmentId:int}")]

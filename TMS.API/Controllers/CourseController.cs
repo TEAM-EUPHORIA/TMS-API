@@ -212,7 +212,7 @@ namespace TMS.API.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <response code="200">If the course was created. </response>
+        /// <response code="200">If the course was updated. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="404">If course was not found. </response>
         /// <response code="500">If there is problem in server. </response>
@@ -506,7 +506,7 @@ namespace TMS.API.Controllers
         /// 
         /// </remarks>
         /// <response code="200">Returns a list successfully assigned users. </response>
-        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.  </response>
         /// <response code="404">If course was not found. </response>
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>

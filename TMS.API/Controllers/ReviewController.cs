@@ -19,22 +19,18 @@ namespace TMS.API.Controllers
             _reviewService = reviewService;
         }
        /// <summary>
-        /// This method is invoked when the Coorinator wants to view the Reviews based on the status 
+        /// Get all Review by Status 
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetReviewByStatusId
-        ///     {
-        ///        "statusId": 1  (1-Assigned; 2-Completed; 3-Cancelled)
-        ///     }
+        ///      url:https://localhost:5001/Review/review/status/(statusId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="statusId"></param>
+       /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">Returns a Review.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <param name="statusId"></param>
        /// <returns></returns>
        [HttpGet("review/status/{statusId:int}")]
         public IActionResult GetReviewByStatusId(int statusId)
@@ -56,23 +52,18 @@ namespace TMS.API.Controllers
             return NotFound();
         }
         /// <summary>
-        /// This method is invoked when the Coordinator/Trainee/Reviewer wants to view the Assigned Reviews
+        /// Get a Review
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetReviewById
-        ///     {
-        ///        "reviewId": 4
-        ///   
-        ///     }
+        ///     url:https://localhost:5001/Review/(reviewId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="reviewId"></param>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">Returns a Review.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <param name="reviewId"></param>
        /// <returns></returns>
         [HttpGet("{reviewId:int}")]
         public IActionResult GetReviewById(int reviewId)
@@ -94,27 +85,29 @@ namespace TMS.API.Controllers
             return NotFound();
         }
         /// <summary>
-        /// This method is invoked when the Coordinator wants to Create a Review
+        /// To Create a Review
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
+        ///     url:https://localhost:5001/Review/review
+        /// 
+        ///      * fields are required
+        /// 
         ///     POST /CreateReview
         ///     {
-        ///        "reviewerId": 11,
-        ///        "statusId": 1,
-        ///        "traineeId": 15,
-        ///        "reviewDate": "20-07-2022",
-        ///        "reviewTime": "10:40AM",
-        ///        "mode": "online",
-        ///        "isDisabled": "false"   
+        ///        reviewerId*: int,
+        ///        statusId*: int,
+        ///        traineeId*: int,
+        ///        reviewDate*: DateTime,
+        ///        reviewTime*: DateTime,
+        ///        mode*: String  
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the Review was created..</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <param name="review"></param>
         /// <returns></returns>
         [HttpPost("review")]
@@ -140,28 +133,33 @@ namespace TMS.API.Controllers
         }
 
         /// <summary>
-        /// This method is invoked when the Coordinator wants to Update Review
+        /// To Update Review
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
+        ///     url:https://localhost:5001/Review/review
+        /// 
+        ///     * fields are required
+        /// 
         ///     PUT /UpdateReview
         ///     {
-        ///        "id": 1,
-        ///        "reviewerId": 11,
-        ///        "statusId": 1,
-        ///        "traineeId": 15,
-        ///        "reviewDate": "20-07-2022",
-        ///        "reviewTime": "10:00AM",
-        ///        "mode": "offline",
-        ///        "isDisabled": "false"
+        ///        id*: int,
+        ///        reviewerId*: int,
+        ///        statusId*: int,
+        ///        traineeId*: int,
+        ///        reviewDate*: DateTime,
+        ///        reviewTime*: DateTime,
+        ///        mode*: string
+        ///        
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="review"></param>
+         /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the Review was created.</response>
+        /// <response code="404">If Feedback was not found. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <param name="review"></param>
        /// <returns></returns>
         [HttpPut("review")]
         public IActionResult UpdateReview(Review review)

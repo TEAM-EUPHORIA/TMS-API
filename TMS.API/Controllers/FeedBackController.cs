@@ -19,23 +19,18 @@ namespace TMS.API.Controllers
             _feedbackService = feedbackService;
         }
         /// <summary>
-        /// This method is invoked when the trainer/coordinator wants to view a feedback about Course.
+        ///Gets a Feedback
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetCourseFeedbackByCourseIdAndOwnerId
-        ///     {
-        ///        "CourseId": 1,
-        ///        "TraineeId": 13
-        ///       
-        ///     }
+        ///     url:https://localhost:5001/FeedBack/course/(courseId:int),(traineeId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">Returns a single Feedback.</response>
+        /// <response code="404">If Feedback was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <param name="courseId"></param>
         /// <param name="traineeId"></param>
         /// <returns>Returns the Course feedback when the given input isvalid</returns>
@@ -59,25 +54,28 @@ namespace TMS.API.Controllers
             return NotFound();
         }
        /// <summary>
-        ///  This method is invoked when the trainee wants to create a Course Feedback
+        ///  Create a Feedback
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
+        ///     url:https://localhost:5001/FeedBack/course/feedback
+        /// 
+        ///     * fields are required
+        /// 
         ///     POST /CreateCourseFeedback
         ///     {
-        ///        "CourseId": 1,
-        ///        "TraineeId": 18,
-        ///         "Feedback":"Type feedback about course",
-        ///         "Rating":4.5
+        ///        CourseId*: int,
+        ///        TraineeId*: int,
+        ///        Feedback*:string,
+        ///         Rating*:float
         ///       
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <response code="200">If the Feedback was created.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
         [HttpPost("course/feedback")]
@@ -102,26 +100,30 @@ namespace TMS.API.Controllers
             }
         }
        /// <summary>
-        ///This method is invoked when the trainee wants to update a Course Feedback
+       /// Update a Feedback
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
+        ///     url:https://localhost:5001/FeedBack/course/feedback
+        /// 
+        ///     * fields are required
+        /// 
         ///     PUT /UpdateCourseFeedback
         ///     {
-        ///        "CourseId": 1,
-        ///        "TraineeId": 13,
-        ///        "Feedback":"Type feedback about course",
-        ///         "Rating":4.5
+        ///        CourseId*: int,
+        ///        TraineeId*: int,
+        ///        Feedback*:string,
+        ///         Rating*:float
         ///       
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="feedback"></param>
+         /// <response code="200">If the Feedback was updated. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If Feedback was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="feedback"></param>
        /// <returns></returns>
          [HttpPut("course/feedback")]
         public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
@@ -149,18 +151,13 @@ namespace TMS.API.Controllers
             return NotFound();
         }
         /// <summary>
-        /// This method is invoked when the trainee wants to view a feedback given by Trainer
+        /// Gets a Feedback
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetTraineeFeedbackByTrainerIdAndTraineeId
-        ///     {
-        ///        "courseId":1,    
-        ///        "traineeId": 13,
-        ///        "trainerId": 8
-        ///       
-        ///     }
+        ///     url:https://localhost:5001/FeedBack/trainee/(courseId:int),(traineeId:int),(trainerId:int)
+        /// 
         ///
         /// </remarks>
         /// <response code="500">something has gone wrong on the website's server</response>
@@ -191,25 +188,28 @@ namespace TMS.API.Controllers
             return NotFound();
         }
          /// <summary>
-        /// This method is invoked when the trainer wants to create a feedback about Trainee
+        ///To create a Feedback
         /// </summary>
         /// <remarks>
         /// Sample request:
+        /// 
+        ///     url:https://localhost:5001/FeedBack/trainee/feedback
+        /// 
+        ///     * fields are required
         ///
         ///     POST /CreateTraineeFeedback
         ///     {
-        ///       "courseId": 1,
-        ///       "traineeId": 14,
-        ///       "trainerId": 8,
-        ///        "feedback": "Type Some Feedback"
+        ///       courseId*: int,
+        ///       traineeId*: int,
+        ///       trainerId*: int,
+        ///        feedback*: string
         ///       
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the Feedback was updated. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
         [HttpPost("trainee/feedback")]
@@ -234,25 +234,29 @@ namespace TMS.API.Controllers
             }
         }
        /// <summary>
-        /// This method is invoked when the trainer wants to Update a feedback about Trainee
+        /// To update a Feedback
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
+        ///     url:https://localhost:5001/FeedBack/trainee/feedback
+        /// 
+        ///      * fields are required
+        /// 
         ///     PUT /UpdateTraineeFeedback
         ///     {
-        ///        "courseId": 1,
-        ///        "traineeId": 14,
-        ///        "trainerId": 8,
-        ///        "feedback": "swagger documentation checking"
+        ///        courseId*: int,
+        ///        traineeId*: int,
+        ///        trainerId*: int,
+        ///        feedback*: string
         ///       
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the Feedback was updated. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If Feedback was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         /// <returns></returns>
         [HttpPut("trainee/feedback")]
