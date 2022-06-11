@@ -20,13 +20,16 @@ namespace TMS.API.Controllers
             _courseService = courseService;
         }
         /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view all the courses
+        /// Gets all courses
         /// </summary>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     url : https://localhost:5001/Course
+        ///
+        /// </remarks>
+        /// <response code="200">Returns a list of courses. </response>
+        /// <response code="500">If there is problem in server. </response>
         [HttpGet]
         public IActionResult GetCourses()
         {
@@ -40,25 +43,21 @@ namespace TMS.API.Controllers
                 return Problem(ProblemResponse);
             }
         }
+
         /// <summary>
-        /// This method is invoked when the Trainee/Trainer/Coordinator/Head wants to view a Courses
+        /// Gets a list of courses assigned to user by userId
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetCoursesByUserId
-        ///     {
-        ///        "UserId": 13        
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/users/(userId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="userId"></param>
-       /// <returns></returns>
+        /// <response code="200">Returns a list of courses assigned to the user. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If user was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="userId"></param>
         [HttpGet("users/{userId:int}")]
         public IActionResult GetCoursesByUserId(int userId)
         {
@@ -77,26 +76,21 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+
         /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view a courses by department
+        /// Gets a list of courses in a department by departmentId
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetCoursesByDepartmentId
-        ///     {
-        ///        "departmentId": 3
-        ///        
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/departments/(departmentId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="departmentId"></param>
-       /// <returns></returns>
+        /// <response code="200">Returns a list of courses in a department. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If department was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="departmentId"></param>
         [HttpGet("departments/{departmentId:int}")]
         public IActionResult GetCoursesByDepartmentId(int departmentId)
         {
@@ -115,26 +109,21 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+
         /// <summary>
-        /// This method is invoked when the User wants to view a Course
+        /// Gets a single course by courseId
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetCourseById
-        ///     {
-        ///        "courseId": 1,
-        ///       
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/(courseId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">Returns a single course. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
-        /// <returns></returns>
         [HttpGet("{courseId:int}")]
         public IActionResult GetCourseById(int courseId)
         {
@@ -154,29 +143,33 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+
         /// <summary>
-        /// This method is invoked when the Coordinator wants to create a Course
+        /// Create a course
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /CreateCourse
+        ///     url : https://localhost:5001/Course/course
+        /// 
+        ///     * fields are required
+        /// 
+        ///     body
         ///     {
-        ///         "trainerId": 8,
-        ///         "departmentId": 1,
-        ///         "name": "JAVA",
-        ///         "duration": "20 hrs",
-        ///         "description": "Java Course Description"       
+        ///         departmentId* : int (department for the course)
+        ///         trainerId* : int      
+        ///         name* : string
+        ///         duration* : string
+        ///         description* : string
+        ///         createdOn : dateTime
         ///     }
-        ///
+        /// 
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the course was created. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
-        /// <returns></returns>
-        [HttpPost("coures")]
+        [HttpPost("course")]
         public IActionResult CreateCourse(Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -197,29 +190,33 @@ namespace TMS.API.Controllers
                 return Problem(ProblemResponse);
             }
         }
-          /// <summary>
-        /// This method is invoked when the Coordinator wants to Update a Course
+
+        /// <summary>
+        /// Update a course
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /UpdateCourse
-        ///     { 
-        ///         "id": 1,
-        ///         "trainerId": 8,
-        ///         "departmentId": 1,
-        ///         "name": "Topic name",
-        ///         "duration": "20 hrs",
-        ///         "description": "Topic Description"
+        ///     url : https://localhost:5001/Course/course
+        /// 
+        ///     * fields are required
+        /// 
+        ///     body
+        ///     {
+        ///         departmentId* : int (department for the course)
+        ///         trainerId* : int      
+        ///         name* : string
+        ///         duration* : string
+        ///         description* : string
+        ///         updatedOn : dateTime
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the course was created. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
-        /// <returns></returns>
         [HttpPut("course")]
         public IActionResult UpdateCourse(Course course)
         {
@@ -245,25 +242,21 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+
         /// <summary>
-        /// This method is invoked when the Coordinator wants to disable a course
+        /// To disable the course
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /DisableCourse
-        ///     {
-        ///        "courseId": 1
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/disable/(courseId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the course was disabled / deleted. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
-        /// <returns></returns>
         [HttpPut("disable/{courseId:int}")]
         public IActionResult DisableCourse(int courseId)
         {
@@ -284,25 +277,21 @@ namespace TMS.API.Controllers
             return NotFound();
 
         }
+
         /// <summary>
-        /// This method is invoked when the user wants to view a topic based on the specified course
+        /// Gets a list of topics in a course by courseId
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetTopicsByCourseId
-        ///     {
-        ///        "courseId": 1
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/(courseId:int)/topics
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="courseId"></param>
-       /// <returns></returns>
+        /// <response code="200">Returns a list of topics present in a course </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="courseId"></param>
         [HttpGet("{courseId:int}/topics")]
         public IActionResult GetTopicsByCourseId(int courseId)
         {
@@ -321,29 +310,26 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-      /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view a Topic
+
+        /// <summary>
+        /// Gets a single topic by courseId and topicId
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetTopicById
-        ///     {
-        ///        "topicId": 1
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/(courseId:int)/topics/(topicId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="topicId"></param>
-       /// <returns></returns>
-        [HttpGet("topics/{topicId:int}")]
-        public IActionResult GetTopicById(int topicId)
+        /// <response code="200">Returns a list of topics present in a course </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="courseId"></param>
+        /// <param name="topicId"></param>
+        [HttpGet("{courseId:int}/topics/{topicId:int}")]
+        public IActionResult GetTopicByIds(int courseId,int topicId)
         {
-            var topicExists = Validation.TopicExists(_context,topicId);
+            var topicExists = Validation.TopicExists(_context,topicId,courseId);
             if(topicExists)
             {
                 try
@@ -353,34 +339,38 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetTopicById));
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetTopicByIds));
                     return Problem(ProblemResponse);
                 }
             }
             return NotFound();
         }
+        
         /// <summary>
-        /// This method is invoked when the Coordinator wants to create a topic
+        /// Create a topic
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /CreateTopic
+        ///     url : https://localhost:5001/Course/topic
+        /// 
+        ///     * fields are required
+        /// 
+        ///     body
         ///     {
-        ///         "courseId": 3,
-        ///         "name": "Inheritance",
-        ///         "duration": "1 hrs",
-        ///         "content": "Inheritance content"
-        ///       
+        ///         topicId* : int 
+        ///         courseId* : int      
+        ///         name* : string
+        ///         duration* : string
+        ///         content* : string
+        ///         createdOn : dateTime
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the topic was created. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
-        /// <returns></returns>
         [HttpPost("topic")]
         public IActionResult CreateTopic(Topic topic)
         {
@@ -402,33 +392,38 @@ namespace TMS.API.Controllers
                 return Problem(ProblemResponse);
             }
         }
-         /// <summary>
-        /// This method is invoked when the Coordinator wants to Update a Topic
+
+        /// <summary>
+        /// Update a topic
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /UpdateTopic
+        ///     url : https://localhost:5001/Course/topic
+        /// 
+        ///     * fields are required
+        /// 
+        ///     body
         ///     {
-        ///      "topicId":1,
-        ///      "courseId": 3,
-        ///      "name": "topic",
-        ///      "duration": "1 hr",
-        ///      "content": "topic content"
+        ///         topicId* : int 
+        ///         courseId* : int      
+        ///         name* : string
+        ///         duration* : string
+        ///         content* : string
+        ///         updatedOn : dateTime
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the topic was updated. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course or topic was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
-        /// <returns></returns>
         [HttpPut("topic")]
         public IActionResult UpdateTopic(Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var topicExists = Validation.TopicExists(_context,topic.TopicId);
+            var topicExists = Validation.TopicExists(_context,topic.TopicId,topic.CourseId);
             if(topicExists)
             {
                 try
@@ -449,29 +444,27 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+
         /// <summary>
-        /// This method is invoked when the Coordinator wants to Disable a Topic
+        /// To disable the topic
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /DisableTopic
-        ///     {
-        ///        "topicId": 1
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/(courseId)/topics/disable/(topicId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the topic was disabled / deleted. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course or topic was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         /// <returns></returns>
-        [HttpPut("topics/disable/{topicId:int}")]
-        public IActionResult DisableTopic(int topicId)
+        [HttpPut("{courseId:int}/topics/disable/{topicId:int}")]
+        public IActionResult DisableTopic(int courseId,int topicId)
         {
-            var topicExists = Validation.TopicExists(_context,topicId);
+            var topicExists = Validation.TopicExists(_context,topicId,courseId);
             if(topicExists)
             {
                 try
@@ -489,6 +482,34 @@ namespace TMS.API.Controllers
 
         }
         
+        /// <summary>
+        /// To assign users to the course
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     url : https://localhost:5001/Course/assignUser
+        ///     
+        ///     * fields are required
+        /// 
+        ///     body
+        ///     {
+        ///         courseId* : int,
+        ///         users* : (list of objects with userId and roleId)
+        ///         [
+        ///             {
+        ///                 userId* : int,
+        ///                 roleId* : int
+        ///             }
+        ///         ]
+        ///     }
+        /// 
+        /// </remarks>
+        /// <response code="200">Returns a list successfully assigned users. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="data"></param>
         [HttpPut("assignUser")]
         public IActionResult AssignUsersToCourse(AddUsersToCourse data)
         {
@@ -500,6 +521,35 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+
+        /// <summary>
+        /// To remove users from the course
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     url : https://localhost:5001/Course/removeUsers
+        ///     
+        ///     * fields are required
+        /// 
+        ///     body
+        ///     {
+        ///         courseId* : int,
+        ///         users* : (list of objects with userId and roleId)
+        ///         [
+        ///             {
+        ///                 userId* : int,
+        ///                 roleId* : int
+        ///             }
+        ///         ]
+        ///     }
+        /// 
+        /// </remarks>
+        /// <response code="200">Returns a list successfully removed users. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="data"></param>
         [HttpPut("removeUsers")]
         public IActionResult RemoveUsersFromCourse(AddUsersToCourse data)
         {
@@ -511,29 +561,26 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-           /// <summary>
-        /// This method is invoked when the User wants to view Assigment based on the Topic
+
+        /// <summary>
+        /// Gets a list of assigments in a topic by courseId and topicId
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetAssignmentsByTopicId
-        ///     {
-        ///        "topicId": 1
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/(courseId:int)/topics/(topicId:int)/assignments
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">Returns a list of assigments present in a topic. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If course was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
+        /// <param name="courseId"></param>
         /// <param name="topicId"></param>
-        /// <returns></returns>
-        [HttpGet("topics/{topicId:int}/assignments")]
-        public IActionResult GetAssignmentsByTopicId(int topicId)
+        [HttpGet("{courseId:int}/topics/{topicId:int}/assignments")]
+        public IActionResult GetAssignmentsByTopicId(int courseId,int topicId)
         {
-            var topicExists = Validation.TopicExists(_context,topicId);
+            var topicExists = Validation.TopicExists(_context,topicId,courseId);
             if(topicExists)
             {
                 try
@@ -548,29 +595,25 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-          /// <summary>
-        /// This method is invoked when the Trainer wants to view Assignment 
+          
+        /// <summary>
+        /// Gets a single assigments in a topic by courseId, topicId and ownerId
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /GetAssignmentByTopicIdAndOwnerId
-        ///     {
-        ///        "topicId": 1,
-        ///        "ownerId": 13
-        ///       
-        ///     }
+        ///     url : https://localhost:5001/Course/(courseId:int)/topics/(topicId:int)/assignments/(ownerId:int)
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">Returns a single assigments in a topic by courseId, topicId and ownerId. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If assignment was not found. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         /// <param name="ownerId"></param>
         /// <returns></returns>
-        [HttpGet("topics/assignments/{courseId:int},{topicId:int},{ownerId:int}")]
+        [HttpGet("{courseId:int}/topics/{topicId:int}/assignments/{ownerId:int}")]
         public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId,int topicId,int ownerId)
         {
             var assignmentExists = Validation.AssignmentExists(_context,courseId,topicId,ownerId);
@@ -580,39 +623,40 @@ namespace TMS.API.Controllers
                 {
                     var result = _courseService.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId,topicId,ownerId,_context);
                     if (result is not null) return Ok(result);
-                    return NotFound();
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
+                    return Problem(ProblemResponse);
                 }
-                return Problem(ProblemResponse);
             }
             return NotFound();
         }
-         /// <summary>
-        /// This method is invoked when the trainee/trainer wants to create Assignment
+               
+        /// <summary>
+        /// Create a assignment
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /CreateAssignment
+        ///     url : https://localhost:5001/Course/assignment
+        /// 
+        ///     * fields are required
+        /// 
+        ///     body
         ///     {
-        ///          "topicId": 1,
-        ///          "statusId": 1,
-        ///          "ownerId": 13,
-        ///          "base64": "string",
-        ///          "document": "string",
-        ///       
+        ///         courseId* : int      
+        ///         topicId* : int 
+        ///         ownerId* : int 
+        ///         base64* : string (the document in base64)
+        ///         createdOn : dateTime
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the assignment was submitted. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
-        /// <returns></returns>
         [HttpPost("assignment")]
         public IActionResult CreateAssignment(Assignment assignment)
         {
@@ -634,32 +678,31 @@ namespace TMS.API.Controllers
             }
             return Problem(ProblemResponse);
         }
-         /// <summary>
-        /// This method is invoked when the trainee/trainer wants to Update Assignment
+               
+        /// <summary>
+        /// Update a assignment
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /UpdateAssignment
+        ///     url : https://localhost:5001/Course/assignment
+        /// 
+        ///     * fields are required
+        /// 
+        ///     body
         ///     {
-        ///          "id": 1,    
-        ///          "topicId": 1,
-        ///          "statusId": 1,
-        ///          "ownerId": 13,
-        ///          "base64": "string",
-        ///          "document": "string"
-        ///       
-        ///       
+        ///         courseId* : int      
+        ///         topicId* : int 
+        ///         ownerId* : int 
+        ///         base64* : string (the document in base64)
+        ///         createdOn : dateTime
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the assignment was submitted. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
-        /// <returns></returns>
-        /// ///
         [HttpPut("assignment")]
         public IActionResult UpdateAssignment(Assignment assignment)
         {

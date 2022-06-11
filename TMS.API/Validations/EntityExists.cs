@@ -63,6 +63,10 @@ namespace TMS.API
         {
             return dbContext.Roles.Any(r=>r.Id==roleId);
         } 
+        public static bool TopicExists(AppDbContext dbContext, int topicId, int courseId)
+        {
+            return dbContext.Topics.Any(t=>t.TopicId==topicId && t.CourseId == courseId);
+        } 
         public static bool TopicExists(AppDbContext dbContext, int topicId)
         {
             return dbContext.Topics.Any(t=>t.TopicId==topicId);
