@@ -134,7 +134,8 @@ namespace TMS.API.Controllers
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
-        [HttpPost("department")]
+        /// <returns></returns>
+        [HttpPost("departments")]
         public IActionResult CreateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
