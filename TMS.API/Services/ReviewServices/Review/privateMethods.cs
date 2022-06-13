@@ -4,20 +4,9 @@ namespace TMS.API.Services
 {
     public partial class ReviewService
     {
-        private void CreateAndSaveReview(Review review,AppDbContext dbContext)
-        {
-            //review.StatusId=1;
-            dbContext.Reviews.Add(review);
-            dbContext.SaveChanges();
-        }
         private void SetUpReviewDetails(Review review)
         {
             review.CreatedOn = DateTime.UtcNow;
-        }
-        private void UpdateAndSaveReview(Review dbReview,AppDbContext dbContext)
-        {
-            dbContext.Reviews.Update(dbReview);
-            dbContext.SaveChanges();
         }
         private void SetUpReviewDetails(Review review, Review dbReview)
         {

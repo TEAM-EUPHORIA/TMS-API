@@ -26,6 +26,6 @@ namespace TMS.API.Repositories
         Topic GetTopicById(int courseId,int topicId);
         void CreateTopic(Topic topic);
         void UpdateTopic(Topic topic);
-        void DisableTopic(int topicId);
+        void DisableTopic(int courseId,int topicId);
     }
 }

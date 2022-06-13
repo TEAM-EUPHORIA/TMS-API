@@ -49,9 +49,9 @@ namespace TMS.API.Repositories
             }
         }
 
-        public void DisableTopic(int topicId)
+        public void DisableTopic(int courseId,int topicId)
         {
-            var data = dbContext.Topics.Find(topicId);
+            var data = dbContext.Topics.Where(t=>t.CourseId == courseId && t.TopicId == topicId).FirstOrDefault();
             if(data != null)
             {
                 data.isDisabled = true;

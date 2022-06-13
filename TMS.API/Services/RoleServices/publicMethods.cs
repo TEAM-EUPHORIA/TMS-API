@@ -6,14 +6,22 @@ namespace TMS.API.Services
 {
     public class RoleService
     {
-        public IEnumerable<Role> GetRoles(AppDbContext dbContext)
+        private readonly UnitOfWork _repo;
+        
+
+        public RoleService(UnitOfWork repo)
         {
-            return dbContext.Roles.ToList();
+            _repo = repo;
+            
         }
-        public IEnumerable<User> GetUsersByRole(int roleId, AppDbContext dbContext)
+        public IEnumerable<Role> GetRoles()
         {
-            var roleExists = Validation.RoleExists(dbContext, roleId);
-            if (roleExists) return dbContext.Users.Where(u => u.RoleId == roleId).Include(u => u.Role).Include(u => u.Department!).ToList();
+            return _repo.Roles.GetRoles();
+        }
+        public IEnumerable<User> GetUsersByRole(int roleId)
+        {
+            var roleExists = _repo.Validation.RoleExists(roleId);
+            if (roleExists) return _repo.Roles.GetUsersByRole(roleId);
             else throw new ArgumentException("Invalid Id");
         }
     }

@@ -1,56 +1,61 @@
 using Microsoft.EntityFrameworkCore;
+using TMS.API.Repositories;
 using TMS.BAL;
 
 namespace TMS.API.Services
 {
     public partial class ReviewService
     {
-        public IEnumerable<MOM> GetListOfMomByUserId(int userId,AppDbContext dbContext)
+        private readonly UnitOfWork _repo;
+        
+
+        public ReviewService(UnitOfWork repo)
         {
-            var userExists = Validation.UserExists(dbContext,userId);
-            if(userExists) return dbContext.MOMs.Where(m=>m.TraineeId==userId).Include(m=>m.Review).Include(m=>m.Trainee); 
+            _repo = repo;
+            
+        }
+        public IEnumerable<MOM> GetListOfMomByUserId(int userId)
+        {
+            var userExists = _repo.Validation.UserExists(userId);
+            if(userExists) return _repo.Reviews.GetListOfMomByUserId(userId);
             else throw new ArgumentException("Invalid Id");          
         }
-        public MOM GetMomByReviewIdAndTraineeId(int reviewId,int traineeId,AppDbContext dbContext)
+        public MOM GetMomByReviewIdAndTraineeId(int reviewId,int traineeId)
         {
-            var reviewExists = Validation.ReviewExists(dbContext,reviewId);
-            var traineeExists = Validation.UserExists(dbContext,traineeId);
+            var reviewExists = _repo.Validation.ReviewExists(reviewId);
+            var traineeExists = _repo.Validation.UserExists(traineeId);
             if(reviewExists && traineeExists)
             {
-                var momExists = Validation.MOMExists(dbContext,reviewId,traineeId);
+                var momExists = _repo.Validation.MOMExists(reviewId,traineeId);
                 if(momExists) 
                 {
-                    var result = dbContext.MOMs.Where(m=>m.ReviewId==reviewId && m.TraineeId == traineeId).FirstOrDefault();
-                    if(result is not null) return result;
+                    return _repo.Reviews.GetMomByReviewIdAndTraineeId(reviewId,traineeId);;
                 }
             }
             throw new ArgumentException("Inavlid Id's");
         }
-        public Dictionary<string,string> CreateMom(MOM mom,AppDbContext dbContext)
+        public Dictionary<string,string> CreateMom(MOM mom)
         {
             if(mom is null) throw new ArgumentNullException(nameof(mom));
-            var validation = Validation.ValidateMOM(mom,dbContext);
+            var validation = _repo.Validation.ValidateMOM(mom);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
                 SetUpMomDetails(mom);
-                CreateAndSaveMom(mom,dbContext);   
+                _repo.Reviews.CreateMom(mom);
             }
             return validation;
         }
-        public Dictionary<string,string> UpdateMom(MOM mom,AppDbContext dbContext)
+        public Dictionary<string,string> UpdateMom(MOM mom)
         {
             if(mom is null) throw new ArgumentNullException(nameof(mom));
-            var validation = Validation.ValidateMOM(mom,dbContext);
+            var validation = _repo.Validation.ValidateMOM(mom);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             { 
-                var dbMom = dbContext.MOMs.Find(mom.ReviewId,mom.TraineeId);
-                if(dbMom is not null)
-                {
-                    SetUpMomDetails(mom, dbMom);
-                    UpdateAndSaveMom(dbMom,dbContext);
-                }
+                var dbMom = _repo.Reviews.GetMomByReviewIdAndTraineeId(mom.ReviewId,mom.TraineeId);
+                SetUpMomDetails(mom, dbMom);
+                _repo.Reviews.UpdateMom(dbMom);
+                
             }
-            validation.Add("Invalid Id","Not Found");   
             return validation;
         }
     }

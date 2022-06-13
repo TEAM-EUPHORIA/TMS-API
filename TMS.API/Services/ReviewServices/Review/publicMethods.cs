@@ -7,45 +7,42 @@ namespace TMS.API.Services
 {
     public partial class ReviewService
     {
-        public IEnumerable<Review> GetReviewByStatusId(int statusId, AppDbContext dbContext)
+        public IEnumerable<Review> GetReviewByStatusId(int statusId)
         {
-            var reviewStatusExists = Validation.ReviewStatusExists(dbContext, statusId);
-            if (reviewStatusExists) return dbContext.Reviews.Where(r => r.StatusId == statusId).Include(r => r.Reviewer).Include(r => r.Trainee).Include(r => r.Status);
+            var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
+            if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId);
             else throw new ArgumentException("Invalid Id");
         }
-        public Review GetReviewById(int reviewId, AppDbContext dbContext)
+        public Review GetReviewById(int reviewId)
         {
-            var reviewExists = Validation.ReviewExists(dbContext, reviewId);
+            var reviewExists = _repo.Validation.ReviewExists(reviewId);
             if (reviewExists)
             {
-                var result = dbContext.Reviews.Where(r => r.Id == reviewId).Include(r => r.Reviewer).Include(r => r.Trainee).FirstOrDefault();
-                if (result is not null) return result;
+                var result = _repo.Reviews.GetReviewById(reviewId);
+                return result;
             }
             throw new ArgumentException("Invalid Id");
         }
-        public Dictionary<string, string> CreateReview(Review review, AppDbContext dbContext)
+        public Dictionary<string, string> CreateReview(Review review)
         {
             if (review is null) throw new ArgumentNullException(nameof(review));
-            var validation = Validation.ValidateReview(review, dbContext);
+            var validation = _repo.Validation.ValidateReview(review);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
                 SetUpReviewDetails(review);
-                CreateAndSaveReview(review, dbContext);
+                _repo.Reviews.CreateReview(review);
             }
             return validation;
         }
-        public Dictionary<string, string> UpdateReview(Review review, AppDbContext dbContext)
+        public Dictionary<string, string> UpdateReview(Review review)
         {
             if (review is null) throw new ArgumentNullException(nameof(review));
-            var validation = Validation.ValidateReview(review, dbContext);
+            var validation = _repo.Validation.ValidateReview(review);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                var dbReview = dbContext.Reviews.Find(review.Id);
-                if (dbReview is not null)
-                {
-                    SetUpReviewDetails(review, dbReview);
-                    UpdateAndSaveReview(dbReview, dbContext);
-                }
+                var dbReview = _repo.Reviews.GetReviewById(review.Id);                
+                SetUpReviewDetails(review, dbReview);
+                _repo.Reviews.UpdateReview(dbReview);
             }
             return validation;
         }

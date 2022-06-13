@@ -1,3 +1,4 @@
+using TMS.API.ViewModels;
 using TMS.BAL;
 
 
@@ -5,31 +6,30 @@ namespace TMS.API.Services
 {
     public partial class CourseService
     {
-        private void AddUsersToCourseAndSave(List<CourseUsers> validList, AppDbContext dbContext)
+        private List<CourseUsers> GetListOfValidUsers(AddUsersToCourse data)
         {
-            dbContext.CourseUsers.AddRange(validList);
-            dbContext.SaveChanges();
+            var validList = new List<CourseUsers>();
+            bool courseUsertExists = false;
+            foreach (var user in data.users)
+            {
+                courseUsertExists = _repo.Validation.CourseUserExists(data.CourseId, user.UserId, user.RoleId);
+                if (!courseUsertExists)
+                {
+                    var courseUser = new CourseUsers();
+                    courseUser.CourseId = data.CourseId;
+                    courseUser.UserId = user.UserId;
+                    courseUser.RoleId = user.RoleId;
+                    validList.Add(courseUser);
+                }
+            }
+            return validList.Distinct().ToList();
         }
-        private void RemoveUsersFromCourseAndSave(List<CourseUsers> validList, AppDbContext dbContext)
+        private void SetUpCourseDetails(Course course)
         {
-            dbContext.CourseUsers.RemoveRange(validList);
-            dbContext.SaveChanges();
-        }
-        private void UpdateAndSaveCourse(Course course,AppDbContext dbContext)
-        {
-            dbContext.Courses.Update(course);
-            dbContext.SaveChanges();
-        }
-        private void CreateAndSaveCourse(Course course,AppDbContext dbContext)
-        {
-            dbContext.Courses.Add(course);
-            dbContext.SaveChanges();
-        }
-        private void SetUpCourseDetails(Course course,AppDbContext dbContext)
-        {
-            var user = dbContext.Users.Find(course.TrainerId);
+            var user = _repo.Users.GetUserById(course.TrainerId);
             var courseTrainer = new CourseUsers(){CourseId=course.Id,UserId=course.TrainerId,RoleId=3};
             course.UserMapping = new List<CourseUsers>();
+            
             course.UserMapping.Add(courseTrainer);
             course.CreatedOn = DateTime.UtcNow;
         }
@@ -39,7 +39,7 @@ namespace TMS.API.Services
             dbCourse.Name = course.Name;
             dbCourse.Duration = course.Duration;
             dbCourse.Description = course.Description;
-            course.UpdatedOn = DateTime.UtcNow;
+            dbCourse.UpdatedOn = DateTime.UtcNow;
         }
     }
 }

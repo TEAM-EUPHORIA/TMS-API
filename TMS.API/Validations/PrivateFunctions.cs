@@ -5,73 +5,73 @@ using TMS.BAL;
 
 namespace TMS.API
 {
-    public static partial class Validation
+    public partial class Validation
     {
-        private static void AddEntery(string key)
+        public void AddEntery(string key,string value)
         {
-            result.Add($"{key}", $"InValid data");
+            result.Add(key,value);
         }
-        private static void AddEntery(string key,string value)
+        public void AddEnteryValidateCourseUser(bool courseExists,bool userexists)
         {
-            result.Add($"{key}", $"{value}");
+            if(!courseExists) AddEntery("courseId","Can't find the course");
+            if(!userExists) AddEntery("userId, roleId","Can't find the user");
         }
-        private static void AddEnteryForUsers(bool reviewerId,bool traineeId)
+        public void AddEnteryValidateAssignment(bool courseExists,bool topicExists,bool userexists)
         {
-            if(!reviewerId) AddEntery($"{nameof(reviewerId)}","Can't find the User");
-            if(!traineeId)AddEntery($"{nameof(reviewerId)}","Can't find the User");
+            if(!courseExists) AddEntery("courseId","Can't find the course");
+            if(!topicExists) AddEntery("topicId","Can't find the topic");
+            if(!userExists) AddEntery("ownerId","Can't find the user");
         }
-        private static void AddEnteryForUserAndReview(bool userExists,bool reviewExists, bool momExists)
+        public void AddEnteryValidateAttendance(bool courseExists,bool topicExists,bool userexists)
         {
-            if(!userExists) AddEntery("UserExists","Can't find the User");
-            if(!reviewExists) AddEntery("reviewExists","Can't find the Review or Review was not completed");
-            if(momExists)AddEntery("momExists","MOM Already Exists");
+            if(!courseExists) AddEntery("courseId","Can't find the course");
+            if(!topicExists) AddEntery("topicId","Can't find the topic");
+            if(!userExists) AddEntery("ownerId","Can't find the user");
         }
-        private static void AddEnteryForCourseAndUser(bool courseExists,bool userExists,int courseId)
+        public void AddEnteryValidateCourse(bool courseExists, bool userExists, bool departmentExists, bool isCourseNameAvailable)
         {
-            if(!courseExists && courseId != 0) AddEntery("courseExists","Can't find the Course");
-            if(!userExists) AddEntery("userExists","Can't find the User");
-            
-
+            if(!userExists) AddEntery("trainerId","can't find the user");
+            if(!courseExists) AddEntery("courseId","can't find the course");
+            if(!departmentExists) AddEntery("departmentId","can't find the department");
+            if(!isCourseNameAvailable) AddEntery("name","Course with that name already exists");
         }
-         private static void AddEnteryForCourseAndUserWithDept(bool courseExists,bool userExists,bool departmentExists,int courseId,bool courseValidationExists)
+        public void AddEnteryValidateCourseFeedback(bool courseExists, bool userExists)
         {
-            if(!courseExists && courseId != 0) AddEntery("courseExists","Can't find the Course");
-            if(!userExists) AddEntery("UserExists","Can't find the User");
-            if(!departmentExists)AddEntery("departmetExists","Can't find the Department");
-            if(courseValidationExists)AddEntery("courseValidationExists","Alraedy course Exists for this Department");
-            
+            if(!userExists) AddEntery("traineeId","can't find the user");
+            if(!courseExists) AddEntery("courseId","can't find the course");
         }
-         private static void AddEnteryForValidateTopic(bool sa,bool courseExists,int courseId)
+        public void AddEnteryValidateMOM(bool userExists, bool reviewExists, bool momExists)
         {
-            if(!courseExists && courseId != 0) AddEntery("courseExists","Can't find the Course");
-            if(sa)AddEntery("Invalid Id","Alraedy Topic Exists for this Course");
-
+            if(!userExists) AddEntery("traineeId","can't find the user");
+            if(!reviewExists) AddEntery("reviewId","can't find the review");
+            if(momExists) AddEntery("mom","mom already exists");
         }
-        private static void AddEnteryForTopic(bool sa)
+        public void AddEnteryValidateTopic(bool isTopicNameAvailabe, bool courseExists, bool topicExists)
         {
-            
-            if(sa)AddEntery("Invalid Id","Alraedy Topic Exists for this Course");
+            if(!courseExists) AddEntery("courseId","can't find the course");
+            if(!topicExists) AddEntery("topicId","can't find the topic");
+            if(!isTopicNameAvailabe) AddEntery("name","Topic with that name already exists");
         }
-        private static void AddEnteryForCourseTopicAndUser(bool courseExists,bool topicExists,bool userExists)
+        public void AddEnteryValidateTraineeFeedback(bool courseExists,bool userExists, bool traineeExists)
         {
-            if(!courseExists) AddEntery("courseExists","Can't find the Course");
-            if(!topicExists) AddEntery("topicExists","Can't find the Topic in the Course");
-            if(!userExists) AddEntery("userExists","Can't find the User");
+            if(!courseExists) AddEntery("courseId","can't find the course");
+            if(!userExists) AddEntery("trainerId","can't find the user");
+            if(!traineeExists) AddEntery("traineeId","can't find the user");
         }
-        private static void checkIdForCourseTopicAndUser(int courseId,int topicId,int userId)
+        public void checkIdForCourseTopicUser(int courseId, int topicId, int ownerId)
         {
-            checkIdAndAddEntery(courseId,"Course Id");
-            checkIdAndAddEntery(topicId,"Topic Id");
-            checkIdAndAddEntery(userId,"Owner Id");
+            if(courseId == 0) AddEntery("courseId","can't be zero");
+            if(topicId == 0) AddEntery("topicId","can't be zero");
+            if(ownerId == 0) AddEntery("ownerId","can't be zero");
         }
-        private static void validateAndAddEntery(string input,string regex)
+        public void validateAndAddEntery(string key,string input,string regex)
         {
-            bool result = Regex.Match(input,regex).Success;
-            if(!result)AddEntery(input,"Invalid Data");
+            if(!Regex.Match(input,regex).Success)
+                AddEntery(key,"Invalid Data");
         }
-        private static void checkIdAndAddEntery(int id,string nameOfKey)
+        public void checkIdAndAddEntery(int id,string key)
         {
-            if(id==0) AddEntery(nameOfKey);
+            if(id == 0) AddEntery(key,"can't be zero");
         }
     }
 }

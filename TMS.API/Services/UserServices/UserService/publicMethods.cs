@@ -1,65 +1,65 @@
 using Microsoft.EntityFrameworkCore;
+using TMS.API.Repositories;
 using TMS.BAL;
 
 namespace TMS.API.Services
 {
     public partial class UserService
     {
-        public IEnumerable<User> GetUsersByDeptandrole(int departmentId, int roleId, AppDbContext dbContext)
+        private readonly UnitOfWork _repo;
+        
+
+        public UserService(UnitOfWork repo)
         {
-            var departmentExists = Validation.DepartmentExists(dbContext, departmentId);
-            var roleExists = Validation.RoleExists(dbContext, roleId);
-            if (departmentExists && roleExists) return dbContext.Users.Where(u => u.DepartmentId == departmentId && u.RoleId == roleId).Include(u => u.Role).Include(u => u.Department!).ToList();
+            _repo = repo;
+            
+        }
+        public IEnumerable<User> GetUsersByDeptandrole(int departmentId, int roleId)
+        {
+            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
+            var roleExists = _repo.Validation.RoleExists(roleId);
+            if (departmentExists && roleExists) return _repo.Users.GetUsersByDeptandrole(departmentId,roleId);
             else throw new ArgumentException("Invalid Id's");
         }
-        public User GetUserById(int id, AppDbContext dbContext)
+        public User GetUserById(int userId)
         {
-            var userExists = Validation.UserExists(dbContext, id);
+            var userExists = _repo.Validation.UserExists(userId);
             if (userExists)
             {
-                var result = dbContext.Users.Where(u => u.Id == id).Include(u => u.Role).Include(u => u.Department!).FirstOrDefault();
-                if (result is not null) return result;
+                var result =  _repo.Users.GetUserById(userId);
+                return result;
             }
             throw new ArgumentException("Invalid Id");
         }
-        public Dictionary<string, string> CreateUser(User user, AppDbContext dbContext)
+        public Dictionary<string, string> CreateUser(User user)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
-            var validation = Validation.ValidateUser(user, dbContext);
+            var validation = _repo.Validation.ValidateUser(user);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                SetUpUserDetails(user, dbContext);
-                CreateAndSaveUser(user, dbContext);
+                SetUpUserDetails(user);
+                _repo.Users.CreateUser(user);
             }
             return validation;
         }
-        public Dictionary<string, string> UpdateUser(User user, AppDbContext dbContext)
+        public Dictionary<string, string> UpdateUser(User user)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
-            var validation = Validation.ValidateUser(user, dbContext);
+            var validation = _repo.Validation.ValidateUser(user);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                var dbUser = dbContext.Users.Find(user.Id);
-                if (dbUser is not null)
-                {
-                    SetUpUserDetails(user, dbUser);
-                    UpdateAndSaveUser(dbUser, dbContext);
-                }
+                var dbUser = _repo.Users.GetUserById(user.Id);
+                SetUpUserDetails(user, dbUser);
+                _repo.Users.UpdateUser(dbUser);  
             }
             return validation;
         }
-        public bool DisableUser(int userId, AppDbContext dbContext)
+        public bool DisableUser(int userId)
         {
-            var userExists = Validation.UserExists(dbContext, userId);
+            var userExists = _repo.Validation.UserExists(userId);
             if (userExists)
             {
-                var dbUser = dbContext.Users.Find(userId);
-                if (dbUser is not null)
-                {
-                    dbUser.isDisabled = true;
-                    dbUser.UpdatedOn = DateTime.UtcNow;
-                    UpdateAndSaveUser(dbUser, dbContext);
-                }
+                _repo.Users.DisableUser(userId);
             }
             return userExists;
         }

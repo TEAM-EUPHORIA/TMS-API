@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Controllers;
 using TMS.API.Services;
@@ -6,16 +7,19 @@ using TMS.API.ViewModels;
 
 namespace TMS.API
 {
-    public class AuthController : MyBaseController
+    public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
+        private readonly Validation _validation;
         private readonly AuthService _authService;
 
-        public AuthController(AuthService authService, ILogger<AuthController> logger,AppDbContext dbContext):base(dbContext)
+        public AuthController(UnitOfService service, ILogger<AuthController> logger)
         {
             _logger = logger;
-            _authService = authService;
+            _validation = service.Validation;
+            _authService = service.AuthService;
         }
+        
         /// <summary>
         /// Login to the system
         /// </summary>
@@ -34,15 +38,15 @@ namespace TMS.API
         /// <response code="401">Invalid credentials. </response>
         /// <response code="500">If there is problem in server. </response>
         /// <param name="user"></param>
-        [HttpPost("login")]
+        [HttpPost("login")][AllowAnonymous]
         public IActionResult Login(LoginModel user)
         {
-            var validation = Validation.ValidateLoginDetails(user,_context);
+            var validation = _validation.ValidateLoginDetails(user);
             try
             {
                 if(validation.ContainsKey("IsValid"))
                 {
-                    var result = _authService.Login(user,_context);
+                    var result = _authService.Login(user);
                     if(result is not null) return (Ok(result));
                 }
                 return Unauthorized();
@@ -50,7 +54,7 @@ namespace TMS.API
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(AuthController), nameof(Login));
-                return Problem(ProblemResponse);
+                return Problem();
             }
         }
     }

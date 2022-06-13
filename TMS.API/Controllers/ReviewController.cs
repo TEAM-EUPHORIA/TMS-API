@@ -8,119 +8,122 @@ namespace TMS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ReviewController : MyBaseController
+    public class ReviewController : ControllerBase
     {
         private readonly ILogger<ReviewController> _logger;
         private readonly ReviewService _reviewService;
+        private readonly Validation _validation;
 
-        public ReviewController(ILogger<ReviewController> logger, ReviewService reviewService,AppDbContext dbContext):base(dbContext)
+        public ReviewController(UnitOfService service,ILogger<ReviewController> logger)
         {
             _logger = logger;
-            _reviewService = reviewService;
+            _reviewService = service.ReviewService;
+            _validation = service.Validation;
         }
-       /// <summary>
+
+        /// <summary>
         /// Get all Review by Status 
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///      url:https://localhost:5001/Review/review/status/(statusId:int)
+        ///     url : https://localhost:5001/Review/review/status/(statusId:int)
         ///
         /// </remarks>
-       /// <response code="500">If there is problem in server.</response>
         /// <response code="200">Returns a Review.</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="500">If there is problem in server.</response>
         /// <param name="statusId"></param>
-       /// <returns></returns>
        [HttpGet("review/status/{statusId:int}")]
         public IActionResult GetReviewByStatusId(int statusId)
         {
-            var statusExists = Validation.ReviewStatusExists(_context,statusId);
+            var statusExists = _validation.ReviewStatusExists(statusId);
             if(statusExists)
             {
                 try
                 {
-                    var result = _reviewService.GetReviewByStatusId(statusId,_context);
+                    var result = _reviewService.GetReviewByStatusId(statusId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();
         }
+
         /// <summary>
         /// Get a Review
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     url:https://localhost:5001/Review/(reviewId:int)
+        ///     url : https://localhost:5001/Review/(reviewId:int)
         ///
         /// </remarks>
-        /// <response code="500">If there is problem in server.</response>
         /// <response code="200">Returns a Review.</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="500">If there is problem in server.</response>
         /// <param name="reviewId"></param>
-       /// <returns></returns>
         [HttpGet("{reviewId:int}")]
         public IActionResult GetReviewById(int reviewId)
         {
-            var reviewExists = Validation.ReviewExists(_context,reviewId);
+            var reviewExists = _validation.ReviewExists(reviewId);
             if(reviewExists)
             {
                 try
                 {
-                    var result = _reviewService.GetReviewById(reviewId,_context);
+                    var result = _reviewService.GetReviewById(reviewId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();
         }
+
         /// <summary>
         /// To Create a Review
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     url:https://localhost:5001/Review/review
+        ///     url : https://localhost:5001/Review/review
         /// 
         ///      * fields are required
         /// 
         ///     POST /CreateReview
         ///     {
-        ///        reviewerId*: int,
-        ///        statusId*: int,
-        ///        traineeId*: int,
-        ///        reviewDate*: DateTime,
-        ///        reviewTime*: DateTime,
-        ///        mode*: String  
+        ///        reviewerId* : int,
+        ///        statusId* : int,
+        ///        traineeId* : int,
+        ///        reviewDate* : DateTime,
+        ///        reviewTime* : DateTime,
+        ///        mode* : String  
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">If there is problem in server.</response>
         /// <response code="200">If the Review was created..</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
-        /// <returns></returns>
         [HttpPost("review")]
         public IActionResult CreateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = Validation.ValidateReview(review,_context);
+                var IsValid = _validation.ValidateReview(review);
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the review. the review already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    var res = _reviewService.CreateReview(review,_context);
+                    review.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _reviewService.CreateReview(review);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -128,7 +131,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateReview));
-                return Problem(ProblemResponse);
+                return Problem();
             }
         }
 
@@ -138,42 +141,41 @@ namespace TMS.API.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     url:https://localhost:5001/Review/review
+        ///     url : https://localhost:5001/Review/review
         /// 
         ///     * fields are required
         /// 
         ///     PUT /UpdateReview
         ///     {
-        ///        id*: int,
-        ///        reviewerId*: int,
-        ///        statusId*: int,
-        ///        traineeId*: int,
-        ///        reviewDate*: DateTime,
-        ///        reviewTime*: DateTime,
-        ///        mode*: string
+        ///        id* : int,
+        ///        reviewerId* : int,
+        ///        statusId* : int,
+        ///        traineeId* : int,
+        ///        reviewDate* : DateTime,
+        ///        reviewTime* : DateTime,
+        ///        mode* : string
         ///        
         ///     }
         ///
         /// </remarks>
-         /// <response code="500">If there is problem in server.</response>
         /// <response code="200">If the Review was created.</response>
-        /// <response code="404">If Feedback was not found. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="404">If Feedback was not found. </response>
+        /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
-       /// <returns></returns>
         [HttpPut("review")]
         public IActionResult UpdateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var reviewExists = Validation.ReviewExists(_context,review.Id);
+            var reviewExists = _validation.ReviewExists(review.Id);
             if(reviewExists)
             {
                 try
                 {
-                    var IsValid = Validation.ValidateReview(review,_context);
+                    var IsValid = _validation.ValidateReview(review);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        var res = _reviewService.UpdateReview(review,_context);
+                        var res = _reviewService.UpdateReview(review);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -181,120 +183,119 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();
 
         }
+
         /// <summary>
         /// Gets list of MOM by UserId
         /// </summary>
         /// <remarks>
         /// Sample request:
         /// 
-        /// url : https://localhost:5001/Review/mom/user/(userId:int)
-        ///
+        ///     url : https://localhost:5001/Review/mom/user/(userId:int)
         ///
         /// </remarks>
-        /// <response code="500">If there is problem in server.</response>
         /// <response code="200">Returns the list of MOM</response>
-        /// <response code="404">If there is problem in server</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
-       /// <param name="userId"></param>
-
+        /// <response code="404">If there is problem in server</response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <param name="userId"></param>
         [HttpGet("mom/user/{userId:int}")]
         public IActionResult GetListOfMomByUserId(int userId)
         {
-            var userExists = Validation.UserExists(_context,userId);
+            var userExists = _validation.UserExists(userId);
             if(userExists)
             {
                 try
                 {
-                    var result = _reviewService.GetListOfMomByUserId(userId,_context);
+                    var result = _reviewService.GetListOfMomByUserId(userId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();
         }
-          /// <summary>
-        /// Gets the list of MOM
+
+        /// <summary>
+        /// Get a MOM
         /// </summary>
         /// <remarks>
         /// Sample request:
         /// 
-        /// url : https://localhost:5001/Review/mom/(reviewId:int,traineeId:int)
-        ///
+        ///     url : https://localhost:5001/Review/mom/(reviewId:int,traineeId:int)
         ///
         /// </remarks>
-        /// <response code="500">Returns list of MOM.</response>
         /// <response code="200">If the course was created.</response>
-        /// <response code="404">If MOM was not found.</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="404">If MOM was not found.</response>
+        /// <response code="500">Returns a MOM.</response>
         /// <param name="reviewId"></param>
         /// <param name="traineeId"></param>
-
         [HttpGet("mom/{reviewId:int},{traineeId:int}")]
         public IActionResult GetMomByReviewIdAndTraineeId(int reviewId,int traineeId)
         {
-            var momExists = Validation.MOMExists(_context,reviewId,traineeId);
+            var momExists = _validation.MOMExists(reviewId,traineeId);
             if(momExists)
             {
                 try
                 {
-                    var result = _reviewService.GetMomByReviewIdAndTraineeId(reviewId,traineeId,_context);
+                    var result = _reviewService.GetMomByReviewIdAndTraineeId(reviewId,traineeId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetMomByReviewIdAndTraineeId));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();
         }
-       /// <summary>
+
+        /// <summary>
         /// Create a MOM
         /// </summary>
         /// <remarks>
         /// Sample request:
         /// 
-        /// url : https://localhost:5001/Review/mom
+        ///     url : https://localhost:5001/Review/mom
         ///
         ///     * fields are required
         ///     body
         ///     {
-       ///        reviewId*: int
-        ///       statusId*: int
-        ///       ownerId*: int
-        ///       agenda*: string
-        ///       meetingNotes*: string
-        ///       purposeOfMeeting*: string
+        ///       reviewId* : int
+        ///       statusId* : int
+        ///       ownerId* : int
+        ///       agenda* : string
+        ///       meetingNotes* : string
+        ///       purposeOfMeeting* : string
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">If there is problem in server.</response>
         /// <response code="200">If the MOM was created.</response>
-        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="404">If MOM was not found.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
-
         [HttpPost("mom")]
         public IActionResult CreateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = Validation.ValidateMOM(mom,_context);
+                var IsValid = _validation.ValidateMOM(mom);
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the mom. The Mom Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    var res = _reviewService.CreateMom(mom,_context);
+                    mom.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _reviewService.CreateMom(mom);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -302,51 +303,50 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateMom));
-                return Problem(ProblemResponse);
+                return Problem();
             }
         }
-          /// <summary>
+
+        /// <summary>
         /// Update a MOM
         /// </summary>
         /// <remarks>
         /// Sample request:
         /// 
-        /// url : https://localhost:5001/Review/mom
+        ///     url : https://localhost:5001/Review/mom
         ///
-        ///    * fields are required
+        ///     * fields are required
         /// 
         ///     body
         ///     {
         ///       id : int
-        ///       reviewId*: int
-        ///       statusId*: int
-        ///       ownerId*: int
-        ///       agenda*: string
-        ///       meetingNotes*: string
-        ///       purposeOfMeeting*: string
-        ///       
+        ///       reviewId* : int
+        ///       statusId* : int
+        ///       ownerId* : int
+        ///       agenda* : string
+        ///       meetingNotes* : string
+        ///       purposeOfMeeting* : string  
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">If there is problem in server.</response>
         /// <response code="200">If the MOM was updated.</response>
-        /// <response code="404">If MOM was not found.</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="404">If MOM was not found.</response>
+        /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
-
         [HttpPut("mom")]
         public IActionResult UpdateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var momExists = Validation.MOMExists(_context,mom.ReviewId,mom.TraineeId);
+            var momExists = _validation.MOMExists(mom.ReviewId,mom.TraineeId);
             if(momExists)
             {
                 try
                 {
-                    var IsValid = Validation.ValidateMOM(mom,_context);
+                    var IsValid = _validation.ValidateMOM(mom);
                     if (IsValid.ContainsKey("IsValid"))
                     {
-                        var res = _reviewService.UpdateMom(mom,_context);
+                        var res = _reviewService.UpdateMom(mom);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -354,12 +354,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateMom));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();
         }
-
-
     }
 }
