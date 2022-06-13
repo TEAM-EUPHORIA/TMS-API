@@ -8,7 +8,7 @@ namespace TMS.API.Services
         private void SetUpTopicDetails(Topic topic)
         {
             topic.isDisabled = false;
-            topic.CreatedOn = DateTime.UtcNow;
+            topic.CreatedOn = DateTime.Now;
         }
 
         private void SetUpTopicDetails(Topic topic, Topic dbTopic)
@@ -16,7 +16,13 @@ namespace TMS.API.Services
             dbTopic.Name = topic.Name;
             dbTopic.Duration = topic.Duration;
             dbTopic.Content = topic.Content;
-            dbTopic.UpdatedOn = DateTime.UtcNow;
-        }      
+            dbTopic.UpdatedOn = DateTime.Now;
+        }
+        private void disable(int currentUserId,Topic dbTopic)
+        {
+            dbTopic.isDisabled = true;
+            dbTopic.UpdatedBy = currentUserId;
+            dbTopic.UpdatedOn = DateTime.Now;
+        }       
     }
 }

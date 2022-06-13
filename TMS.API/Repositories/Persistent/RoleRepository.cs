@@ -15,10 +15,5 @@ namespace TMS.API.Repositories
         {
             return dbContext.Roles.ToList();
         }
-
-        public IEnumerable<User> GetUsersByRole(int roleId)
-        {
-            return dbContext.Users.Where(u=>u.RoleId == roleId);
-        }
     }
 }

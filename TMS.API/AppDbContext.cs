@@ -48,7 +48,7 @@ namespace TMS.API
             modelBuilder.Entity<TraineeFeedback>().HasKey(e=>new{e.CourseId,e.TraineeId,e.TrainerId});
             modelBuilder.Entity<Review>().HasKey(e=>new{e.Id});
             modelBuilder.Entity<MOM>().HasKey(e=>new{e.ReviewId,e.TraineeId});
-            var createdOn = DateTime.UtcNow;
+            var createdOn = DateTime.Now;
             var password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=";
             modelBuilder.Entity<Role>().HasData(
                 new Role(){Id=1,Name="Training Head",CreatedOn=DateTime.Now,isDisabled=false},
@@ -118,12 +118,12 @@ namespace TMS.API
             // Review
             modelBuilder.Entity<Review>()
                     .HasData(
-                        new Review() { CreatedOn = createdOn, Id = 1, ReviewerId = 11, StatusId = 1, ReviewDate = DateTime.UtcNow , ReviewTime = DateTime.UtcNow, TraineeId = 13, Mode = "online" ,DepartmentId=2},
-                        new Review() { CreatedOn = createdOn, Id = 2, ReviewerId = 11, StatusId = 2, ReviewDate = DateTime.UtcNow, ReviewTime = DateTime.UtcNow, TraineeId = 15, Mode = "Offline",DepartmentId=1 },
-                        new Review() { CreatedOn = createdOn, Id = 3, ReviewerId = 11, StatusId = 3, ReviewDate = DateTime.UtcNow, ReviewTime = DateTime.UtcNow, TraineeId = 16, Mode = "online",DepartmentId=2 },
-                        new Review() { CreatedOn = createdOn, Id = 4, ReviewerId = 10, StatusId = 1, ReviewDate = DateTime.UtcNow, ReviewTime = DateTime.UtcNow, TraineeId = 12, Mode = "online",DepartmentId=1 },
-                        new Review() { CreatedOn = createdOn, Id = 5, ReviewerId = 9, StatusId = 2, ReviewDate = DateTime.UtcNow, ReviewTime = DateTime.UtcNow, TraineeId = 12, Mode = "Offline" ,DepartmentId=1},
-                        new Review() {  CreatedOn = createdOn, Id = 6, ReviewerId = 10, StatusId = 3, ReviewDate = DateTime.UtcNow, ReviewTime = DateTime.UtcNow, TraineeId = 17, Mode = "online",DepartmentId=3 }
+                        new Review() { CreatedOn = createdOn, Id = 1, ReviewerId = 11, StatusId = 1, ReviewDate = DateTime.Now , ReviewTime = DateTime.Now, TraineeId = 13, Mode = "online" ,DepartmentId=2},
+                        new Review() { CreatedOn = createdOn, Id = 2, ReviewerId = 11, StatusId = 2, ReviewDate = DateTime.Now, ReviewTime = DateTime.Now, TraineeId = 15, Mode = "Offline",DepartmentId=1 },
+                        new Review() { CreatedOn = createdOn, Id = 3, ReviewerId = 11, StatusId = 3, ReviewDate = DateTime.Now, ReviewTime = DateTime.Now, TraineeId = 16, Mode = "online",DepartmentId=2 },
+                        new Review() { CreatedOn = createdOn, Id = 4, ReviewerId = 10, StatusId = 1, ReviewDate = DateTime.Now, ReviewTime = DateTime.Now, TraineeId = 12, Mode = "online",DepartmentId=1 },
+                        new Review() { CreatedOn = createdOn, Id = 5, ReviewerId = 9, StatusId = 2, ReviewDate = DateTime.Now, ReviewTime = DateTime.Now, TraineeId = 12, Mode = "Offline" ,DepartmentId=1},
+                        new Review() {  CreatedOn = createdOn, Id = 6, ReviewerId = 10, StatusId = 3, ReviewDate = DateTime.Now, ReviewTime = DateTime.Now, TraineeId = 17, Mode = "online",DepartmentId=3 }
                         );
             // MOM
             modelBuilder.Entity<MOM>()

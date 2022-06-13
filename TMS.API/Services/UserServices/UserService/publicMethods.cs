@@ -7,12 +7,24 @@ namespace TMS.API.Services
     public partial class UserService
     {
         private readonly UnitOfWork _repo;
-        
+        private readonly Statistics _stats;
 
-        public UserService(UnitOfWork repo)
+        public UserService(UnitOfWork repo,Statistics stats)
         {
             _repo = repo;
-            
+            _stats = _repo.stats;
+        }
+        public IEnumerable<User> GetUsersByDepartment(int departmentId)
+        {
+            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
+            if (departmentExists) return _repo.Users.GetUsersByDepartment(departmentId);
+            else throw new ArgumentException("Invalid Id");
+        }
+        public IEnumerable<User> GetUsersByRole(int roleId)
+        {
+            var roleExists = _repo.Validation.RoleExists(roleId);
+            if (roleExists) return _repo.Users.GetUsersByRole(roleId);
+            else throw new ArgumentException("Invalid Id");
         }
         public IEnumerable<User> GetUsersByDeptandrole(int departmentId, int roleId)
         {
@@ -39,6 +51,7 @@ namespace TMS.API.Services
             {
                 SetUpUserDetails(user);
                 _repo.Users.CreateUser(user);
+                _repo.Complete();
             }
             return validation;
         }
@@ -51,15 +64,19 @@ namespace TMS.API.Services
                 var dbUser = _repo.Users.GetUserById(user.Id);
                 SetUpUserDetails(user, dbUser);
                 _repo.Users.UpdateUser(dbUser);  
+                _repo.Complete();
             }
             return validation;
         }
-        public bool DisableUser(int userId)
+        public bool DisableUser(int userId, int currentUserId)
         {
             var userExists = _repo.Validation.UserExists(userId);
             if (userExists)
             {
-                _repo.Users.DisableUser(userId);
+                var dbUser = _repo.Users.GetUserById(userId);
+                disable(currentUserId, dbUser);
+                _repo.Users.UpdateUser(dbUser);
+                _repo.Complete();
             }
             return userExists;
         }

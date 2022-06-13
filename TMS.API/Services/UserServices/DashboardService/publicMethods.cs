@@ -2,38 +2,29 @@ namespace TMS.API.Services
 {
     public partial class UserService
     {
-        public Dictionary<string,int> HeadDashboard()
+        public Dictionary<string,string> Dashboard(int userId)
         {
-            var result = new Dictionary<string,int>();
-            // prepareHeadDashboard(result);
-            return result;
-        }
-        public Dictionary<string,int> CoordinatorDashboard()
-        {
-            var result = new Dictionary<string,int>();
-            // prepareCoordinatorDashboard(result);
-            return result;
-        }
-
-        public Dictionary<string,int> TraineeDashboard()
-        {
-            var result = new Dictionary<string,int>();
-            // prepareTraineeDashboard(result);
-            return result;
-        }
-
-        public Dictionary<string,int> TrainerDashboard()
-        {
-            var result = new Dictionary<string,int>();
-            // prepareTrainerDashboard(result);
-            return result;
-        }
-
-        public Dictionary<string,int> ReviewerDashboard()
-        {
-            var result = new Dictionary<string,int>();
-            // prepareReviewerDashboard(result);
-            return result;
+            var userExists = _repo.Validation.UserExists(userId);
+            var user = _repo.Users.GetUserById(userId);
+            var result = new Dictionary<string,string>();
+            if(userExists)
+            {
+                switch (user.RoleId)
+                {
+                    case 1: result = prepareHeadDashboard(userId);
+                    break;
+                    case 2: result = prepareCoordinatorDashboard(userId);
+                    break;
+                    case 3: result = prepareTrainerDashboard(userId);
+                    break;
+                    case 4: result = prepareTraineeDashboard(userId);
+                    break;
+                    case 5: result = prepareReviewerDashboard(userId);
+                    break;
+                }
+                return result;
+            }
+            throw new ArgumentException("Invalid User");
         }
     }
 }

@@ -6,7 +6,7 @@ namespace TMS.API.Services
     {
         private void SetUpReviewDetails(Review review)
         {
-            review.CreatedOn = DateTime.UtcNow;
+            review.CreatedOn = DateTime.Now;
         }
         private void SetUpReviewDetails(Review review, Review dbReview)
         {
@@ -16,7 +16,7 @@ namespace TMS.API.Services
             dbReview.ReviewDate = review.ReviewDate;
             dbReview.ReviewTime = review.ReviewTime;
             dbReview.StatusId = review.StatusId;
-            dbReview.UpdatedOn = DateTime.UtcNow;
+            dbReview.UpdatedOn = DateTime.Now;
         }
     }
 }

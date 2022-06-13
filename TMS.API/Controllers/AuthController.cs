@@ -38,7 +38,8 @@ namespace TMS.API
         /// <response code="401">Invalid credentials. </response>
         /// <response code="500">If there is problem in server. </response>
         /// <param name="user"></param>
-        [HttpPost("login")][AllowAnonymous]
+        [HttpPost("login")]
+        [AllowAnonymous]
         public IActionResult Login(LoginModel user)
         {
             var validation = _validation.ValidateLoginDetails(user);

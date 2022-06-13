@@ -18,12 +18,6 @@ namespace TMS.API.Services
         {
             return _repo.Roles.GetRoles();
         }
-        public IEnumerable<User> GetUsersByRole(int roleId)
-        {
-            var roleExists = _repo.Validation.RoleExists(roleId);
-            if (roleExists) return _repo.Roles.GetUsersByRole(roleId);
-            else throw new ArgumentException("Invalid Id");
-        }
     }
 }
 

@@ -18,12 +18,6 @@ namespace TMS.API.Services
         {
             return _repo.Departments.GetDepartments();
         }
-        public IEnumerable<User> GetUsersByDepartment(int departmentId)
-        {
-            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
-            if (departmentExists) return _repo.Departments.GetUsersByDepartment(departmentId);
-            else throw new ArgumentException("Invalid Id");
-        }
         public Department GetDepartmentById(int departmentId)
         {
             var departmentExists = _repo.Validation.DepartmentExists(departmentId);
@@ -43,6 +37,7 @@ namespace TMS.API.Services
             {
                 SetUpDepartmentDetails(department);
                 _repo.Departments.CreateDepartment(department);
+                _repo.Complete();
             }
             return validation;
         }
@@ -56,16 +51,20 @@ namespace TMS.API.Services
                 var dbDeparment = _repo.Departments.GetDepartmentById(department.Id);
                 SetUpDepartmentDetails(department, dbDeparment);
                 _repo.Departments.UpdateDepartment(dbDeparment);
+                _repo.Complete();
             }
             return validation;
         }
 
-        public bool DisableDepartment(int departmentId)
+        public bool DisableDepartment(int departmentId, int currentUserId)
         {
             var departmentExists = _repo.Validation.DepartmentExists(departmentId);
             if (departmentExists)
             {
-                _repo.Departments.DisableDepartment(departmentId);                                
+                var dbDeparment = _repo.Departments.GetDepartmentById(departmentId);
+                disable(currentUserId,dbDeparment);
+                _repo.Departments.UpdateDepartment(dbDeparment);
+                _repo.Complete();                               
             }
             return departmentExists;
         }

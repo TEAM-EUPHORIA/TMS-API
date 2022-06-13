@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TMS.BAL;
 
 namespace TMS.API.Repositories
@@ -21,12 +22,21 @@ namespace TMS.API.Repositories
 
         public CourseFeedback GetCourseFeedbackByCourseIdAndTraineeId(int courseId, int traineeId)
         {
-            return dbContext.CourseFeedbacks.Where(cf=> cf.CourseId == courseId && cf.TraineeId == traineeId).FirstOrDefault();
+            return dbContext.CourseFeedbacks
+                    .Where(cf=> cf.CourseId == courseId && cf.TraineeId == traineeId)
+                    .FirstOrDefault();
+        }
+        public IEnumerable<CourseFeedback> GetCourseFeedbacksByCourseId(int courseId)
+        {
+            return dbContext.CourseFeedbacks.Where(cf=> cf.CourseId == courseId).Include(cf=>cf.Trainee).ToList();
         }
 
         public TraineeFeedback GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(int courseId, int traineeId, int trainerId)
         {
-            return dbContext.TraineeFeedbacks.Where(tf=> tf.CourseId == courseId && tf.TraineeId == traineeId && tf.TrainerId == trainerId).FirstOrDefault();
+            return dbContext.TraineeFeedbacks
+                    .Where(tf=> tf.CourseId == courseId && tf.TraineeId == traineeId && tf.TrainerId == trainerId)
+                    .Include(tf=>tf.Trainee).Include(tf=>tf.Trainer)
+                    .FirstOrDefault();
         }
 
         public void UpdateCourseFeedback(CourseFeedback courseFeedback)

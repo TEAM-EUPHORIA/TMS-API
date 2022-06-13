@@ -7,12 +7,18 @@ namespace TMS.API.Services
         private void SetUpDepartmentDetails(Department department)
         {
             department.isDisabled = false;
-            department.CreatedOn = DateTime.UtcNow;
+            department.CreatedOn = DateTime.Now;
         }
         private void SetUpDepartmentDetails(Department department,Department dbDepartment)
         {
             dbDepartment.Name = department.Name;
-            department.UpdatedOn = DateTime.UtcNow;
+            department.UpdatedOn = DateTime.Now;
+        }
+        private void disable(int currentUserId,Department dbDepartment)
+        {
+            dbDepartment.isDisabled = true;
+            dbDepartment.UpdatedBy = currentUserId;
+            dbDepartment.UpdatedOn = DateTime.Now;
         }        
     }
 }

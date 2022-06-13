@@ -41,6 +41,7 @@ namespace TMS.API.Services
             {
                 prepareAssignment(assignment);
                 _repo.Courses.CreateAssignment(assignment);
+                _repo.Complete();
             }
             return validation;
         }
@@ -53,6 +54,7 @@ namespace TMS.API.Services
                 var dbAssignment = _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(assignment.CourseId,assignment.TopicId,assignment.OwnerId);
                 prepareAssignment(assignment,dbAssignment);
                 _repo.Courses.UpdateAssignment(dbAssignment);
+                _repo.Complete();
             }
             return validation;
         }

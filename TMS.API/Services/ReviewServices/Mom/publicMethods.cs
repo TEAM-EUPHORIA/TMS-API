@@ -42,6 +42,7 @@ namespace TMS.API.Services
             {
                 SetUpMomDetails(mom);
                 _repo.Reviews.CreateMom(mom);
+                _repo.Complete();
             }
             return validation;
         }
@@ -54,7 +55,7 @@ namespace TMS.API.Services
                 var dbMom = _repo.Reviews.GetMomByReviewIdAndTraineeId(mom.ReviewId,mom.TraineeId);
                 SetUpMomDetails(mom, dbMom);
                 _repo.Reviews.UpdateMom(dbMom);
-                
+                _repo.Complete();
             }
             return validation;
         }

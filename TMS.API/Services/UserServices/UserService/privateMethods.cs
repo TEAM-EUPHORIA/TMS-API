@@ -7,7 +7,7 @@ namespace TMS.API.Services
     {
         private void GenerateUserId(User user)
         {
-            var newId = 1;
+            var newId = _stats.lastUserId() + 1;
             if (user.DepartmentId != 0 && user.DepartmentId != null) user.EmployeeId = $"TMS{user.RoleId}{user.DepartmentId}{newId}";
             else user.EmployeeId = $"TMS{user.RoleId}0{newId}";
         }
@@ -23,7 +23,7 @@ namespace TMS.API.Services
             user.Password = HashPassword.Sha256(user.Password);
             if (string.IsNullOrEmpty(user.EmployeeId)) GenerateUserId(user);
             if (!string.IsNullOrEmpty(user.Base64) && user.Base64.Length > 1000) SetUpImage(user);
-            user.CreatedOn = DateTime.UtcNow;
+            user.CreatedOn = DateTime.Now;
         }
         private void SetUpUserDetails(User user, User dbUser)
         {
@@ -35,7 +35,14 @@ namespace TMS.API.Services
             SetUpImage(user);
             dbUser.Base64 = user.Base64;
             dbUser.Image = user.Image;
-            dbUser.UpdatedOn = DateTime.UtcNow;
+            dbUser.UpdatedOn = DateTime.Now;
+        }
+        
+        private void disable(int currentUserId, User dbUser)
+        {
+            dbUser.isDisabled = true;
+            dbUser.UpdatedBy = currentUserId;
+            dbUser.UpdatedOn = DateTime.Now;
         }
     }
 }

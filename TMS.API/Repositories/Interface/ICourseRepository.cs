@@ -17,15 +17,15 @@ namespace TMS.API.Repositories
         Course GetCourseById(int courseId);
         void CreateCourse(Course course);
         void UpdateCourse(Course course);
-        void DisableCourse(int courseId);
 
         void AddUsersToCourse(List<CourseUsers> data);
         void RemoveUsersFromCourse(List<CourseUsers> data);
+        void MarkAttendance(Attendance attendance);
 
         IEnumerable<Topic> GetTopicsByCourseId(int courseId);
+        Topic GetTopicById(int courseId,int topicId,int userId);
         Topic GetTopicById(int courseId,int topicId);
         void CreateTopic(Topic topic);
         void UpdateTopic(Topic topic);
-        void DisableTopic(int courseId,int topicId);
     }
 }

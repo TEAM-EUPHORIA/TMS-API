@@ -6,12 +6,12 @@ namespace TMS.API.Services
     {
         private void SetUpTraineeFeedbackDetails(TraineeFeedback traineeFeedback)
         {
-            traineeFeedback.CreatedOn = DateTime.UtcNow;
+            traineeFeedback.CreatedOn = DateTime.Now;
         }
         private void SetUpTraineeFeedbackDetails(TraineeFeedback traineeFeedback,TraineeFeedback dbTraineeFeedback)
         {
             dbTraineeFeedback.Feedback = traineeFeedback.Feedback;
-            dbTraineeFeedback.UpdatedOn = DateTime.UtcNow;
+            dbTraineeFeedback.UpdatedOn = DateTime.Now;
         }    
 
     }

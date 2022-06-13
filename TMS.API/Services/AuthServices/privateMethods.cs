@@ -17,7 +17,7 @@ namespace TMS.API.Services
                 issuer: "https://localhost:5001",
                 audience: "https://localhost:5001",
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: signinCredentials
             );
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);

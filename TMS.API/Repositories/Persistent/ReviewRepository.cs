@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TMS.BAL;
 
 namespace TMS.API.Repositories
@@ -12,6 +13,8 @@ namespace TMS.API.Repositories
 
         public void CreateMom(MOM mom)
         {
+            var review = dbContext.Reviews.Find(mom.ReviewId);
+            review.StatusId = 2;
             dbContext.MOMs.Add(mom);
         }
 
@@ -22,22 +25,34 @@ namespace TMS.API.Repositories
 
         public IEnumerable<MOM> GetListOfMomByUserId(int userId)
         {
-            return dbContext.MOMs.Where(m=>m.TraineeId == userId);
+            return dbContext.MOMs
+                    .Where(m=>m.TraineeId == userId)
+                    .Include(m=>m.Trainee);
         }
 
         public MOM GetMomByReviewIdAndTraineeId(int reviewId, int traineeId)
         {
-            return dbContext.MOMs.Where(m=>m.ReviewId == reviewId && m.TraineeId == traineeId).FirstOrDefault();
+            return dbContext.MOMs
+                    .Where(m=>m.ReviewId == reviewId && m.TraineeId == traineeId)
+                    .Include(m=>m.Review).ThenInclude(r=>r.Reviewer)
+                    .Include(m=>m.Trainee)
+                    .FirstOrDefault();
         }
 
         public Review GetReviewById(int reviewId)
         {
-            return dbContext.Reviews.Where(r=>r.Id == reviewId).FirstOrDefault();
+            return dbContext.Reviews
+                    .Where(r=>r.Id == reviewId)
+                    .Include(r=>r.Reviewer)
+                    .Include(r=>r.Trainee)
+                    .FirstOrDefault();
         }
 
         public IEnumerable<Review> GetReviewByStatusId(int statusId)
         {
-            return dbContext.Reviews.Where(r=>r.StatusId == statusId);
+            return dbContext.Reviews
+                    .Where(r=>r.StatusId == statusId)
+                    .Include(r=>r.Status);
         }
 
         public void UpdateMom(MOM mom)

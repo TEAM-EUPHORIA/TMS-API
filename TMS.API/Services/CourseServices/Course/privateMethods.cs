@@ -19,6 +19,7 @@ namespace TMS.API.Services
                     courseUser.CourseId = data.CourseId;
                     courseUser.UserId = user.UserId;
                     courseUser.RoleId = user.RoleId;
+                    courseUser.CreatedOn = DateTime.Now;
                     validList.Add(courseUser);
                 }
             }
@@ -27,11 +28,16 @@ namespace TMS.API.Services
         private void SetUpCourseDetails(Course course)
         {
             var user = _repo.Users.GetUserById(course.TrainerId);
-            var courseTrainer = new CourseUsers(){CourseId=course.Id,UserId=course.TrainerId,RoleId=3};
+            var courseTrainer = new CourseUsers(){
+                CourseId=course.Id,
+                UserId=course.TrainerId,
+                RoleId=3,
+                CreatedOn = DateTime.Now
+            };
             course.UserMapping = new List<CourseUsers>();
-            
+
             course.UserMapping.Add(courseTrainer);
-            course.CreatedOn = DateTime.UtcNow;
+            course.CreatedOn = DateTime.Now;
         }
         private void SetUpCourseDetails(Course course,Course dbCourse)
         {
@@ -39,7 +45,13 @@ namespace TMS.API.Services
             dbCourse.Name = course.Name;
             dbCourse.Duration = course.Duration;
             dbCourse.Description = course.Description;
-            dbCourse.UpdatedOn = DateTime.UtcNow;
+            dbCourse.UpdatedOn = DateTime.Now;
         }
+        private void disable(int currentUserId,Course dbCourse)
+        {
+            dbCourse.isDisabled = true;
+            dbCourse.UpdatedBy = currentUserId;
+            dbCourse.UpdatedOn = DateTime.Now;
+        } 
     }
 }

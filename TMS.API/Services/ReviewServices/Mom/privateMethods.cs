@@ -6,14 +6,14 @@ namespace TMS.API.Services
     {
         private void SetUpMomDetails(MOM mom)
         {
-            mom.CreatedOn = DateTime.UtcNow;
+            mom.CreatedOn = DateTime.Now;
         }
         private void SetUpMomDetails(MOM mom, MOM dbMom)
         {
             dbMom.Agenda = mom.Agenda;
             dbMom.PurposeOfMeeting = mom.PurposeOfMeeting;
             dbMom.MeetingNotes = mom.MeetingNotes;
-            dbMom.UpdatedOn = DateTime.UtcNow;
+            dbMom.UpdatedOn = DateTime.Now;
         }
     }
 }

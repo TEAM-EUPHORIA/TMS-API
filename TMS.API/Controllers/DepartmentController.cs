@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
@@ -30,8 +31,8 @@ namespace TMS.API.Controllers
         /// <response code="200">Returns a list of Departments. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="500">If there is problem in server. </response>
-
         [HttpGet("departments")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetDepartments()
         {
             try
@@ -44,41 +45,7 @@ namespace TMS.API.Controllers
                 return Problem();
             }
         }
-
-        /// <summary>
-        /// Gets the list of Users by Department 
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        /// 
-        ///     url : https://localhost:5001/Department/(departmentId:int)/users
-        ///
-        /// </remarks>
-        /// <response code="200">Returns a list of Users. </response>
-        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
-        /// <response code="404">If user was not found.</response>
-        /// <response code="500">If there is problem in server.</response>
-        /// <param name="departmentId"></param>
-        [HttpGet("{departmentId:int}/users")]
-        public IActionResult GetAllUserByDepartment(int departmentId)
-        {
-            var departmentExists = _validation.DepartmentExists(departmentId);
-            if(departmentExists)
-            {
-                try
-                {
-                    var result = _departmentService.GetUsersByDepartment(departmentId);
-                    if (result is not null) return Ok(result);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
-                    return Problem();
-                }
-            }
-            return NotFound();
-        }
-            
+           
         /// <summary>
         /// Gets a single Department by departmentId
         /// </summary>
@@ -94,6 +61,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="departmentId"></param>
         [HttpGet("{departmentId:int}")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetDepartmentById(int departmentId)
         {
             var departmentExists = _validation.DepartmentExists(departmentId);
@@ -135,6 +103,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPost("department")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -180,6 +150,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPut("department")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -191,6 +163,7 @@ namespace TMS.API.Controllers
                     var IsValid = _validation.ValidateDepartment(department);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
+                        department.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);;
                         var res = _departmentService.UpdateDepartment(department);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Department was Updated successfully" });
                     }
@@ -220,6 +193,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
         [HttpPut("disable/{departmentId:int}")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableDepartment(int departmentId)
         {
             var departmentExists = _validation.DepartmentExists(departmentId);
@@ -227,7 +202,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    var res = _departmentService.DisableDepartment(departmentId);
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _departmentService.DisableDepartment(departmentId, currentUserId);
                     if (res) return Ok("The Department was Disabled successfully");
                 }
                 catch (InvalidOperationException ex)

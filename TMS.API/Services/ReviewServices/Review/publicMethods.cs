@@ -31,6 +31,7 @@ namespace TMS.API.Services
             {
                 SetUpReviewDetails(review);
                 _repo.Reviews.CreateReview(review);
+                _repo.Complete();
             }
             return validation;
         }
@@ -43,6 +44,7 @@ namespace TMS.API.Services
                 var dbReview = _repo.Reviews.GetReviewById(review.Id);                
                 SetUpReviewDetails(review, dbReview);
                 _repo.Reviews.UpdateReview(dbReview);
+                _repo.Complete();
             }
             return validation;
         }

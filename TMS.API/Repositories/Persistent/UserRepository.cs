@@ -18,29 +18,43 @@ namespace TMS.API.Repositories
         {
             dbContext.Users.Add(user);
         }
-
-        public void DisableUser(int userId)
-        {
-            var data = dbContext.Users.Find(userId);
-            if(data!=null)
-            {
-                data.isDisabled = true;
-                dbContext.Users.Update(data);
-            }
-        }
         public User GetUserByEmailAndPassword(LoginModel user)
         {
-            return dbContext.Users.Where(u => u.Email == user.Email && u.Password == HashPassword.Sha256(user.Password)).Include(u => u.Role).FirstOrDefault();
+            return dbContext.Users
+                    .Where(u => u.Email == user.Email && 
+                           u.Password == HashPassword.Sha256(user.Password))
+                    .Include(u => u.Role).FirstOrDefault();
         }
 
         public User GetUserById(int id)
         {
-            return dbContext.Users.Where(u=>u.Id == id).FirstOrDefault();
+            return dbContext.Users
+                    .Where(u=>u.Id == id)
+                    .Include(u=>u.Role)
+                    .Include(u=>u.Department)
+                    .FirstOrDefault();
+        }
+        public IEnumerable<User> GetUsersByRole(int roleId)
+        {
+            return dbContext.Users
+                    .Where(u=>u.RoleId == roleId)
+                    .Include(u=>u.Department)
+                    .Include(u=>u.Role);
+        }
+        public IEnumerable<User> GetUsersByDepartment(int departmentId)
+        {
+            return dbContext.Users
+                    .Where(u=>u.DepartmentId == departmentId)
+                    .Include(u=>u.Department)
+                    .Include(u=>u.Role);
         }
 
         public IEnumerable<User> GetUsersByDeptandrole(int departmentId, int roleId)
         {
-            return dbContext.Users.Where(u=>u.DepartmentId == departmentId && u.RoleId == roleId);
+            return dbContext.Users
+                    .Where(u=>u.DepartmentId == departmentId && u.RoleId == roleId)
+                    .Include(u=>u.Department)
+                    .Include(u=>u.Role);
         }
 
         public void UpdateUser(User user)

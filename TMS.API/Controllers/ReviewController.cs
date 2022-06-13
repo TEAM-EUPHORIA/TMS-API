@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
@@ -113,6 +114,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPost("review")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -164,6 +167,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPut("review")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -175,6 +180,7 @@ namespace TMS.API.Controllers
                     var IsValid = _validation.ValidateReview(review);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
+                        review.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _reviewService.UpdateReview(review);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
                     }
@@ -285,6 +291,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPost("mom")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainee")]
         public IActionResult CreateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -335,6 +343,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPut("mom")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainee")]
         public IActionResult UpdateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -346,6 +356,7 @@ namespace TMS.API.Controllers
                     var IsValid = _validation.ValidateMOM(mom);
                     if (IsValid.ContainsKey("IsValid"))
                     {
+                        mom.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _reviewService.UpdateMom(mom);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Updated successfully" });
                     }

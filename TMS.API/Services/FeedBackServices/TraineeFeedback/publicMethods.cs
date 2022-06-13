@@ -29,6 +29,7 @@ namespace TMS.API.Services
             {
                 SetUpTraineeFeedbackDetails(traineeFeedback);
                 _repo.Feedbacks.CreateTraineeFeedback(traineeFeedback);
+                _repo.Complete();
             }
             return validation;
         }
@@ -41,6 +42,7 @@ namespace TMS.API.Services
                 var dbTraineeFeedback = _repo.Feedbacks.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(traineeFeedback.CourseId,traineeFeedback.TraineeId,traineeFeedback.TrainerId);
                 SetUpTraineeFeedbackDetails(traineeFeedback, dbTraineeFeedback);
                 _repo.Feedbacks.UpdateTraineeFeedback(dbTraineeFeedback);
+                _repo.Complete();
             }
             return validation;
         }

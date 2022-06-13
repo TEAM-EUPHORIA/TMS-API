@@ -19,7 +19,7 @@ namespace TMS.API.Services
         {
             _repo = repo;
             AuthService = new AuthService(_repo);
-            UserService = new UserService(_repo);
+            UserService = new UserService(_repo,_repo.stats);
             RoleService = new RoleService(_repo);
             ReviewService = new ReviewService(_repo);
             FeedbackService = new FeedbackService(_repo);

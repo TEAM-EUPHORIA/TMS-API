@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
@@ -33,6 +34,7 @@ namespace TMS.API.Controllers
         /// <response code="404">If role was not found.</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         [HttpGet("roles")]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult GetRoles()
         {
             try
@@ -44,40 +46,6 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(RoleService), nameof(GetRoles));
                 return Problem();
             }
-        }
-
-        /// <summary>
-        /// Gets a list of users by role
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        /// 
-        ///     url : https://localhost:5001/Role/(roleId:int)/users
-        /// 
-        /// </remarks>
-        /// <response code="200">Returns a list of Users. </response>
-        /// <response code="500">If there is problem in server.</response>
-        /// <response code="404">If user was not found.</response>
-        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
-        /// <param name="roleId"></param>
-        [HttpGet("{roleId:int}/users")]
-        public IActionResult GetAllUserByRole(int roleId)
-        {
-            var roleExists = _validation.RoleExists(roleId);
-            if(roleExists)
-            {
-                try
-                {
-                    var result = _roleService.GetUsersByRole(roleId);
-                    if (result is not null) return Ok(result);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
-                    return Problem();
-                }
-            }
-            return NotFound();
         }
     }
 }

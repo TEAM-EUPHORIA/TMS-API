@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
@@ -6,6 +7,7 @@ using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
+    [Authorize(Roles = "")]
     [ApiController]
     [Route("[controller]")]
     public class FeedBackController : ControllerBase
@@ -79,6 +81,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="feedback"></param>
         [HttpPost("course/feedback")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainee")]
         public IActionResult CreateCourseFeedback(CourseFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -125,6 +129,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("course/feedback")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainee")]
         public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
         {
             var feedbackExists = _validation.CourseFeedbackExists(feedback.CourseId,feedback.TraineeId);
@@ -136,6 +142,7 @@ namespace TMS.API.Controllers
                     var IsValid = _validation.ValidateCourseFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
+                        feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _feedbackService.UpdateCourseFeedback(feedback);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }
@@ -211,6 +218,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPost("trainee/feedback")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainer")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -258,6 +267,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("trainee/feedback")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainer")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -269,6 +280,7 @@ namespace TMS.API.Controllers
                     var IsValid = _validation.ValidateTraineeFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid"))
                     {
+                        feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _feedbackService.UpdateTraineeFeedback(feedback);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }

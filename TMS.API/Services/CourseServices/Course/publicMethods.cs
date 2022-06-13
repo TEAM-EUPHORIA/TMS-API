@@ -46,6 +46,7 @@ namespace TMS.API.Services
             {
                 SetUpCourseDetails(course);
                 _repo.Courses.CreateCourse(course);
+                _repo.Complete();
             }
             return validation;
         }
@@ -57,20 +58,23 @@ namespace TMS.API.Services
             {
                 var dbCourse = _repo.Courses.GetCourseById(course.Id);
                 SetUpCourseDetails(course, dbCourse);
-                _repo.Courses.UpdateCourse(dbCourse);    
+                _repo.Courses.UpdateCourse(dbCourse);
+                _repo.Complete();    
             }
             return validation;
         }
-        public bool DisableCourse(int courseId)
+        public bool DisableCourse(int courseId, int currentUserId)
         {
             var courseExists = _repo.Validation.CourseExists(courseId);
             if(courseExists)
             {
-                _repo.Courses.DisableCourse(courseId);
+                var dbCourse = _repo.Courses.GetCourseById(courseId);
+                disable(currentUserId,dbCourse);
+                _repo.Complete();
             }
             return courseExists;        
         }
-        public Dictionary<string,List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data)
+        public Dictionary<string,List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data, int currentUserId)
         {
             var courseExists = _repo.Validation.CourseExists(data.CourseId);
             if(courseExists)
@@ -79,19 +83,22 @@ namespace TMS.API.Services
                 var validList = GetListOfValidUsers(data);
                 _repo.Courses.AddUsersToCourse(validList);
                 result.Add("the following records are created", validList);
+                _repo.Complete();
                 return result;
             }
             else throw new ArgumentException(nameof(data));
         }
 
-        public Dictionary<string,List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data)
+        public Dictionary<string,List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int userId)
         {
             var courseExists = _repo.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
                 var result =  new Dictionary<string,List<CourseUsers>>();
                 var validList = GetListOfValidUsers(data);
+                _repo.Courses.RemoveUsersFromCourse(validList);
                 result.Add("the following records are removed",validList); 
+                _repo.Complete();
                 return result;
             }
             else throw new ArgumentException(nameof(data));

@@ -144,7 +144,7 @@ namespace TMS.API
                 reviewStatusExists = ReviewStatusExists(review.StatusId);
                 if(!reviewStatusExists) AddEntery(nameof(review.StatusId),"Invalid Id");
                 
-                if(review.ReviewDate < DateTime.UtcNow) 
+                if(review.ReviewDate < DateTime.Now) 
                     AddEntery(nameof(review.ReviewDate),"Invalid Date");
                 
                 if(review.Id != 0) 
@@ -207,11 +207,11 @@ namespace TMS.API
         public Dictionary<string, string> ValidateUser(User user)
         {
             roleExists = RoleExists(user.RoleId);
-            if(roleExists && user.RoleId >= 3) departmentExists = DepartmentExists(user.RoleId);
+            departmentExists = DepartmentExists(user.DepartmentId);
             if(!roleExists) AddEntery(nameof(user.RoleId),"can't find the role");
+            if(roleExists && user.RoleId >= 3) AddEntery(nameof(user.DepartmentId),"can't find the department");
             if(result.Count==0 && roleExists)
             {
-                AddEntery(nameof(user.DepartmentId),"can't find the department");
                 validateAndAddEntery(nameof(user.FullName),user.FullName,fullNameValidation);
                 validateAndAddEntery(nameof(user.UserName),user.UserName,userNameValidation);
                 validateAndAddEntery(nameof(user.Email),user.Email,emailValidation);
