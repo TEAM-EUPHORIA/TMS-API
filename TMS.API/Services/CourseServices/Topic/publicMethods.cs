@@ -6,60 +6,50 @@ namespace TMS.API.Services
 {
     public partial class CourseService
     {
-        public IEnumerable<Topic> GetTopicsByCourseId(int courseId,AppDbContext dbContext)
+        public IEnumerable<Topic> GetTopicsByCourseId(int courseId)
         {
-            var courseExists = Validation.CourseExists(dbContext,courseId);
-            if(courseExists) return dbContext.Topics.Where(t=>t.CourseId==courseId);
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            if(courseExists) return _repo.Courses.GetTopicsByCourseId(courseId);
             else throw new ArgumentException("Invalid Id"); 
         }
-        public Topic GetTopicById(int topicId,AppDbContext dbContext)
+        public Topic GetTopicById(int courseId,int topicId)
         {
-            var topicExists = Validation.TopicExists(dbContext,topicId);
+            var topicExists = _repo.Validation.TopicExists(topicId);
             if(topicExists)
             {
-                var result = dbContext.Topics.Where(t=>t.TopicId==topicId).Include(t=>t.Attendances).Include(t=>t.Assignments).FirstOrDefault();
-                if(result is not null) return result;
+                return _repo.Courses.GetTopicById(courseId,topicId);
             }
             throw new ArgumentException("Invalid Id");
         }
-        public Dictionary<string,string> CreateTopic(Topic topic,AppDbContext dbContext)
+        public Dictionary<string,string> CreateTopic(Topic topic)
         {
             if (topic is null) throw new ArgumentNullException(nameof(topic));
-            var validation = Validation.ValidateTopic(topic,dbContext);
+            var validation = _repo.Validation.ValidateTopic(topic);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
                 SetUpTopicDetails(topic);
-                CreateAndSaveTopic(topic,dbContext);  
+                _repo.Courses.CreateTopic(topic);
             }
             return validation;
         }
-        public Dictionary<string,string> UpdateTopic(Topic topic,AppDbContext dbContext)
+        public Dictionary<string,string> UpdateTopic(Topic topic)
         {
             if (topic is null) throw new ArgumentNullException(nameof(topic));
-            var validation = Validation.ValidateTopic(topic,dbContext);
+            var validation = _repo.Validation.ValidateTopic(topic);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                var dbTopic = dbContext.Topics.Find(topic.TopicId);
-                if(dbTopic is not null)
-                {
-                    SetUpTopicDetails(topic, dbTopic);
-                    UpdateAndSaveTopic(dbTopic,dbContext);   
-                }
+                var dbTopic = _repo.Courses.GetTopicById(topic.CourseId,topic.TopicId);
+                SetUpTopicDetails(topic, dbTopic);
+                _repo.Courses.UpdateTopic(dbTopic);
             }
             return validation;
         }
-        public bool DisableTopic(int topicId,AppDbContext dbContext)
+        public bool DisableTopic(int courseId,int topicId)
         {
-            var topicExists = Validation.TopicExists(dbContext,topicId);
+            var topicExists = _repo.Validation.TopicExists(topicId,courseId);
             if(topicExists)
             {
-                var dbTopic = dbContext.Topics.Find(topicId);
-                if(dbTopic is not null)
-                {
-                    dbTopic.isDisabled = true;
-                    dbTopic.UpdatedOn = DateTime.UtcNow;
-                    UpdateAndSaveTopic(dbTopic,dbContext);
-                }
+                _repo.Courses.DisableTopic(courseId,topicId);
             }
             return topicExists;
         }

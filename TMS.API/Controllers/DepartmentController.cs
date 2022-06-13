@@ -6,106 +6,146 @@ namespace TMS.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DepartmentController : MyBaseController
+    public class DepartmentController : ControllerBase
     {
         private readonly ILogger<DepartmentController> _logger;
         private readonly DepartmentService  _departmentService;
+        private readonly Validation _validation;
 
-        public DepartmentController(ILogger<DepartmentController> logger, DepartmentService departmentService,AppDbContext dbContext):base(dbContext)
+        public DepartmentController(UnitOfService service, ILogger<DepartmentController> logger)
         {
             _logger = logger;
-            _departmentService= departmentService;
+            _departmentService= service.DepartmentService;
+            _validation = service.Validation;
         }
         /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view a Departments
+        /// Get all Departments
         /// </summary>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     url : https://localhost:5001/Department/departments
+        /// 
+        ///</remarks>
+        /// <response code="200">Returns a list of Departments. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="500">If there is problem in server. </response>
+
         [HttpGet("departments")]
         public IActionResult GetDepartments()
         {
             try
             {
-                return Ok(_departmentService.GetDepartments(_context));
+                return Ok(_departmentService.GetDepartments());
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(GetDepartments));
-                return Problem(ProblemResponse);
+                return Problem();
             }
         }
-          /// <summary>
-        /// This method is invoked when the Coordinator/Head wants to view all Departments
+
+        /// <summary>
+        /// Gets the list of Users by Department 
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /GetDepartmentById
-        ///     {
-        ///        "departmentId": 1 
-        ///     }
+        /// 
+        ///     url : https://localhost:5001/Department/(departmentId:int)/users
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="departmentId"></param>
-       /// <returns></returns>
-        [HttpGet("{departmentId:int}")]
-        public IActionResult GetDepartmentById(int departmentId)
+        /// <response code="200">Returns a list of Users. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If user was not found.</response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <param name="departmentId"></param>
+        [HttpGet("{departmentId:int}/users")]
+        public IActionResult GetAllUserByDepartment(int departmentId)
         {
-            var departmentExists = Validation.DepartmentExists(_context,departmentId);
+            var departmentExists = _validation.DepartmentExists(departmentId);
             if(departmentExists)
             {
                 try
                 {
-                    var result = _departmentService.GetDepartmentById(departmentId,_context);
+                    var result = _departmentService.GetUsersByDepartment(departmentId);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
+                    return Problem();
+                }
+            }
+            return NotFound();
+        }
+            
+        /// <summary>
+        /// Gets a single Department by departmentId
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     url : https://localhost:5001/Department/(departmentId:int)
+        ///    
+        /// </remarks>
+        /// <response code="200">Returns a single department. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="404">If department was not found.</response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <param name="departmentId"></param>
+        [HttpGet("{departmentId:int}")]
+        public IActionResult GetDepartmentById(int departmentId)
+        {
+            var departmentExists = _validation.DepartmentExists(departmentId);
+            if(departmentExists)
+            {
+                try
+                {
+                    var result = _departmentService.GetDepartmentById(departmentId);
                     if (result is not null) return Ok(result);
                     return NotFound();
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(GetDepartmentById));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();
         }
+
         /// <summary>
-        /// This method is invoked when the Coordinator wants to create a Department
+        /// Create a department
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /CreateDepartment
+        /// 
+        ///     url : https://localhost:5001/Department/department
+        /// 
+        ///     * fields are required
+        /// 
+        ///     body
         ///     {
-        ///          "name": "SQL"
-        ///          
+        ///          name* : string 
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-        
+        /// <response code="200">If the department was created.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
-        /// <returns></returns>
         [HttpPost("department")]
         public IActionResult CreateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = Validation.ValidateDepartment(department,_context);
+                var IsValid = _validation.ValidateDepartment(department);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create department. The department already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    var res = _departmentService.CreateDepartment(department,_context);
+                    department.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _departmentService.CreateDepartment(department);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Department was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -113,42 +153,45 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(CreateDepartment));
-                return Problem(ProblemResponse);
+                return Problem();
             }
         }
+
         /// <summary>
-        /// This method is invoked when the Coordinator wants to Update Department
+        /// Update a department
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /UpdateDepartment
+        /// 
+        ///     url : https://localhost:5001/Department/department
+        /// 
+        ///     * fields are required
+        ///     
+        ///     body
         ///     {
-        ///         "id": 1,
-        ///         "name": "B",
-        ///         
+        ///         id* : int,
+        ///         name* : string 
         ///     }
         ///
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
-       /// <param name="department"></param>
-       /// <returns></returns>
+        /// <response code="200">If the department was updated.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If Department was not found.</response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <param name="department"></param>
         [HttpPut("department")]
         public IActionResult UpdateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var departmentExists = Validation.DepartmentExists(_context,department.Id);
+            var departmentExists = _validation.DepartmentExists(department.Id);
             if(departmentExists)
             {
                 try
                 {
-                    var IsValid = Validation.ValidateDepartment(department,_context);
+                    var IsValid = _validation.ValidateDepartment(department);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        var res = _departmentService.UpdateDepartment(department,_context);
+                        var res = _departmentService.UpdateDepartment(department);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Department was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -156,45 +199,41 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(UpdateDepartment));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();
         }
+
         /// <summary>
-        /// This method is invoked when the Coordinator wants to Disable Department
+        /// To disable the department
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
-        ///     GET /DisableDepartment
-        ///     {
-        ///        "departmentId": 1
-        ///       
-        ///     }
-        ///
+        /// 
+        ///     url : https://localhost:5001/Department/disable/(departmentId:int)
+        /// 
         /// </remarks>
-        /// <response code="500">something has gone wrong on the website's server</response>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="404">Returns Not Found</response>
-        /// <response code="400">If the item is null/the server cannot or will not process the request due to something that is perceived to be a client error </response>
+        /// <response code="200">If the Department was disabled</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
+        /// <response code="404">If Department was not found.</response>
+        /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
-        /// <returns></returns>
         [HttpPut("disable/{departmentId:int}")]
         public IActionResult DisableDepartment(int departmentId)
         {
-            var departmentExists = Validation.DepartmentExists(_context,departmentId);
+            var departmentExists = _validation.DepartmentExists(departmentId);
             if(departmentExists)
             {
                 try
                 {
-                    var res = _departmentService.DisableDepartment(departmentId,_context);
+                    var res = _departmentService.DisableDepartment(departmentId);
                     if (res) return Ok("The Department was Disabled successfully");
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(DisableDepartment));
-                    return Problem(ProblemResponse);
+                    return Problem();
                 }
             }
             return NotFound();

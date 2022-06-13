@@ -1,48 +1,46 @@
 using Microsoft.EntityFrameworkCore;
+using TMS.API.Repositories;
 using TMS.BAL;
 
 namespace TMS.API.Services
 {
-    public partial class FeedbackService
+    public partial class FeedbackService 
     {
-        public TraineeFeedback GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(int courseId,int traineeId, int trainerId,AppDbContext dbContext)
-        {   
-            var courseExists = Validation.CourseExists(dbContext,courseId);
-            var traineeExists = Validation.UserExists(dbContext,traineeId);
-            var trainerExists = Validation.UserExists(dbContext,trainerId);
-            if(courseExists && traineeExists && trainerExists)
+        public TraineeFeedback GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(int courseId, int traineeId, int trainerId)
+        {
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            var traineeExists = _repo.Validation.UserExists(traineeId);
+            var trainerExists = _repo.Validation.UserExists(trainerId);
+            if (courseExists && traineeExists && trainerExists)
             {
-                var traineeFeedbackExists = Validation.TraineeFeedbackExists(dbContext,courseId,traineeId,trainerId);        
-                if(traineeFeedbackExists)
+                var traineeFeedbackExists = _repo.Validation.TraineeFeedbackExists(courseId, traineeId, trainerId);
+                if (traineeFeedbackExists)
                 {
-                    var result = dbContext.TraineeFeedbacks.Where(tf =>tf.CourseId==courseId && tf.TraineeId == traineeId && tf.TrainerId == trainerId).Include(tf=>tf.Trainer).Include(tf=>tf.Trainee).FirstOrDefault();          
-                    if(result is not null) return result;
+                    return _repo.Feedbacks.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(courseId,traineeId,trainerId);
                 }
             }
             throw new ArgumentException("Invalid Id");
         }
-        public Dictionary<string,string> CreateTraineeFeedback(TraineeFeedback traineeFeedback,AppDbContext dbContext)
+        public Dictionary<string, string> CreateTraineeFeedback(TraineeFeedback traineeFeedback)
         {
             if (traineeFeedback is null) throw new ArgumentNullException(nameof(traineeFeedback));
-            var validation = Validation.ValidateTraineeFeedback(traineeFeedback,dbContext);
+            var validation = _repo.Validation.ValidateTraineeFeedback(traineeFeedback);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                CreateAndSaveTraineeFeedback(traineeFeedback,dbContext);
+                SetUpTraineeFeedbackDetails(traineeFeedback);
+                _repo.Feedbacks.CreateTraineeFeedback(traineeFeedback);
             }
             return validation;
         }
-        public Dictionary<string,string> UpdateTraineeFeedback(TraineeFeedback traineeFeedback,AppDbContext dbContext)
+        public Dictionary<string, string> UpdateTraineeFeedback(TraineeFeedback traineeFeedback)
         {
             if (traineeFeedback is null) throw new ArgumentNullException(nameof(traineeFeedback));
-            var validation = Validation.ValidateTraineeFeedback(traineeFeedback,dbContext);
+            var validation = _repo.Validation.ValidateTraineeFeedback(traineeFeedback);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                var dbTraineeFeedback = dbContext.TraineeFeedbacks.Find(traineeFeedback.CourseId,traineeFeedback.TraineeId,traineeFeedback.TrainerId);
-                if(dbTraineeFeedback is not null)
-                {
-                    SetUpTraineeFeedbackDetails(traineeFeedback, dbTraineeFeedback);
-                    UpdateAndSaveTraineeFeedback(dbTraineeFeedback, dbContext);
-                }
+                var dbTraineeFeedback = _repo.Feedbacks.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(traineeFeedback.CourseId,traineeFeedback.TraineeId,traineeFeedback.TrainerId);
+                SetUpTraineeFeedbackDetails(traineeFeedback, dbTraineeFeedback);
+                _repo.Feedbacks.UpdateTraineeFeedback(dbTraineeFeedback);
             }
             return validation;
         }

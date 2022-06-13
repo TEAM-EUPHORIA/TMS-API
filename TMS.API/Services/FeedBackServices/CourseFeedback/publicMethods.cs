@@ -1,43 +1,49 @@
 using Microsoft.EntityFrameworkCore;
+using TMS.API.Repositories;
 using TMS.BAL;
 
 namespace TMS.API.Services
 {
     public partial class FeedbackService
     {
-        public CourseFeedback GetCourseFeedbackByCourseIdAndTraineeId(int courseId, int traineeId,AppDbContext dbContext)
+        private readonly UnitOfWork _repo;
+        
+
+        public FeedbackService(UnitOfWork repo)
         {
-            var courseExists = Validation.CourseExists(dbContext,courseId);
-            var traineeExists = Validation.UserExists(dbContext,traineeId);
+            _repo = repo;
+            
+        }
+        public CourseFeedback GetCourseFeedbackByCourseIdAndTraineeId(int courseId, int traineeId)
+        {
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            var traineeExists = _repo.Validation.UserExists(traineeId);
             if(courseExists && traineeExists)
             {
-                var result = dbContext.CourseFeedbacks.Where(cf => cf.CourseId == courseId && cf.TraineeId == traineeId).Include(cf=>cf.Trainee).Include(cf=>cf.Course).FirstOrDefault();        
-                if(result is not null) return result;
+                return _repo.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId);
             }
             throw new ArgumentException("Invalid Id's");
         }
-        public Dictionary<string,string> CreateCourseFeedback(CourseFeedback courseFeedback,AppDbContext dbContext)
+        public Dictionary<string,string> CreateCourseFeedback(CourseFeedback courseFeedback)
         {
-           if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
-            var validation = Validation.ValidateCourseFeedback(courseFeedback,dbContext);
+            if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
+            var validation = _repo.Validation.ValidateCourseFeedback(courseFeedback);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))            
             {
-                CreateAndSaveCourseFeedback(courseFeedback,dbContext);
+                SetUpCourseFeedbackDetails(courseFeedback);
+                _repo.Feedbacks.CreateCourseFeedback(courseFeedback);
             }
             return validation;
         }
-        public Dictionary<string,string> UpdateCourseFeedback(CourseFeedback courseFeedback,AppDbContext dbContext)
+        public Dictionary<string,string> UpdateCourseFeedback(CourseFeedback courseFeedback)
         {
            if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
-            var validation = Validation.ValidateCourseFeedback(courseFeedback,dbContext);
+            var validation = _repo.Validation.ValidateCourseFeedback(courseFeedback);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                var dbCourseFeedback = dbContext.CourseFeedbacks.Find(courseFeedback.CourseId,courseFeedback.TraineeId);
-                if(dbCourseFeedback is not null)
-                {
-                    SetUpCourseFeedbackDetails(courseFeedback, dbCourseFeedback);
-                    UpdateAndSaveCourseFeedback(dbCourseFeedback,dbContext);
-                }
+                var dbCourseFeedback = _repo.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseFeedback.CourseId,courseFeedback.TraineeId);
+                SetUpCourseFeedbackDetails(courseFeedback, dbCourseFeedback);
+                _repo.Feedbacks.UpdateCourseFeedback(dbCourseFeedback);
             }
             return validation;
         }

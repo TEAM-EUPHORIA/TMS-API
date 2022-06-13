@@ -8,8 +8,9 @@ namespace TMS.API.Services
 {
     public partial class AuthService
     {
-        private static string GenerateTokenString(List<Claim> claims)
+        private static string GenerateTokenString(User dbUser)
         {
+            var claims = GenerateClaims(dbUser);
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
@@ -22,16 +23,17 @@ namespace TMS.API.Services
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
             return tokenString;
         }
-        private static List<Claim> GenerateClaims(User dbUser,string roleName)
+        private static List<Claim> GenerateClaims(User dbUser)
         {
             return new List<Claim>
-                {
-                    new Claim("Email",dbUser.Email),
-                    new Claim("Name", dbUser.FullName),
-                    new Claim("Role", roleName),
-                    new Claim("RoleId", dbUser.RoleId.ToString()),
-                    new Claim("UserId", dbUser.Id.ToString())
-                };
+            {
+                new Claim("Email",dbUser.Email),
+                new Claim("Name", dbUser.FullName),
+                new Claim("Role", dbUser.Role.Name),
+                new Claim(ClaimTypes.Role, dbUser.Role.Name),
+                new Claim("RoleId", dbUser.RoleId.ToString()),
+                new Claim("UserId", dbUser.Id.ToString())
+            };
         }
     }
 }

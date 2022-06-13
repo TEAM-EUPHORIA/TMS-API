@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using TMS.API;
+using TMS.API.Repositories;
 using TMS.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,15 +41,9 @@ builder.Logging.AddSerilog(logger);
 
 // Making Db Context available for the App 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-
-// Making UserService available for the App
-builder.Services.AddTransient<AuthService>();
-builder.Services.AddTransient<CourseService>();
-builder.Services.AddTransient<DepartmentService>();
-builder.Services.AddTransient<FeedbackService>();
-builder.Services.AddTransient<ReviewService>();
-builder.Services.AddTransient<RoleService>();
-builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<Validation>();
+builder.Services.AddTransient<UnitOfWork>();
+builder.Services.AddTransient<UnitOfService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

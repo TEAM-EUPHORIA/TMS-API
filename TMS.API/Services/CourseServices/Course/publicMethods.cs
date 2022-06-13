@@ -7,133 +7,94 @@ namespace TMS.API.Services
 {
     public partial class CourseService
     {
-        public IEnumerable<Course> GetCoursesByUserId(int userId,AppDbContext dbContext)
+        public IEnumerable<Course> GetCoursesByUserId(int userId)
         {
-            var userExists = Validation.UserExists(dbContext,userId);
+            var userExists = _repo.Validation.UserExists(userId);
             if(userExists)
             {
-                var mappingData = dbContext.CourseUsers.Where(cu=>cu.UserId==userId).Include(cu=>cu.Course).ToList();
-                var result = new List<Course>();
-                foreach (var item in mappingData)
-                {
-                    if(item.Course is not null) result.Add(item.Course); 
-                }
-                return result;   
+                return _repo.Courses.GetCoursesByUserId(userId); 
             }
             else throw new ArgumentException(nameof(userId));
         }
-        public IEnumerable<Course> GetCoursesByDepartmentId(int departmentId,AppDbContext dbContext)
+        public IEnumerable<Course> GetCoursesByDepartmentId(int departmentId)
         {
-            var departmentExists = Validation.DepartmentExists(dbContext,departmentId);
+            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
             if(departmentExists)
             {
-                return dbContext.Courses.Where(c => c.DepartmentId == departmentId);
+                return _repo.Courses.GetCoursesByDepartmentId(departmentId);
             }
             else throw new ArgumentException(nameof(departmentId));
         }
-        public IEnumerable<Course> GetCourses(AppDbContext dbContext)
+        public IEnumerable<Course> GetCourses()
         {
-            return dbContext.Courses.ToList();   
+            return _repo.Courses.GetCourses();   
         }
-        public Course GetCourseById(int courseId,AppDbContext dbContext)
+        public Course GetCourseById(int courseId)
         {
-            var courseExists = Validation.CourseExists(dbContext,courseId);
+            var courseExists = _repo.Validation.CourseExists(courseId);
             if(courseExists)
             {
-                var result = dbContext.Courses.Find(courseId);
-                if(result is not null) return result;
+                return _repo.Courses.GetCourseById(courseId);
             }
             throw new ArgumentException(nameof(courseId));
         }
-        public Dictionary<string,string> CreateCourse(Course course,AppDbContext dbContext)
+        public Dictionary<string,string> CreateCourse(Course course)
         {
             if (course is null) throw new ArgumentNullException(nameof(course));
-            var validation = Validation.ValidateCourse(course,dbContext);
+            var validation = _repo.Validation.ValidateCourse(course);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                SetUpCourseDetails(course,dbContext);
-                CreateAndSaveCourse(course,dbContext);
+                SetUpCourseDetails(course);
+                _repo.Courses.CreateCourse(course);
             }
             return validation;
         }
-        public Dictionary<string,string> UpdateCourse(Course course,AppDbContext dbContext)
+        public Dictionary<string,string> UpdateCourse(Course course)
         {
             if (course is null) throw new ArgumentNullException(nameof(course));
-            var validation = Validation.ValidateCourse(course,dbContext);
+            var validation = _repo.Validation.ValidateCourse(course);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                var dbCourse = dbContext.Courses.Find(course.Id);
-                if(dbCourse is not null)
-                {
-                    SetUpCourseDetails(course, dbCourse);
-                    UpdateAndSaveCourse(dbCourse,dbContext);      
-                }
+                var dbCourse = _repo.Courses.GetCourseById(course.Id);
+                SetUpCourseDetails(course, dbCourse);
+                _repo.Courses.UpdateCourse(dbCourse);    
             }
             return validation;
         }
-        public bool DisableCourse(int courseId,AppDbContext dbContext)
+        public bool DisableCourse(int courseId)
         {
-            var courseExists = Validation.CourseExists(dbContext,courseId);
+            var courseExists = _repo.Validation.CourseExists(courseId);
             if(courseExists)
             {
-                var dbCourse = dbContext.Courses.Find(courseId);
-                if(dbCourse is not null)
-                {
-                    dbCourse.isDisabled = true;
-                    dbCourse.UpdatedOn = DateTime.UtcNow;
-                    UpdateAndSaveCourse(dbCourse,dbContext);
-                }  
+                _repo.Courses.DisableCourse(courseId);
             }
             return courseExists;        
         }
-        public Dictionary<string,List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data,AppDbContext dbContext)
+        public Dictionary<string,List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data)
         {
-            var courseExists = Validation.CourseExists(dbContext,data.CourseId);
-            var result =  new Dictionary<string,List<CourseUsers>>();
+            var courseExists = _repo.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
-                var validList = new List<CourseUsers>();
-                bool courseUsertExists = false;
-                foreach (var user in data.users)
-                {
-                    courseUsertExists = Validation.CourseUserExists(dbContext,data.CourseId,user.UserId,user.RoleId);
-                    if(!courseUsertExists)
-                    {
-                        var courseUser = new CourseUsers();
-                        courseUser.CourseId = data.CourseId;
-                        courseUser.UserId = user.UserId;
-                        courseUser.RoleId = user.RoleId;
-                        validList.Add(courseUser);
-                    }
-                }  
-                validList =validList.Distinct().ToList();
-                AddUsersToCourseAndSave(validList,dbContext); 
-                result.Add("the following records are created",validList); 
+                var result =  new Dictionary<string,List<CourseUsers>>();
+                var validList = GetListOfValidUsers(data);
+                _repo.Courses.AddUsersToCourse(validList);
+                result.Add("the following records are created", validList);
                 return result;
             }
             else throw new ArgumentException(nameof(data));
         }
-        public Dictionary<string,List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data,AppDbContext dbContext)
+
+        public Dictionary<string,List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data)
         {
-            var validList = new List<CourseUsers>();
-            bool courseUsertExists = false;
-            foreach (var user in data.users)
+            var courseExists = _repo.Validation.CourseExists(data.CourseId);
+            if(courseExists)
             {
-                courseUsertExists = Validation.CourseUserExists(dbContext,data.CourseId,user.UserId,user.RoleId);
-                if(courseUsertExists)
-                {
-                    var courseUser = new CourseUsers();
-                    courseUser.CourseId = data.CourseId;
-                    courseUser.UserId = user.UserId;
-                    courseUser.RoleId = user.RoleId;
-                    validList.Add(courseUser);
-                }
-            }  
-            validList =validList.Distinct().ToList();
-            RemoveUsersFromCourseAndSave(validList,dbContext); 
-            var result =  new Dictionary<string,List<CourseUsers>>();
-            result.Add("the following records are removed",validList); 
-            return result;
+                var result =  new Dictionary<string,List<CourseUsers>>();
+                var validList = GetListOfValidUsers(data);
+                result.Add("the following records are removed",validList); 
+                return result;
+            }
+            else throw new ArgumentException(nameof(data));
         }
     }
 }

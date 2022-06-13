@@ -3,236 +3,221 @@ using TMS.BAL;
 
 namespace TMS.API
 {
-    public static partial class Validation
+    public partial class Validation
     {
-
-        public static Dictionary<string, string> ValidateCourseUser(CourseUsers user,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateCourseUser(CourseUsers user)
         {
-            result.Clear();
-            courseUsertExists=false;
-            courseExists = CourseExists(dbContext,user.CourseId);
-            userExists = UserExists(dbContext,user.UserId,user.RoleId);
-            AddEnteryForCourseAndUser(courseExists,userExists,user.CourseId);
-            if(result.Count==0)
+            courseExists = CourseExists(user.CourseId);
+            userExists = UserExists(user.UserId,user.RoleId);
+            AddEnteryValidateCourseUser(courseExists,userExists);
+            if(result.Count == 0 && courseExists && userExists)
             {
-                if(courseExists && userExists) courseUsertExists = CourseUserExists(dbContext,user.CourseId,user.UserId,user.RoleId);
+                courseUsertExists = CourseUserExists(user.CourseId,user.UserId,user.RoleId);
                 if(courseUsertExists) AddEntery("Exists","true");
             }
             if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateAssignment(Assignment assignment,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateAssignment(Assignment assignment)
         {
-            result.Clear();
-            assignmentExists=false;
-            if(result.Count == 0)
-            {
-                courseExists = CourseExists(dbContext, assignment.CourseId);
-                topicExists = TopicExists(dbContext, assignment.TopicId);
-                userExists = UserExists(dbContext, assignment.OwnerId);
-                
-                AddEnteryForCourseTopicAndUser(courseExists,topicExists,userExists);
-                
-                if(courseExists && topicExists && userExists)assignmentExists = AssignmentExists(dbContext,assignment.CourseId,assignment.TopicId,assignment.OwnerId);
-                          
+            courseExists = CourseExists(assignment.CourseId);
+            topicExists = TopicExists(assignment.TopicId);
+            userExists = UserExists(assignment.OwnerId);
+            AddEnteryValidateAssignment(courseExists,topicExists,userExists);
+            if(result.Count == 0 && courseExists && topicExists && userExists)
+            { 
+                assignmentExists = AssignmentExists(assignment.CourseId,assignment.TopicId,assignment.OwnerId);          
                 if(assignmentExists) AddEntery("Exists","true");
             }
 
             if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateAttendance(Attendance attendance,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateAttendance(Attendance attendance)
         {
-            result.Clear();
-            attendanceExists=false;
-            checkIdForCourseTopicAndUser(attendance.CourseId,attendance.TopicId,attendance.OwnerId);
+            checkIdForCourseTopicUser(attendance.CourseId,attendance.TopicId,attendance.OwnerId);
             if(result.Count == 0)
             {
-                courseExists = CourseExists(dbContext, attendance.CourseId);
-                topicExists = TopicExists(dbContext, attendance.TopicId);
-                userExists = UserExists(dbContext, attendance.OwnerId);
-                
-                AddEnteryForCourseTopicAndUser(courseExists,topicExists,userExists);
-
-                if(courseExists && topicExists && userExists)attendanceExists = AttendanceExists(dbContext,attendance.CourseId,attendance.TopicId,attendance.OwnerId);
-                                
-                if(attendanceExists) AddEntery("Exists","true");
+                courseExists = CourseExists(attendance.CourseId);
+                topicExists = TopicExists(attendance.TopicId);
+                userExists = UserExists(attendance.OwnerId);
+                AddEnteryValidateAttendance(courseExists,topicExists,userExists);
+                if(courseExists && topicExists && userExists)
+                {
+                    attendanceExists = AttendanceExists(attendance.CourseId,attendance.TopicId,attendance.OwnerId);                   
+                    if(attendanceExists) AddEntery("Exists","true");
+                }
+                AddEntery("IsValid","true");
             }
-
-            if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateLoginDetails(LoginModel user,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateLoginDetails(LoginModel user)
         {            
-            result.Clear();
-            validateAndAddEntery(user.Email,emailValidation);
-            validateAndAddEntery(user.Password,passwordValidation);
+            validateAndAddEntery(nameof(user.Email),user.Email,emailValidation);
+            validateAndAddEntery(nameof(user.Password),user.Password,passwordValidation);
             if(result.Count == 0)
             {
-                userExists = UserExists(dbContext,user);
+                userExists = UserExists(user);
                 if(userExists) AddEntery("IsValid","true");
             }
             return result;
         }
 
-         public static Dictionary<string, string> ValidateCourse(Course course,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateCourse(Course course)
         {       
-            result.Clear();
-            courseValidationExists=false;
             checkIdAndAddEntery(course.TrainerId,nameof(course.TrainerId));
             checkIdAndAddEntery(course.DepartmentId,nameof(course.DepartmentId));
-            validateAndAddEntery(course.Name,nameValidation);
-            validateAndAddEntery(course.Duration,durationValidation);
-            validateAndAddEntery(course.Description,contentValidation);
+            validateAndAddEntery(nameof(course.Name),course.Name,nameValidation);
+            validateAndAddEntery(nameof(course.Duration),course.Duration,durationValidation);
+            validateAndAddEntery(nameof(course.Description),course.Description,contentValidation);
             
             if(result.Count == 0)
             {
-                courseExists = CourseExists(dbContext,course.Id);
-                userExists = UserExists(dbContext,course.TrainerId,3);
-                departmentExists=DepartmentExists(dbContext,course.DepartmentId);          
-                if(userExists && departmentExists)courseValidationExists=CourseValidateExists(dbContext,course.Id,course.DepartmentId,course.Name);   
-                AddEnteryForCourseAndUserWithDept(courseExists,userExists,departmentExists,course.Id,courseValidationExists);
-                if(courseExists && userExists && !courseValidationExists) AddEntery("Exists","true");
+                userExists = UserExists(course.TrainerId,3);
+                courseExists = CourseExists(course.Id);
+                departmentExists = DepartmentExists(course.DepartmentId);          
+                if(userExists && departmentExists) isCourseNameAvailable=IsCourseNameAvailable(course.Id,course.DepartmentId,course.Name);   
+                AddEnteryValidateCourse(courseExists,userExists,departmentExists,isCourseNameAvailable);
+                if(courseExists && userExists) AddEntery("Exists","true");
             }
 
             if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback)
         {
-            result.Clear();
-            courseFeedbackExists=false;
             checkIdAndAddEntery(feedback.CourseId,nameof(feedback.CourseId));
             checkIdAndAddEntery(feedback.TraineeId,nameof(feedback.TraineeId));
-            validateAndAddEntery(feedback.Feedback,feedbackValidation);
-            if(feedback.Rating <= 0 || feedback.Rating > 5) AddEntery("feedback rating","rating must be between 0 to 5");
-            if(result.Count==0)
+            validateAndAddEntery(nameof(feedback.Feedback),feedback.Feedback,feedbackValidation);
+            if(feedback.Rating <= 0 || feedback.Rating > 5) AddEntery("rating","rating must be between 0 to 5");
+            if(result.Count == 0)
             {
-                courseExists = CourseExists(dbContext,feedback.CourseId);
-                userExists = UserExists(dbContext,feedback.TraineeId,4);
-                AddEnteryForCourseAndUser(courseExists,userExists,feedback.CourseId);
-                if(courseExists && userExists) courseFeedbackExists = CourseFeedbackExists(dbContext,feedback.CourseId,feedback.TraineeId);
+                courseExists = CourseExists(feedback.CourseId);
+                userExists = UserExists(feedback.TraineeId,4);
+                AddEnteryValidateCourseFeedback(courseExists,userExists);
+                if(courseExists && userExists) courseFeedbackExists = CourseFeedbackExists(feedback.CourseId,feedback.TraineeId);
                 if(courseFeedbackExists) AddEntery("Exists","true");
             }
 
             if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateDepartment(Department dpet,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateDepartment(Department dpet)
         {
-            result.Clear();
-            departmentExists=false;
-            validateAndAddEntery(dpet.Name,userNameValidation);
-            if(dpet.Id!=0)departmentExists=DepartmentExists(dbContext,dpet.Id);
+            validateAndAddEntery(nameof(dpet.Name),dpet.Name,userNameValidation);
+            if(dpet.Id != 0) departmentExists=DepartmentExists(dpet.Id);
             if(departmentExists)AddEntery("Exists","true");
             if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
 
-        public static Dictionary<string, string> ValidateMOM(MOM mom,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateMOM(MOM mom)
         {
-            result.Clear();
-            momExists=false;
             checkIdAndAddEntery(mom.ReviewId,nameof(mom.ReviewId));
             checkIdAndAddEntery(mom.TraineeId,nameof(mom.TraineeId));
-            validateAndAddEntery(mom.Agenda,contentValidation);
-            validateAndAddEntery(mom.MeetingNotes,contentValidation);
-            validateAndAddEntery(mom.PurposeOfMeeting,contentValidation);
+            validateAndAddEntery(nameof(mom.Agenda),mom.Agenda,contentValidation);
+            validateAndAddEntery(nameof(mom.MeetingNotes),mom.MeetingNotes,contentValidation);
+            validateAndAddEntery(nameof(mom.PurposeOfMeeting),mom.PurposeOfMeeting,contentValidation);
             if(result.Count==0)
             {
-                userExists = UserExists(dbContext,mom.TraineeId,4);
-                reviewExists = MOMReviewExists(dbContext,mom.ReviewId,mom.TraineeId);
-                if(userExists && reviewExists)momExists = MOMExists(dbContext,mom.ReviewId,mom.TraineeId);
-                AddEnteryForUserAndReview(userExists,reviewExists,momExists);
-                if(!momExists && revieweExists) AddEntery("Exists","true");
+                userExists = UserExists(mom.TraineeId,4);
+                reviewExists = MOMReviewExists(mom.ReviewId,mom.TraineeId);
+                if(userExists && reviewExists) momExists = MOMExists(mom.ReviewId,mom.TraineeId);
+                AddEnteryValidateMOM(userExists,reviewExists,momExists);
+                if(momExists) AddEntery("Exists","true");
             }
             if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateReview(Review review,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateReview(Review review)
         {
-            result.Clear();
-            revieweExists=false;
-            reviewerAvailabilityExists=false;
-            traineeAvailabilityExists=false;
             checkIdAndAddEntery(review.ReviewerId,nameof(review.ReviewerId));
             checkIdAndAddEntery(review.TraineeId,nameof(review.TraineeId));
             checkIdAndAddEntery(review.StatusId,nameof(review.StatusId));
-            validateAndAddEntery(review.ReviewDate.ToShortDateString(),dateValidation);
-            validateAndAddEntery(review.ReviewTime.ToShortTimeString(),timeValidation);
-            validateAndAddEntery(review.Mode,modeValidation);
+            validateAndAddEntery(nameof(review.ReviewDate),review.ReviewDate.ToShortDateString(),dateValidation);
+            validateAndAddEntery(nameof(review.ReviewTime),review.ReviewTime.ToShortTimeString(),timeValidation);
+            validateAndAddEntery(nameof(review.Mode),review.Mode,modeValidation);
             if(result.Count==0)
             {
-                userExists = UserExists(dbContext,review.ReviewerId,5);
-                traineeExists = UserExists(dbContext,review.TraineeId,4);
-                reviewStatusExists = ReviewStatusExists(dbContext,review.StatusId);
-                if(!reviewStatusExists) AddEntery(nameof(review.StatusId));
+                userExists = UserExists(review.ReviewerId,5);
+                traineeExists = UserExists(review.TraineeId,4);
+                reviewStatusExists = ReviewStatusExists(review.StatusId);
+                if(!reviewStatusExists) AddEntery(nameof(review.StatusId),"Invalid Id");
                 
-                if(review.ReviewDate<DateTime.UtcNow)AddEntery(nameof(review.ReviewDate));
-                if(review.Id!=0)revieweExists= ReviewExists(dbContext,review.Id);
-                if(userExists && traineeExists && reviewStatusExists)reviewerAvailabilityExists= ReviewerAvailabilityExists(dbContext,review.Id,review.ReviewerId,review.ReviewDate,review.ReviewTime,review.StatusId);
-                if(reviewerAvailabilityExists)AddEntery(nameof(reviewerAvailabilityExists));
-                if(userExists && traineeExists && reviewStatusExists)traineeAvailabilityExists= TraineeAvailabilityExists(dbContext,review.Id,review.TraineeId,review.ReviewDate,review.ReviewTime,review.StatusId);
-                if(traineeAvailabilityExists)AddEntery(nameof(traineeAvailabilityExists));
-                //AddEnteryForUsers(userExists,traineeExists);
-                if(revieweExists && userExists && traineeExists && !reviewerAvailabilityExists && !traineeAvailabilityExists) AddEntery("Exists","true");
+                if(review.ReviewDate < DateTime.UtcNow) 
+                    AddEntery(nameof(review.ReviewDate),"Invalid Date");
+                
+                if(review.Id != 0) 
+                    revieweExists = ReviewExists(review.Id);
+                
+                if(userExists && traineeExists && reviewStatusExists)
+                    isReviewerAvailable = ReviewerAvailabilityExists(review.Id,review.ReviewerId,review.ReviewDate,review.ReviewTime,review.StatusId);
+
+                if(!isReviewerAvailable)
+                    AddEntery("reviewerId","is not available");
+                
+                if(userExists && traineeExists && reviewStatusExists)
+                    isTraineeAvailable = TraineeAvailabilityExists(review.Id,review.TraineeId,review.ReviewDate,review.ReviewTime,review.StatusId);
+
+                if(!isTraineeAvailable)
+                    AddEntery("traineeId","is not available");
+
+                if(revieweExists) 
+                    AddEntery("Exists","true");
             }
             if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateTopic(Topic topic,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateTopic(Topic topic)
         {
-            result.Clear();
-            topicExists=false;
             checkIdAndAddEntery(topic.CourseId,nameof(topic.CourseId));
-            validateAndAddEntery(topic.Name,nameValidation);
-            validateAndAddEntery(topic.Duration,durationValidation);
+            validateAndAddEntery(topic.Name,nameValidation,nameof(topic.Name));
+            validateAndAddEntery(topic.Duration,durationValidation,nameof(topic.Duration));
             if(result.Count==0) 
             {
-                courseExists = CourseExists(dbContext,topic.CourseId);
-                //if(!courseExists) AddEntery(nameof(topic.CourseId));
-                if(courseExists && topic.TopicId != 0) topicExists = TopicExists(dbContext,topic.TopicId);
-                topicValidationExists=TopicValidateExists(dbContext,topic.TopicId,topic.CourseId,topic.Name);
-                AddEnteryForValidateTopic(topicValidationExists,courseExists,topic.CourseId);
-                if(topicExists && !topicValidationExists) AddEntery("Exists","true");
+                courseExists = CourseExists(topic.CourseId);
+                if(courseExists && topic.TopicId != 0) topicExists = TopicExists(topic.TopicId,topic.CourseId);
+                isTopicNameAvailabe = IsTopicNameAvailabe(topic.TopicId,topic.CourseId,topic.Name);
+                AddEnteryValidateTopic(isTopicNameAvailabe,courseExists,topicExists);
+                if(topicExists) AddEntery("Exists","true");
             }
             if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback)
         {
-            result.Clear();
             traineeFeedbackExists=false;
             checkIdAndAddEntery(feedback.CourseId,nameof(feedback.CourseId));
             checkIdAndAddEntery(feedback.TraineeId,nameof(feedback.TraineeId));
             checkIdAndAddEntery(feedback.TrainerId,nameof(feedback.TrainerId));
-            validateAndAddEntery(feedback.Feedback,feedbackValidation);
+            validateAndAddEntery(nameof(feedback.Feedback),feedback.Feedback,feedbackValidation);
             if(result.Count==0)
             {
-                courseExists = CourseExists(dbContext,feedback.CourseId);
-                if(!courseExists) AddEntery(nameof(feedback.CourseId));
-                userExists = UserExists(dbContext,feedback.TrainerId,3);
-                traineeExists = UserExists(dbContext,feedback.TraineeId,4);
-                AddEnteryForUsers(userExists,traineeExists);
-                if(courseExists && userExists && traineeExists) traineeFeedbackExists = TraineeFeedbackExists(dbContext,feedback.CourseId,feedback.TraineeId,feedback.TrainerId);
+                courseExists = CourseExists(feedback.CourseId);
+                if(!courseExists) AddEntery(nameof(feedback.CourseId),"Invalid Data");
+                userExists = UserExists(feedback.TrainerId,3);
+                traineeExists = UserExists(feedback.TraineeId,4);
+                AddEnteryValidateTraineeFeedback(courseExists,userExists,traineeExists);
+                if(courseExists && userExists && traineeExists) traineeFeedbackExists = TraineeFeedbackExists(feedback.CourseId,feedback.TraineeId,feedback.TrainerId);
                 if(traineeFeedbackExists) AddEntery("Exists","true");
             }
             if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
             return result;
         }
-        public static Dictionary<string, string> ValidateUser(User user,AppDbContext dbContext)
+        public Dictionary<string, string> ValidateUser(User user)
         {
-            result.Clear();
-            if(user.RoleId<=dbContext.Roles.Count()) AddEntery(nameof(user.RoleId));
-            if(user.DepartmentId<=dbContext.Departments.Count()) AddEntery(nameof(user.DepartmentId));
-            validateAndAddEntery(user.FullName,fullNameValidation);
-            validateAndAddEntery(user.UserName,userNameValidation);
-            validateAndAddEntery(user.Email,emailValidation);
-            validateAndAddEntery(user.Password,passwordValidation);
-            validateAndAddEntery(user.Base64,Image);
-             if(result.Count==0)
+            roleExists = RoleExists(user.RoleId);
+            if(roleExists && user.RoleId >= 3) departmentExists = DepartmentExists(user.RoleId);
+            if(!roleExists) AddEntery(nameof(user.RoleId),"can't find the role");
+            if(result.Count==0 && roleExists)
             {
-                userExists = UserExists(dbContext,user.Id);
+                AddEntery(nameof(user.DepartmentId),"can't find the department");
+                validateAndAddEntery(nameof(user.FullName),user.FullName,fullNameValidation);
+                validateAndAddEntery(nameof(user.UserName),user.UserName,userNameValidation);
+                validateAndAddEntery(nameof(user.Email),user.Email,emailValidation);
+                validateAndAddEntery(nameof(user.Password),user.Password,passwordValidation);
+                validateAndAddEntery(nameof(user.Base64),user.Base64,Image);
+                userExists = UserExists(user.Id);
                 if(userExists) AddEntery("Exists","true");
             }
             if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
