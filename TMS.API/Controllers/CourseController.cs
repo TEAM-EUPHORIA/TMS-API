@@ -344,7 +344,7 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}")]
-        public IActionResult GetTopicByIds(int courseId,int topicId)
+        public IActionResult GetTopicByIds(int courseId, int topicId)
         {
             var topicExists = _validation.TopicExists(topicId,courseId);
             if(topicExists)
@@ -363,7 +363,7 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-        
+
         /// <summary>
         /// Create a topic
         /// </summary>
@@ -505,7 +505,7 @@ namespace TMS.API.Controllers
             return NotFound();
 
         }
-        
+
         /// <summary>
         /// To assign users to the course
         /// </summary>
@@ -608,7 +608,7 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments")]
-        public IActionResult GetAssignmentsByTopicId(int courseId,int topicId)
+        public IActionResult GetAssignmentsByTopicId(int courseId, int topicId)
         {
             var topicExists = _validation.TopicExists(topicId,courseId);
             if(topicExists)
@@ -625,7 +625,7 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-          
+
         /// <summary>
         /// Gets a single assigments in a topic by courseId, topicId and ownerId
         /// </summary>
@@ -643,7 +643,7 @@ namespace TMS.API.Controllers
         /// <param name="topicId"></param>
         /// <param name="ownerId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments/{ownerId:int}")]
-        public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId,int topicId,int ownerId)
+        public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
             var assignmentExists = _validation.AssignmentExists(courseId,topicId,ownerId);
             if(assignmentExists)
@@ -661,7 +661,7 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
-               
+
         /// <summary>
         /// Create a assignment
         /// </summary>
@@ -709,7 +709,7 @@ namespace TMS.API.Controllers
             }
             return Problem();
         }
-               
+
         /// <summary>
         /// Update a assignment
         /// </summary>
