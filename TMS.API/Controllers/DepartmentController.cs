@@ -103,7 +103,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPost("department")]
-        // [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         //[Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateDepartment(Department department)
         {
@@ -114,7 +114,7 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create department. The department already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    //department.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    department.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _departmentService.CreateDepartment(department);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Department was Created successfully" });
                 }
