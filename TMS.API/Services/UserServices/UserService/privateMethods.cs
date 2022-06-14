@@ -7,6 +7,7 @@ namespace TMS.API.Services
     {
         private void GenerateUserId(User user)
         {
+            // var newId = 1; //for creating first user
             var newId = _stats.lastUserId() + 1;
             if (user.DepartmentId != 0 && user.DepartmentId != null) user.EmployeeId = $"TMS{user.RoleId}{user.DepartmentId}{newId}";
             else user.EmployeeId = $"TMS{user.RoleId}0{newId}";
@@ -36,6 +37,7 @@ namespace TMS.API.Services
             dbUser.Base64 = user.Base64;
             dbUser.Image = user.Image;
             dbUser.UpdatedOn = DateTime.Now;
+            if(user.DepartmentId != 0) dbUser.DepartmentId = user.DepartmentId;
         }
         
         private void disable(int currentUserId, User dbUser)

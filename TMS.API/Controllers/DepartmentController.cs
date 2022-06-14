@@ -163,7 +163,7 @@ namespace TMS.API.Controllers
                     var IsValid = _validation.ValidateDepartment(department);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        department.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);;
+                        department.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _departmentService.UpdateDepartment(department);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Department was Updated successfully" });
                     }

@@ -53,7 +53,7 @@ namespace TMS.API
         } 
          public bool MOMReviewExists(int reviewId ,int traineeId)
         {
-            return dbContext.Reviews.Any(r=>r.Id==reviewId && r.TraineeId==traineeId && r.StatusId==2);
+            return dbContext.Reviews.Any(r=>r.Id==reviewId && r.TraineeId==traineeId);
         } 
         public bool ReviewStatusExists(int statusId)
         {

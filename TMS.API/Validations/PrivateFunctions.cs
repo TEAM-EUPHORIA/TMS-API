@@ -13,32 +13,37 @@ namespace TMS.API
         }
         private void AddEnteryValidateCourseUser(bool courseExists,bool userexists)
         {
-            if(!courseExists) AddEntery("courseId","Can't find the course");
+            AddEnteryCourseNotFound(courseExists);
             if(!userExists) AddEntery("userId, roleId","Can't find the user");
         }
         private void AddEnteryValidateAssignment(bool courseExists,bool topicExists,bool userexists)
         {
-            if(!courseExists) AddEntery("courseId","Can't find the course");
+            AddEnteryCourseNotFound(courseExists);
             if(!topicExists) AddEntery("topicId","Can't find the topic");
             if(!userExists) AddEntery("ownerId","Can't find the user");
         }
         private void AddEnteryValidateAttendance(bool courseExists,bool topicExists,bool userexists)
         {
-            if(!courseExists) AddEntery("courseId","Can't find the course");
+            AddEnteryCourseNotFound(courseExists);
             if(!topicExists) AddEntery("topicId","Can't find the topic");
             if(!userExists) AddEntery("ownerId","Can't find the user");
         }
-        private void AddEnteryValidateCourse(bool courseExists, bool userExists, bool departmentExists, bool isCourseNameAvailable)
+        private void AddEnteryValidateCourse(bool userExists, bool departmentExists, bool isCourseNameAvailable)
         {
-            if(!userExists) AddEntery("trainerId","can't find the user");
-            if(!courseExists) AddEntery("courseId","can't find the course");
-            if(!departmentExists) AddEntery("departmentId","can't find the department");
-            if(!isCourseNameAvailable) AddEntery("name","Course with that name already exists");
+            if (!userExists) AddEntery("trainerId", "can't find the user");
+            if (!departmentExists) AddEntery("departmentId", "can't find the department");
+            if (isCourseNameAvailable) AddEntery("name", "Course with that name already exists");
         }
+
+        private void AddEnteryCourseNotFound(bool courseExists)
+        {
+            if (!courseExists) AddEntery("courseId", "can't find the course");
+        }
+
         private void AddEnteryValidateCourseFeedback(bool courseExists, bool userExists)
         {
             if(!userExists) AddEntery("traineeId","can't find the user");
-            if(!courseExists) AddEntery("courseId","can't find the course");
+            AddEnteryCourseNotFound(courseExists);
         }
         private void AddEnteryValidateMOM(bool userExists, bool reviewExists, bool momExists)
         {
@@ -48,13 +53,18 @@ namespace TMS.API
         }
         private void AddEnteryValidateTopic(bool isTopicNameAvailabe, bool courseExists, bool topicExists)
         {
-            if(!courseExists) AddEntery("courseId","can't find the course");
-            if(!topicExists) AddEntery("topicId","can't find the topic");
-            if(!isTopicNameAvailabe) AddEntery("name","Topic with that name already exists");
+            AddEnteryCourseNotFound(courseExists);
+            if (isTopicNameAvailabe) AddEntery("name", "Topic with that name already exists");
         }
+
+        private void AddEnteryTopicNotFound(bool topicExists)
+        {
+            if (!topicExists) AddEntery("topicId", "can't find the topic");
+        }
+
         private void AddEnteryValidateTraineeFeedback(bool courseExists,bool userExists, bool traineeExists)
         {
-            if(!courseExists) AddEntery("courseId","can't find the course");
+            AddEnteryCourseNotFound(courseExists);
             if(!userExists) AddEntery("trainerId","can't find the user");
             if(!traineeExists) AddEntery("traineeId","can't find the user");
         }

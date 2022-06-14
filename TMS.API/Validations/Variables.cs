@@ -19,7 +19,7 @@ namespace TMS.API
          modeValidation = @"^((online)|(offline)|(Online)|(Offilne)){1}$",
          durationValidation = @"^(\d+ ((hr)|(hrs)|(mins)){1}$)|(\d+ ((hr)|(hrs)){1})\s([0-5][0-9] ((min)|(mins)){1})$",
          contentValidation = @"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$",
-         feedbackValidation = @"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z.,\s]{5,100}$",
+         feedbackValidation = @"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z.,#\s]{5,100}$",
          base64Validation = @"^data:application\/pdf;base64,";
          bool attendanceExists = false,
          assignmentExists = false,
@@ -36,8 +36,8 @@ namespace TMS.API
          courseFeedbackExists = false,
          userExists = false,
          revieweExists=false,
-         isReviewerAvailable=false,
-         isTraineeAvailable=false,
+         reviewerAvailabilityExists=false,
+         traineeAvailabilityExists=false,
          traineeExists = false,
          roleExists = false;
         private readonly AppDbContext dbContext;

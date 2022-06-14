@@ -7,7 +7,6 @@ namespace TMS.BAL
     {
         [Key]
         public int Id { get; set; }
-        [Required]
         public int? DepartmentId { get; set; }
         [Required]
         public int ReviewerId { get; set; }

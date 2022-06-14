@@ -17,7 +17,7 @@ namespace TMS.API.Services
         }
         public int GetCoordinatorCount()
         {
-            return dbContext.Users.Select(u=>u.RoleId == 2).Count();
+            return dbContext.Users.Where(u=>u.RoleId == 2).Count();
         }
         public int GetDepartmentsCount()
         {
@@ -25,7 +25,7 @@ namespace TMS.API.Services
         }
         public int GetTraineesCount()
         {
-            return dbContext.Users.Select(u=>u.RoleId == 4).Count();
+            return dbContext.Users.Where(u=>u.RoleId == 4).Count();
         }
         public int GetTrainersCount()
         {
@@ -33,7 +33,7 @@ namespace TMS.API.Services
         }
         public int GetCourseCount(int userId)
         {
-            return dbContext.CourseUsers.Select(cu=>cu.UserId == userId).Count();
+            return dbContext.CourseUsers.Where(cu=>cu.UserId == userId).Count();
         }
         public int GetCompletedReviews(int userId)
         {

@@ -80,7 +80,7 @@ namespace TMS.API.Services
             if(courseExists)
             {
                 var result =  new Dictionary<string,List<CourseUsers>>();
-                var validList = GetListOfValidUsers(data);
+                var validList = GetListOfValidUsers(data,currentUserId);
                 _repo.Courses.AddUsersToCourse(validList);
                 result.Add("the following records are created", validList);
                 _repo.Complete();
@@ -89,13 +89,13 @@ namespace TMS.API.Services
             else throw new ArgumentException(nameof(data));
         }
 
-        public Dictionary<string,List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int userId)
+        public Dictionary<string,List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int currentUserId)
         {
             var courseExists = _repo.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
                 var result =  new Dictionary<string,List<CourseUsers>>();
-                var validList = GetListOfValidUsers(data);
+                var validList = GetCourseUsers(data,currentUserId);
                 _repo.Courses.RemoveUsersFromCourse(validList);
                 result.Add("the following records are removed",validList); 
                 _repo.Complete();

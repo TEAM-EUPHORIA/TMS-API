@@ -145,30 +145,6 @@ namespace TMS.API.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Courses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 3,
-                            Description = "You can launch a new career in web development today by learning HTML & CSS. You don't need a computer science degree or expensive software. All you need is a computer, a bit of time, a lot of determination, and a teacher you trust. I've taught HTML and CSS to countless coworkers and held training sessions for fortune 100 companies. I am that teacher you can trust.",
-                            Duration = "11 hrs",
-                            Name = "HTML 5 With CSS 3",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 3,
-                            Description = "You can launch a new career by learning SQL RDBMS. You don't need a computer science degree or expensive software. All you need is a computer, a bit of time, a lot of determination, and a teacher you trust. I've taught RDBMS to countless coworkers and held training sessions for fortune 100 companies. I am that teacher you can trust.",
-                            Duration = "28 hrs",
-                            Name = "SQL RDBMS",
-                            isDisabled = false
-                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.CourseFeedback", b =>
@@ -206,44 +182,6 @@ namespace TMS.API.Migrations
                     b.HasIndex("TraineeId");
 
                     b.ToTable("CourseFeedbacks");
-
-                    b.HasData(
-                        new
-                        {
-                            CourseId = 1,
-                            TraineeId = 13,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Feedback = "Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu felis",
-                            Rating = 3.8f
-                        },
-                        new
-                        {
-                            CourseId = 2,
-                            TraineeId = 17,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Feedback = " Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu felis",
-                            Rating = 4.3f
-                        },
-                        new
-                        {
-                            CourseId = 1,
-                            TraineeId = 12,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Feedback = "Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu felis",
-                            Rating = 4.8f
-                        },
-                        new
-                        {
-                            CourseId = 2,
-                            TraineeId = 16,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Feedback = " Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu felis",
-                            Rating = 3.6f
-                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.CourseUsers", b =>
@@ -277,64 +215,6 @@ namespace TMS.API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("CourseUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            CourseId = 1,
-                            UserId = 12,
-                            RoleId = 4,
-                            CreatedBy = 3,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145)
-                        },
-                        new
-                        {
-                            CourseId = 1,
-                            UserId = 13,
-                            RoleId = 4,
-                            CreatedBy = 3,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145)
-                        },
-                        new
-                        {
-                            CourseId = 1,
-                            UserId = 14,
-                            RoleId = 4,
-                            CreatedBy = 3,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145)
-                        },
-                        new
-                        {
-                            CourseId = 1,
-                            UserId = 8,
-                            RoleId = 3,
-                            CreatedBy = 3,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145)
-                        },
-                        new
-                        {
-                            CourseId = 2,
-                            UserId = 16,
-                            RoleId = 4,
-                            CreatedBy = 3,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145)
-                        },
-                        new
-                        {
-                            CourseId = 2,
-                            UserId = 17,
-                            RoleId = 4,
-                            CreatedBy = 3,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145)
-                        },
-                        new
-                        {
-                            CourseId = 2,
-                            UserId = 7,
-                            RoleId = 3,
-                            CreatedBy = 3,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145)
-                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.Department", b =>
@@ -373,7 +253,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8675),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7452),
                             Name = ".NET",
                             isDisabled = false
                         },
@@ -381,7 +261,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8680),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7463),
                             Name = "JAVA",
                             isDisabled = false
                         },
@@ -389,7 +269,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8683),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7468),
                             Name = "LAMP",
                             isDisabled = false
                         });
@@ -434,28 +314,6 @@ namespace TMS.API.Migrations
                     b.HasIndex("TraineeId");
 
                     b.ToTable("MOMs");
-
-                    b.HasData(
-                        new
-                        {
-                            ReviewId = 1,
-                            TraineeId = 13,
-                            Agenda = "Lorem ipsum dolor sit amet\nAdipiscing elit duis\nAenean euismod elementum",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            MeetingNotes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dolor purus non enim praesent elementum facilisis. Nisi scelerisque eu ultrices vitae auctor eu augue ut lectus. Adipiscing elit duis tristique sollicitudin nibh sit amet. Id eu nisl nunc mi ipsum faucibus vitae aliquet. Cras ornare arcu dui vivamus arcu felis bibendum ut tristique. Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu felis bibendum ut. Enim blandit volutpat maecenas volutpat. Ut ornare lectus sit amet est placerat in egestas erat. Dictumst quisque sagittis purus sit amet volutpat consequat mauris nunc. Aenean euismod elementum nisi quis eleifend quam adipiscing vitae. Ac auctor augue mauris augue. Sagittis orci a scelerisque purus semper eget. Massa placerat duis ultricies lacus sed turpis.",
-                            PurposeOfMeeting = "Eu consequat ac felis donec et odio pellentesque diam volutpat. Suspendisse in est ante in. Dis parturient montes nascetur ridiculus mus mauris vitae ultricies leo. Leo vel orci porta non pulvinar neque. Ultrices vitae auctor eu augue ut lectus arcu. Nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae. Quisque sagittis purus sit amet volutpat. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a."
-                        },
-                        new
-                        {
-                            ReviewId = 4,
-                            TraineeId = 13,
-                            Agenda = "Lorem ipsum dolor sit amet\nAdipiscing elit duis\nAenean euismod elementum",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            MeetingNotes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dolor purus non enim praesent elementum facilisis. Nisi scelerisque eu ultrices vitae auctor eu augue ut lectus. Adipiscing elit duis tristique sollicitudin nibh sit amet. Id eu nisl nunc mi ipsum faucibus vitae aliquet. Cras ornare arcu dui vivamus arcu felis bibendum ut tristique. Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu felis bibendum ut. Enim blandit volutpat maecenas volutpat. Ut ornare lectus sit amet est placerat in egestas erat. Dictumst quisque sagittis purus sit amet volutpat consequat mauris nunc. Aenean euismod elementum nisi quis eleifend quam adipiscing vitae. Ac auctor augue mauris augue. Sagittis orci a scelerisque purus semper eget. Massa placerat duis ultricies lacus sed turpis.",
-                            PurposeOfMeeting = "Eu consequat ac felis donec et odio pellentesque diam volutpat. Suspendisse in est ante in. Dis parturient montes nascetur ridiculus mus mauris vitae ultricies leo. Leo vel orci porta non pulvinar neque. Ultrices vitae auctor eu augue ut lectus arcu. Nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae. Quisque sagittis purus sit amet volutpat. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a."
-                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.Review", b =>
@@ -473,7 +331,6 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DepartmentId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Mode")
@@ -512,86 +369,6 @@ namespace TMS.API.Migrations
                     b.HasIndex("TraineeId");
 
                     b.ToTable("Reviews");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 2,
-                            Mode = "online",
-                            ReviewDate = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9150),
-                            ReviewTime = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9152),
-                            ReviewerId = 11,
-                            StatusId = 1,
-                            TraineeId = 13
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 1,
-                            Mode = "Offline",
-                            ReviewDate = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9157),
-                            ReviewTime = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9158),
-                            ReviewerId = 11,
-                            StatusId = 2,
-                            TraineeId = 15
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 2,
-                            Mode = "online",
-                            ReviewDate = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9161),
-                            ReviewTime = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9162),
-                            ReviewerId = 11,
-                            StatusId = 3,
-                            TraineeId = 16
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 1,
-                            Mode = "online",
-                            ReviewDate = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9165),
-                            ReviewTime = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9166),
-                            ReviewerId = 10,
-                            StatusId = 1,
-                            TraineeId = 12
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 1,
-                            Mode = "Offline",
-                            ReviewDate = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9169),
-                            ReviewTime = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9171),
-                            ReviewerId = 9,
-                            StatusId = 2,
-                            TraineeId = 12
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 3,
-                            Mode = "online",
-                            ReviewDate = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9175),
-                            ReviewTime = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(9176),
-                            ReviewerId = 10,
-                            StatusId = 3,
-                            TraineeId = 17
-                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.ReviewStatus", b =>
@@ -627,21 +404,21 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8739),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7606),
                             Name = "Assigned"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8744),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7614),
                             Name = "Completed"
                         },
                         new
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8746),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7618),
                             Name = "Canceled"
                         });
                 });
@@ -682,7 +459,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8205),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6782),
                             Name = "Training Head",
                             isDisabled = false
                         },
@@ -690,7 +467,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8223),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6792),
                             Name = "Training Coordinator",
                             isDisabled = false
                         },
@@ -698,7 +475,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8226),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6796),
                             Name = "Trainer",
                             isDisabled = false
                         },
@@ -706,7 +483,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 4,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8229),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6800),
                             Name = "Trainee",
                             isDisabled = false
                         },
@@ -714,7 +491,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 5,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 12, 22, 42, 605, DateTimeKind.Local).AddTicks(8234),
+                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6804),
                             Name = "Reviewer",
                             isDisabled = false
                         });
@@ -763,63 +540,6 @@ namespace TMS.API.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Topics");
-
-                    b.HasData(
-                        new
-                        {
-                            TopicId = 1,
-                            Content = "All HTML documents must start with a document type declaration: <!DOCTYPE html>. \nThe HTML document itself begins with < html > and ends with </ html >.\nThe visible part of the HTML document is between<> and </ body >.\n HTML headings are defined with the <h1> to <h6> tags. \n< h1 > defines the most important heading. < h6 > defines the least important heading: \nHTML paragraphs are defined with the <p> tag \n HTML links are defined with the <a> tag \nHTML images are defined with the <img> tag.\nThe source file(src), alternative text(alt),width,and height are provided as attributes",
-                            CourseId = 1,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Duration = "50 mins",
-                            Name = "HTML Basics",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            TopicId = 2,
-                            Content = "All HTML documents must start with a document type declaration: <!DOCTYPE html>. \nThe HTML document itself begins with < html > and ends with </ html >.\nThe visible part of the HTML document is between<> and </ body >.\n HTML headings are defined with the <h1> to <h6> tags. \n< h1 > defines the most important heading. < h6 > defines the least important heading: \nHTML paragraphs are defined with the <p> tag \n HTML links are defined with the <a> tag \nHTML images are defined with the <img> tag.\nThe source file(src), alternative text(alt),width,and height are provided as attributes",
-                            CourseId = 1,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Duration = "50 mins",
-                            Name = "CSS Basics",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            TopicId = 3,
-                            Content = "All HTML documents must start with a document type declaration: <!DOCTYPE html>. \nThe HTML document itself begins with < html > and ends with </ html >.\nThe visible part of the HTML document is between<> and </ body >.\n HTML headings are defined with the <h1> to <h6> tags. \n< h1 > defines the most important heading. < h6 > defines the least important heading: \nHTML paragraphs are defined with the <p> tag \n HTML links are defined with the <a> tag \nHTML images are defined with the <img> tag.\nThe source file(src), alternative text(alt),width,and height are provided as attributes",
-                            CourseId = 1,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Duration = "50 mins",
-                            Name = "HTML & CSS Together",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            TopicId = 4,
-                            Content = "RDBMS stands for Relational DataBase Management Systems. It is basically a program that allows us to create, delete, and update a relational database. Relational Database is a database system that stores and retrieves data in a tabular format organized in the form of rows and columns.It is a smaller subset of DBMS which was designed by E.F Codd in the 1970s. The major DBMS like SQL, My-SQL, ORACLE are all based on the principles of relational DBMS",
-                            CourseId = 2,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Duration = "50 mins",
-                            Name = "RDBMS Basics",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            TopicId = 5,
-                            Content = "DBMS is the management of data that should remain integrated when any changes are done in it. It is because if the integrity of the data is affected, whole data will get disturbed and corrupted. Therefore, to maintain the integrity of the data, there are four properties described in the database management system, which are known as the ACID properties. The ACID properties are meant for the transaction that goes through a different group of tasks, and there we come to see the role of the ACID properties.\nIn this section, we will learn and understand about the ACID properties. We will learn what these properties stand for and what does each property is used for. We will also understand the ACID properties with the help of some examples.",
-                            CourseId = 2,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Duration = "50 mins",
-                            Name = "ACID Property",
-                            isDisabled = false
-                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.TraineeFeedback", b =>
@@ -860,44 +580,6 @@ namespace TMS.API.Migrations
                     b.HasIndex("TrainerId");
 
                     b.ToTable("TraineeFeedbacks");
-
-                    b.HasData(
-                        new
-                        {
-                            CourseId = 1,
-                            TraineeId = 13,
-                            TrainerId = 8,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Feedback = "Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu felis"
-                        },
-                        new
-                        {
-                            CourseId = 2,
-                            TraineeId = 17,
-                            TrainerId = 7,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Feedback = " Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu felis"
-                        },
-                        new
-                        {
-                            CourseId = 1,
-                            TraineeId = 12,
-                            TrainerId = 8,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Feedback = "Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu "
-                        },
-                        new
-                        {
-                            CourseId = 2,
-                            TraineeId = 16,
-                            TrainerId = 7,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Feedback = " Enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra. Dui vivamus arcu"
-                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.User", b =>
@@ -962,258 +644,6 @@ namespace TMS.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Email = "Warren.Mackenzie@tms.edu.in",
-                            EmployeeId = "TMS101",
-                            FullName = "Warren Mackenzie",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 1,
-                            UserName = "Warren",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Email = "William.MacLeod@tms.edu.in",
-                            EmployeeId = "TMS102",
-                            FullName = "William MacLeod",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 1,
-                            UserName = "William",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Email = "Abigail.Manning@tms.edu.in",
-                            EmployeeId = "TMS203",
-                            FullName = "Abigail Manning",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 2,
-                            UserName = "Abigail",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Email = "Alexandra.Marshall@tms.edu.in",
-                            EmployeeId = "TMS204",
-                            FullName = "Alexandra Marshall",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 2,
-                            UserName = "Alexandra",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            Email = "Alison.Martin@tms.edu.in",
-                            EmployeeId = "TMS205",
-                            FullName = "Alison Martin",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 2,
-                            UserName = "Alison",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 1,
-                            Email = "Austin.Bailey@tms.edu.in",
-                            EmployeeId = "TMS316",
-                            FullName = "Austin Bailey",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 3,
-                            UserName = "Austin",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 2,
-                            Email = "Benjamin.Baker@tms.edu.in",
-                            EmployeeId = "TMS327",
-                            FullName = "Benjamin Baker",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 3,
-                            UserName = "Benjamin",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 3,
-                            Email = "Blake.Ball@tms.edu.in",
-                            EmployeeId = "TMS338",
-                            FullName = "Blake Ball",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 3,
-                            UserName = "Blake",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 1,
-                            Email = "Ella.Payne@tms.edu.in",
-                            EmployeeId = "TMS519",
-                            FullName = "Ella Payne",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 5,
-                            UserName = "Ella",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 2,
-                            Email = "Emily.Peake@tms.edu.in",
-                            EmployeeId = "TMS5210",
-                            FullName = "Emily Peake",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 5,
-                            UserName = "Emily",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 3,
-                            Email = "Emma.Peters@tms.edu.in",
-                            EmployeeId = "TMS5211",
-                            FullName = "Emma Peters",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 5,
-                            UserName = "Emma",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 1,
-                            Email = "Charles.Bower@tms.edu",
-                            EmployeeId = "TMS4112",
-                            FullName = "Charles Bower",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 4,
-                            UserName = "Charles",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 2,
-                            Email = "Christian.Brown@tms.edu",
-                            EmployeeId = "TMS4213",
-                            FullName = "Christian Brown",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 4,
-                            UserName = "Christian",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 3,
-                            Email = "Christopher.Buckland@tms.edu",
-                            EmployeeId = "TMS4314",
-                            FullName = "Christopher Buckland",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 4,
-                            UserName = "Christopher",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 1,
-                            Email = "Gabrielle.Pullman@tms.edu.in",
-                            EmployeeId = "TMS4115",
-                            FullName = "Gabrielle Pullman",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 4,
-                            UserName = "Gabrielle",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 2,
-                            Email = "Grace.Quinn@tms.edu.in",
-                            EmployeeId = "TMS4216",
-                            FullName = "Grace Quinn",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 4,
-                            UserName = "Grace",
-                            isDisabled = false
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Base64 = "data:image/jpeg;base64,",
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 2, 6, 52, 42, 605, DateTimeKind.Utc).AddTicks(8145),
-                            DepartmentId = 3,
-                            Email = "Hannah.Rampling@tms.edu.in",
-                            EmployeeId = "TMS4217",
-                            FullName = "Hannah Rampling",
-                            Password = "XIBWXbbynaCwGqElIsN7MvEhy+R6hh738AbLIpIt/6E=",
-                            RoleId = 4,
-                            UserName = "Hannah",
-                            isDisabled = false
-                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.Assignment", b =>
@@ -1342,9 +772,7 @@ namespace TMS.API.Migrations
                 {
                     b.HasOne("TMS.BAL.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentId");
 
                     b.HasOne("TMS.BAL.User", "Reviewer")
                         .WithMany()

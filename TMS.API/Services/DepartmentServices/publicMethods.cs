@@ -46,7 +46,7 @@ namespace TMS.API.Services
         {
             if (department is null) throw new ArgumentNullException(nameof(department));
             var validation = _repo.Validation.ValidateDepartment(department);
-            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
+            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
                 var dbDeparment = _repo.Departments.GetDepartmentById(department.Id);
                 SetUpDepartmentDetails(department, dbDeparment);

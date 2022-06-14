@@ -74,10 +74,14 @@ namespace TMS.API
             if(result.Count == 0)
             {
                 userExists = UserExists(course.TrainerId,3);
-                courseExists = CourseExists(course.Id);
+                if(course.Id != 0) 
+                {
+                    courseExists = CourseExists(course.Id);
+                    AddEnteryCourseNotFound(courseExists);
+                }
                 departmentExists = DepartmentExists(course.DepartmentId);          
                 if(userExists && departmentExists) isCourseNameAvailable=IsCourseNameAvailable(course.Id,course.DepartmentId,course.Name);   
-                AddEnteryValidateCourse(courseExists,userExists,departmentExists,isCourseNameAvailable);
+                AddEnteryValidateCourse(userExists,departmentExists,isCourseNameAvailable);
                 if(courseExists && userExists) AddEntery("Exists","true");
             }
 
@@ -106,7 +110,7 @@ namespace TMS.API
         {
             validateAndAddEntery(nameof(dpet.Name),dpet.Name,userNameValidation);
             if(dpet.Id != 0) departmentExists=DepartmentExists(dpet.Id);
-            if(departmentExists)AddEntery("Exists","true");
+            if(departmentExists && !result.ContainsKey("Exists"))AddEntery("Exists","true");
             if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
@@ -151,15 +155,15 @@ namespace TMS.API
                     revieweExists = ReviewExists(review.Id);
                 
                 if(userExists && traineeExists && reviewStatusExists)
-                    isReviewerAvailable = ReviewerAvailabilityExists(review.Id,review.ReviewerId,review.ReviewDate,review.ReviewTime,review.StatusId);
+                    reviewerAvailabilityExists = ReviewerAvailabilityExists(review.Id,review.ReviewerId,review.ReviewDate,review.ReviewTime,review.StatusId);
 
-                if(!isReviewerAvailable)
+                if(reviewerAvailabilityExists)
                     AddEntery("reviewerId","is not available");
                 
                 if(userExists && traineeExists && reviewStatusExists)
-                    isTraineeAvailable = TraineeAvailabilityExists(review.Id,review.TraineeId,review.ReviewDate,review.ReviewTime,review.StatusId);
+                    traineeAvailabilityExists = TraineeAvailabilityExists(review.Id,review.TraineeId,review.ReviewDate,review.ReviewTime,review.StatusId);
 
-                if(!isTraineeAvailable)
+                if(traineeAvailabilityExists)
                     AddEntery("traineeId","is not available");
 
                 if(revieweExists) 
@@ -171,12 +175,16 @@ namespace TMS.API
         public Dictionary<string, string> ValidateTopic(Topic topic)
         {
             checkIdAndAddEntery(topic.CourseId,nameof(topic.CourseId));
-            validateAndAddEntery(topic.Name,nameValidation,nameof(topic.Name));
-            validateAndAddEntery(topic.Duration,durationValidation,nameof(topic.Duration));
+            validateAndAddEntery(nameof(topic.Name),topic.Name,nameValidation);
+            validateAndAddEntery(nameof(topic.Duration),topic.Duration,durationValidation);
             if(result.Count==0) 
             {
                 courseExists = CourseExists(topic.CourseId);
-                if(courseExists && topic.TopicId != 0) topicExists = TopicExists(topic.TopicId,topic.CourseId);
+                if(courseExists && topic.TopicId != 0)
+                {
+                    topicExists = TopicExists(topic.TopicId,topic.CourseId);
+                    AddEnteryTopicNotFound(topicExists);
+                } 
                 isTopicNameAvailabe = IsTopicNameAvailabe(topic.TopicId,topic.CourseId,topic.Name);
                 AddEnteryValidateTopic(isTopicNameAvailabe,courseExists,topicExists);
                 if(topicExists) AddEntery("Exists","true");
@@ -209,7 +217,7 @@ namespace TMS.API
             roleExists = RoleExists(user.RoleId);
             departmentExists = DepartmentExists(user.DepartmentId);
             if(!roleExists) AddEntery(nameof(user.RoleId),"can't find the role");
-            if(roleExists && user.RoleId >= 3) AddEntery(nameof(user.DepartmentId),"can't find the department");
+            if((roleExists && user.RoleId >= 3) && !departmentExists) AddEntery(nameof(user.DepartmentId),"can't find the department");
             if(result.Count==0 && roleExists)
             {
                 validateAndAddEntery(nameof(user.FullName),user.FullName,fullNameValidation);

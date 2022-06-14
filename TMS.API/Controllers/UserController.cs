@@ -69,7 +69,7 @@ namespace TMS.API.Controllers
         /// <response code="404">If user was not found.</response>
         /// <response code="500">If there is problem in server.</response>
         /// <param name="departmentId"></param>
-        [HttpGet("{departmentId:int}/users")]
+        [HttpGet("department/{departmentId:int}")]
         public IActionResult GetAllUserByDepartment(int departmentId)
         {
             var departmentExists = _validation.DepartmentExists(departmentId);
@@ -189,7 +189,7 @@ namespace TMS.API.Controllers
         /// <param name="user"></param>
         [HttpPost("user")]
         // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Head, Training Coordinator")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult CreateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -199,7 +199,7 @@ namespace TMS.API.Controllers
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the user. The user Already exists.");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    // user.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    user.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _userService.CreateUser(user);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Created successfully" });
                 }

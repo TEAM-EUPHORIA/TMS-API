@@ -97,7 +97,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
         [HttpGet("departments/{departmentId:int}")]
-        [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCoursesByDepartmentId(int departmentId)
         {
             var departmentExists = _validation.DepartmentExists(departmentId);
@@ -283,7 +283,7 @@ namespace TMS.API.Controllers
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _courseService.DisableCourse(courseId,currentUserId);
-                    if (res) return Ok("The Course was successfully");
+                    if (res) return Ok("The Course disabled was successfully");
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -292,7 +292,6 @@ namespace TMS.API.Controllers
                 }
             }
             return NotFound();
-
         }
 
         /// <summary>

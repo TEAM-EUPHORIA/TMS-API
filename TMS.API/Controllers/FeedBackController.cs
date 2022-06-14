@@ -7,7 +7,6 @@ using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
-    [Authorize(Roles = "")]
     [ApiController]
     [Route("[controller]")]
     public class FeedBackController : ControllerBase

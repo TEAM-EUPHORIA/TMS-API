@@ -20,7 +20,7 @@ namespace TMS.API.Repositories
 
         public void RemoveUsersFromCourse(List<CourseUsers> data)
         {
-            dbContext.RemoveRange(data);
+            dbContext.CourseUsers.RemoveRange(data);
         }
 
         public void CreateAssignment(Assignment assignment)
