@@ -81,7 +81,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="feedback"></param>
         [HttpPost("course/feedback")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Trainee")]
         public IActionResult CreateCourseFeedback(CourseFeedback feedback)
         {
@@ -129,7 +129,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("course/feedback")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Trainee")]
         public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
         {
@@ -218,7 +218,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPost("trainee/feedback")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Trainer")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback feedback)
         {
@@ -267,7 +267,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("trainee/feedback")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Trainer")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
         {

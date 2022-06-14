@@ -7,6 +7,8 @@ using TMS.API.ViewModels;
 
 namespace TMS.API
 {
+    [ApiController]
+    [Route("[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
@@ -39,8 +41,7 @@ namespace TMS.API
         /// <response code="500">If there is problem in server. </response>
         /// <param name="user"></param>
         [HttpPost("login")]
-        [AllowAnonymous]
-        public IActionResult Login(LoginModel user)
+        public IActionResult Login([FromBody]LoginModel user)
         {
             var validation = _validation.ValidateLoginDetails(user);
             try

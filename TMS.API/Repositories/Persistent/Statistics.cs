@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 
 namespace TMS.API.Services
@@ -94,7 +95,7 @@ namespace TMS.API.Services
             {
                 result.Add("Name",user.FullName);
                 result.Add("Role",user.Role.Name);
-                result.Add("Image",user.Base64 + user.Image);
+                result.Add("Image",user.Base64 + Convert.ToBase64String(user.Image));
             }
             return result;
         }

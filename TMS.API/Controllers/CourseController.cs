@@ -176,7 +176,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
         [HttpPost("course")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateCourse(Course course)
         {
@@ -229,7 +229,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
         [HttpPut("course")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateCourse(Course course)
         {
@@ -272,7 +272,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         [HttpPut("disable/{courseId:int}")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]        
         public IActionResult DisableCourse(int courseId)
         {
@@ -389,7 +389,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
         [HttpPost("topic")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateTopic(Topic topic)
         {
@@ -439,7 +439,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
         [HttpPut("topic")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateTopic(Topic topic)
         {
@@ -483,7 +483,7 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpPut("{courseId:int}/topics/disable/{topicId:int}")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableTopic(int courseId,int topicId)
         {
@@ -535,7 +535,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>
         [HttpPut("assignUsers")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult AssignUsersToCourse(AddUsersToCourse data)
         {
@@ -578,7 +578,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>
         [HttpPut("removeUsers")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult RemoveUsersFromCourse(AddUsersToCourse data)
         {
@@ -686,7 +686,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPost("assignment")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult CreateAssignment(Assignment assignment)
         {
@@ -735,7 +735,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPut("assignment")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult UpdateAssignment(Assignment assignment)
         {
@@ -764,7 +764,7 @@ namespace TMS.API.Controllers
         }
 
         [HttpPut("attendance")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles ="Trainer, Trainee")]
         public IActionResult MarkAttendance(Attendance attendance)
         {

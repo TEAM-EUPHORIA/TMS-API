@@ -103,7 +103,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPost("department")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateDepartment(Department department)
         {
@@ -150,7 +150,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPut("department")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateDepartment(Department department)
         {
@@ -193,7 +193,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
         [HttpPut("disable/{departmentId:int}")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableDepartment(int departmentId)
         {

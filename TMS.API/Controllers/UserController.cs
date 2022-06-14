@@ -240,7 +240,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="user"></param>
         [HttpPut("user")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult UpdateUser(User user)
         {
@@ -283,7 +283,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="userId"></param>
         [HttpPut("disable/{userId:int}")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
         {
@@ -318,6 +318,7 @@ namespace TMS.API.Controllers
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <response code="500">If there is problem in server.</response>
         [HttpGet("Dashboard")]
+        [Authorize]
         public IActionResult DashboardData()
         {
             int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);

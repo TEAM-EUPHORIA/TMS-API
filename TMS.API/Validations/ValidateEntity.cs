@@ -15,7 +15,7 @@ namespace TMS.API
                 courseUsertExists = CourseUserExists(user.CourseId,user.UserId,user.RoleId);
                 if(courseUsertExists) AddEntery("Exists","true");
             }
-            if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
         public Dictionary<string, string> ValidateAssignment(Assignment assignment)
@@ -30,7 +30,7 @@ namespace TMS.API
                 if(assignmentExists) AddEntery("Exists","true");
             }
 
-            if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
         public Dictionary<string, string> ValidateAttendance(Attendance attendance)
@@ -81,7 +81,7 @@ namespace TMS.API
                 if(courseExists && userExists) AddEntery("Exists","true");
             }
 
-            if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
         public Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback)
@@ -99,7 +99,7 @@ namespace TMS.API
                 if(courseFeedbackExists) AddEntery("Exists","true");
             }
 
-            if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
         public Dictionary<string, string> ValidateDepartment(Department dpet)
@@ -107,7 +107,7 @@ namespace TMS.API
             validateAndAddEntery(nameof(dpet.Name),dpet.Name,userNameValidation);
             if(dpet.Id != 0) departmentExists=DepartmentExists(dpet.Id);
             if(departmentExists)AddEntery("Exists","true");
-            if(result.Count == 0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
 
@@ -126,7 +126,7 @@ namespace TMS.API
                 AddEnteryValidateMOM(userExists,reviewExists,momExists);
                 if(momExists) AddEntery("Exists","true");
             }
-            if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
         public Dictionary<string, string> ValidateReview(Review review)
@@ -165,7 +165,7 @@ namespace TMS.API
                 if(revieweExists) 
                     AddEntery("Exists","true");
             }
-            if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
         public Dictionary<string, string> ValidateTopic(Topic topic)
@@ -181,7 +181,7 @@ namespace TMS.API
                 AddEnteryValidateTopic(isTopicNameAvailabe,courseExists,topicExists);
                 if(topicExists) AddEntery("Exists","true");
             }
-            if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
         public Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback)
@@ -201,7 +201,7 @@ namespace TMS.API
                 if(courseExists && userExists && traineeExists) traineeFeedbackExists = TraineeFeedbackExists(feedback.CourseId,feedback.TraineeId,feedback.TrainerId);
                 if(traineeFeedbackExists) AddEntery("Exists","true");
             }
-            if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
         public Dictionary<string, string> ValidateUser(User user)
@@ -220,7 +220,7 @@ namespace TMS.API
                 userExists = UserExists(user.Id);
                 if(userExists) AddEntery("Exists","true");
             }
-            if(result.Count==0 || result.ContainsKey("Exists")) AddEntery("IsValid","true");
+            if(result.Count==0 || ((result.ContainsKey("Exists") && !result.ContainsKey("IsValid")) && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
 

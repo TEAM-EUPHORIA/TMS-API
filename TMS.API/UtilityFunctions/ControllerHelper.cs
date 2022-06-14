@@ -11,7 +11,7 @@ namespace TMS.API.UtilityFunctions
             int userId = 0;
             if (identity != null)
             {
-                int.TryParse(identity.FindFirst("Id").Value,out userId);
+                int.TryParse(identity.FindFirst("UserId").Value,out userId);
             }
             return userId;
         } 

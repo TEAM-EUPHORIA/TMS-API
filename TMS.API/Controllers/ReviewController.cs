@@ -114,7 +114,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPost("review")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateReview(Review review)
         {
@@ -167,7 +167,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPut("review")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateReview(Review review)
         {
@@ -291,7 +291,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPost("mom")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Trainee")]
         public IActionResult CreateMom(MOM mom)
         {
@@ -343,7 +343,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPut("mom")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         [Authorize(Roles = "Trainee")]
         public IActionResult UpdateMom(MOM mom)
         {
