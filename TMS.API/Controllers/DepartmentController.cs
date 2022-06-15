@@ -104,7 +104,7 @@ namespace TMS.API.Controllers
         /// <param name="department"></param>
         [HttpPost("department")]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Training Coordinator")]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

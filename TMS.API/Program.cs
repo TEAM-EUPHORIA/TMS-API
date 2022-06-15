@@ -63,6 +63,12 @@ builder.Services.AddCors((setup) =>
     });
 });
 
+builder.Services.AddCors(setup => {
+    setup.AddPolicy("EnableCORS", builder => {
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -85,7 +91,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("default");
+app.UseCors("EnableCORS");
 
 app.UseHttpsRedirection();
 
