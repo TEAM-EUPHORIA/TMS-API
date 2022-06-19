@@ -34,7 +34,7 @@ namespace TMS.API.Controllers
         /// <response code="200">Returns a list of courses. </response>
         /// <response code="500">If there is problem in server. </response>
         [HttpGet]
-        [Authorize(Roles = "Training Head, Training Coordinator")]
+        //[Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCourses()
         {
             try
@@ -63,7 +63,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="userId"></param>
         [HttpGet("users/{userId:int}")]
-        [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        //[Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetCoursesByUserId(int userId)
         {
             var userExists = _validation.UserExists(userId);
@@ -97,7 +97,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
         [HttpGet("departments/{departmentId:int}")]
-        [Authorize(Roles = "Training Head, Training Coordinator")]
+        //[Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCoursesByDepartmentId(int departmentId)
         {
             var departmentExists = _validation.DepartmentExists(departmentId);
@@ -131,7 +131,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         [HttpGet("{courseId:int}")]
-        [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        //[Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetCourseById(int courseId)
         {
             var courseExists = _validation.CourseExists(courseId);

@@ -15,6 +15,7 @@ namespace TMS.API.Services
             result.Add("traineesCount", _stats.GetTraineesCount().ToString());
             result.Add("trainersCount", _stats.GetTrainersCount().ToString());
             result.Add("departmentCount", _stats.GetDepartmentsCount().ToString());
+            result.Add("reviewersCount", _stats.GetReviewersCount().ToString());
         }
 
         private Dictionary<string,string>? prepareCoordinatorDashboard(int userId)

@@ -32,7 +32,7 @@ namespace TMS.API.Controllers
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="500">If there is problem in server. </response>
         [HttpGet("departments")]
-        [Authorize(Roles = "Training Head, Training Coordinator")]
+        //[Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetDepartments()
         {
             try
@@ -61,7 +61,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="departmentId"></param>
         [HttpGet("{departmentId:int}")]
-        [Authorize(Roles = "Training Head, Training Coordinator")]
+        //[Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetDepartmentById(int departmentId)
         {
             var departmentExists = _validation.DepartmentExists(departmentId);

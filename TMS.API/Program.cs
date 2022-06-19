@@ -91,7 +91,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("EnableCORS");
+app.UseCors("default");
 
 app.UseHttpsRedirection();
 

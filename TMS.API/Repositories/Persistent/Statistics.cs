@@ -31,6 +31,9 @@ namespace TMS.API.Services
         {
             return dbContext.Users.Where(u=>u.RoleId == 3).Count();
         }
+        public int GetReviewersCount(){
+            return dbContext.Users.Where(u=>u.RoleId == 5).Count();
+        }
         public int GetCourseCount(int userId)
         {
             return dbContext.CourseUsers.Where(cu=>cu.UserId == userId).Count();
