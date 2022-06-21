@@ -31,7 +31,7 @@ namespace TMS.API.Controllers
         /// <response code="200">Returns a list of Departments. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="500">If there is problem in server. </response>
-        [HttpGet("departments")]
+        [HttpGet("department")]
         //[Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetDepartments()
         {
