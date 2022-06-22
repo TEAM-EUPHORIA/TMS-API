@@ -98,7 +98,8 @@ namespace TMS.API.Services
             {
                 result.Add("Name",user.FullName);
                 result.Add("Role",user.Role.Name);
-                result.Add("Image",user.Base64 + Convert.ToBase64String(user.Image));
+                result.Add("Base64",user.Base64 );
+                result.Add("Image",Convert.ToBase64String(user.Image));
             }
             return result;
         }
