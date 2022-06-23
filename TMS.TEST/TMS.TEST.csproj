@@ -26,7 +26,7 @@
     </PackageReference>
   </ItemGroup>
    <ItemGroup>
-       <ProjectReference Include="..\TMS.API\TMS.API.csproj" />
-    </ItemGroup>
+     <ProjectReference Include="..\TMS.API\TMS.API.csproj" />
+   </ItemGroup>
 
 </Project>
