@@ -199,7 +199,7 @@ namespace TMS.API.Controllers
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the user. The user Already exists.");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    user.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    // user.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _userService.CreateUser(user);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The User was Created successfully" });
                 }

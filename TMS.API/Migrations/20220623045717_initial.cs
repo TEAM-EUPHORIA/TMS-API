@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TMS.API.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -403,9 +403,9 @@ namespace TMS.API.Migrations
                 columns: new[] { "Id", "CreatedBy", "CreatedOn", "Name", "UpdatedBy", "UpdatedOn", "isDisabled" },
                 values: new object[,]
                 {
-                    { 1, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7452), ".NET", null, null, false },
-                    { 2, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7463), "JAVA", null, null, false },
-                    { 3, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7468), "LAMP", null, null, false }
+                    { 1, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5335), ".NET", null, null, false },
+                    { 2, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5337), "JAVA", null, null, false },
+                    { 3, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5337), "LAMP", null, null, false }
                 });
 
             migrationBuilder.InsertData(
@@ -413,9 +413,9 @@ namespace TMS.API.Migrations
                 columns: new[] { "Id", "CreatedBy", "CreatedOn", "Name", "UpdatedBy", "UpdatedOn" },
                 values: new object[,]
                 {
-                    { 1, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7606), "Assigned", null, null },
-                    { 2, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7614), "Completed", null, null },
-                    { 3, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7618), "Canceled", null, null }
+                    { 1, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5348), "Assigned", null, null },
+                    { 2, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5349), "Completed", null, null },
+                    { 3, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5350), "Canceled", null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -423,11 +423,11 @@ namespace TMS.API.Migrations
                 columns: new[] { "Id", "CreatedBy", "CreatedOn", "Name", "UpdatedBy", "UpdatedOn", "isDisabled" },
                 values: new object[,]
                 {
-                    { 1, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6782), "Training Head", null, null, false },
-                    { 2, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6792), "Training Coordinator", null, null, false },
-                    { 3, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6796), "Trainer", null, null, false },
-                    { 4, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6800), "Trainee", null, null, false },
-                    { 5, 0, new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6804), "Reviewer", null, null, false }
+                    { 1, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5230), "Training Head", null, null, false },
+                    { 2, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5231), "Training Coordinator", null, null, false },
+                    { 3, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5232), "Trainer", null, null, false },
+                    { 4, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5233), "Trainee", null, null, false },
+                    { 5, 0, new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5234), "Reviewer", null, null, false }
                 });
 
             migrationBuilder.CreateIndex(

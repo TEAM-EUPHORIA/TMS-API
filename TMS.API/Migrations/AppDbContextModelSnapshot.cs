@@ -253,7 +253,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7452),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5335),
                             Name = ".NET",
                             isDisabled = false
                         },
@@ -261,7 +261,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7463),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5337),
                             Name = "JAVA",
                             isDisabled = false
                         },
@@ -269,7 +269,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7468),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5337),
                             Name = "LAMP",
                             isDisabled = false
                         });
@@ -404,21 +404,21 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7606),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5348),
                             Name = "Assigned"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7614),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5349),
                             Name = "Completed"
                         },
                         new
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(7618),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5350),
                             Name = "Canceled"
                         });
                 });
@@ -459,7 +459,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6782),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5230),
                             Name = "Training Head",
                             isDisabled = false
                         },
@@ -467,7 +467,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6792),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5231),
                             Name = "Training Coordinator",
                             isDisabled = false
                         },
@@ -475,7 +475,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6796),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5232),
                             Name = "Trainer",
                             isDisabled = false
                         },
@@ -483,7 +483,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 4,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6800),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5233),
                             Name = "Trainee",
                             isDisabled = false
                         },
@@ -491,7 +491,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 5,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 14, 23, 41, 28, 311, DateTimeKind.Local).AddTicks(6804),
+                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5234),
                             Name = "Reviewer",
                             isDisabled = false
                         });

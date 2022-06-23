@@ -11,6 +11,10 @@ namespace TMS.API.Services
         {
             this.dbContext = dbContext;
         }
+        public int GetUserCount()
+        {
+            return dbContext.Users.Count();
+        }
         public int lastUserId()
         {
             return dbContext.Users.OrderBy(u=>u.Id).Last().Id;

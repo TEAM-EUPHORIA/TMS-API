@@ -7,8 +7,12 @@ namespace TMS.API.Services
     {
         private void GenerateUserId(User user)
         {
-            // var newId = 1; //for creating first user
-            var newId = _stats.lastUserId() + 1;
+            var count  = _stats.GetUserCount();
+            int newId = 1;
+            if(count > 0)
+            {
+                newId = _stats.lastUserId() + 1;
+            }
             if (user.DepartmentId != 0 && user.DepartmentId != null) user.EmployeeId = $"TMS{user.RoleId}{user.DepartmentId}{newId}";
             else user.EmployeeId = $"TMS{user.RoleId}0{newId}";
         }
