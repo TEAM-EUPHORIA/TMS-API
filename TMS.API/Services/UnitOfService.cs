@@ -4,14 +4,14 @@ namespace TMS.API.Services
 {
     public interface IUnitOfService
     {
-        AuthService AuthService { get; set; }
-        UserService UserService { get; set; }
-        RoleService RoleService { get; set; }
-        ReviewService ReviewService { get; set; }
-        FeedbackService FeedbackService { get; set; }
-        DepartmentService DepartmentService { get; set; }
-        CourseService CourseService { get; set; }
-        Validation Validation { get; set; }
+        IAuthService AuthService { get; set; }
+        IUserService UserService { get; set; }
+        IRoleService RoleService { get; set; }
+        IReviewService ReviewService { get; set; }
+        IFeedbackService FeedbackService { get; set; }
+        IDepartmentService DepartmentService { get; set; }
+        ICourseService CourseService { get; set; }
+        IValidation Validation { get; set; }
 
         void Complete();
     }
@@ -20,14 +20,14 @@ namespace TMS.API.Services
     {
         private readonly UnitOfWork _repo;
 
-        public AuthService AuthService { get; set; }
-        public UserService UserService { get; set; }
-        public RoleService RoleService { get; set; }
-        public ReviewService ReviewService { get; set; }
-        public FeedbackService FeedbackService { get; set; }
-        public DepartmentService DepartmentService { get; set; }
-        public CourseService CourseService { get; set; }
-        public Validation Validation { get; set; }
+        public IAuthService AuthService { get; set; }
+        public IUserService UserService { get; set; }
+        public IRoleService RoleService { get; set; }
+        public IReviewService ReviewService { get; set; }
+        public IFeedbackService FeedbackService { get; set; }
+        public IDepartmentService DepartmentService { get; set; }
+        public ICourseService CourseService { get; set; }
+        public IValidation Validation { get; set; }
 
         public UnitOfService(UnitOfWork repo)
         {

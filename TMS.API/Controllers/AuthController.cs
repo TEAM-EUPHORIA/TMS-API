@@ -12,8 +12,8 @@ namespace TMS.API
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        private readonly Validation _validation;
-        private readonly AuthService _authService;
+        private readonly IValidation _validation;
+        private readonly IAuthService _authService;
 
         public AuthController(UnitOfService service, ILogger<AuthController> logger)
         {

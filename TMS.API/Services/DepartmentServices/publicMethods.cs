@@ -4,15 +4,24 @@ using TMS.BAL;
 
 namespace TMS.API.Services
 {
-    public partial class DepartmentService
+    public interface IDepartmentService
+    {
+        Dictionary<string, string> CreateDepartment(Department department);
+        bool DisableDepartment(int departmentId, int currentUserId);
+        Department GetDepartmentById(int departmentId);
+        IEnumerable<Department> GetDepartments();
+        Dictionary<string, string> UpdateDepartment(Department department);
+    }
+
+    public partial class DepartmentService : IDepartmentService
     {
         private readonly UnitOfWork _repo;
-        
+
 
         public DepartmentService(UnitOfWork repo)
         {
             _repo = repo;
-            
+
         }
         public IEnumerable<Department> GetDepartments()
         {
@@ -62,9 +71,9 @@ namespace TMS.API.Services
             if (departmentExists)
             {
                 var dbDeparment = _repo.Departments.GetDepartmentById(departmentId);
-                disable(currentUserId,dbDeparment);
+                disable(currentUserId, dbDeparment);
                 _repo.Departments.UpdateDepartment(dbDeparment);
-                _repo.Complete();                               
+                _repo.Complete();
             }
             return departmentExists;
         }

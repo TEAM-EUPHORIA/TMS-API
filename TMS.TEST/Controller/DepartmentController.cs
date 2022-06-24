@@ -14,25 +14,24 @@ namespace TMS.TEST.Controller
 {
     public class DepartmentControllerTest
     {
-         private readonly Mock<ILogger<DepartmentController>> _logger= new Mock<ILogger<DepartmentController>>();
-        private readonly Mock<IUnitOfService> _unitOfService = new Mock<IUnitOfService>();
-        private readonly Mock<DepartmentService> _departmentService = new Mock<DepartmentService>();
+         private readonly Mock<ILogger<DepartmentController>> _Logger = new  Mock<ILogger<DepartmentController>>();  
+         private readonly Mock<IDepartmentService> _departmentService = new Mock<IDepartmentService>();
         private readonly DepartmentController _departmentController;
 
-        public DepartmentControllerTest()
-        {
-            
-            _departmentController=new DepartmentController(_unitOfService.Object, _logger.Object);
-        }
+        // public DepartmentControllerTest()
+        // {
+        //     _departmentController = new DepartmentController(_departmentService.Object);
+        // }
 
-         [Fact]
+        // [Fact]
 
-        public void GetAllDepartments_ShouldReturn200Status_WhenReturnsTrue()
-        {
-                 _departmentService.Setup(obj => obj.GetDepartments()).Returns(new List<Department>());
-                 var Results =_departmentController.GetDepartments() as ObjectResult;
-                 Assert.Equal(200,Results?.StatusCode);
-        }
+        // public void  ABC()
+        // {
+        //     var Departments=DeparmentMock.DepartmentsList();
+        //     _departmentService.Setup(obj => obj.GetDepartments()).Returns(Departments);
+        //     var Result =_departmentController.GetDepartments() as ObjectResult;
+        //     Assert.Equal(200,Result?.StatusCode);
+        // }
 
     }
 }

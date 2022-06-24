@@ -4,15 +4,20 @@ using TMS.BAL;
 
 namespace TMS.API.Services
 {
-    public class RoleService
+    public interface IRoleService
+    {
+        IEnumerable<Role> GetRoles();
+    }
+
+    public class RoleService : IRoleService
     {
         private readonly UnitOfWork _repo;
-        
+
 
         public RoleService(UnitOfWork repo)
         {
             _repo = repo;
-            
+
         }
         public IEnumerable<Role> GetRoles()
         {

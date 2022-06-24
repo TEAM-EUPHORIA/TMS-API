@@ -12,8 +12,8 @@ namespace TMS.API.Controllers
     public class FeedBackController : ControllerBase
     {
         private readonly ILogger<FeedBackController> _logger;
-        private readonly FeedbackService _feedbackService;
-        private readonly Validation _validation;
+        private readonly IFeedbackService _feedbackService;
+        private readonly IValidation _validation;
 
         public FeedBackController(UnitOfService service, ILogger<FeedBackController> logger)
         {

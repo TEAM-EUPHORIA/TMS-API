@@ -10,8 +10,8 @@ namespace TMS.API.Controllers
     public class RoleController : ControllerBase
     {
         private readonly ILogger<RoleController> _logger;
-        private readonly RoleService _roleService;
-        private readonly Validation _validation;
+        private readonly IRoleService _roleService;
+        private readonly IValidation _validation;
 
         public RoleController(UnitOfService service, ILogger<RoleController> logger)
         {

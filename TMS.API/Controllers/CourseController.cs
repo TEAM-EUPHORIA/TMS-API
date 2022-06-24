@@ -14,8 +14,8 @@ namespace TMS.API.Controllers
     public class CourseController : ControllerBase
     {
         private readonly ILogger<CourseController> _logger;
-        private readonly CourseService _courseService;
-        private readonly Validation _validation;
+        private readonly ICourseService _courseService;
+        private readonly IValidation _validation;
         public CourseController(UnitOfService service, ILogger<CourseController> logger)
         {
             _logger = logger;

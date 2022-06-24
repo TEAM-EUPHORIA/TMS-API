@@ -10,14 +10,18 @@ namespace TMS.API.Controllers
     public class DepartmentController : ControllerBase
     {
         private readonly ILogger<DepartmentController> _logger;
-        private readonly DepartmentService  _departmentService;
-        private readonly Validation _validation;
+        private readonly IDepartmentService  _departmentService;
+        private readonly IValidation _validation;
 
-        public DepartmentController(UnitOfService service, ILogger<DepartmentController> logger)
+        // public DepartmentController(IDepartmentService service)
+        // {
+        //     _departmentService =  service; 
+        // }
+        public DepartmentController(IDepartmentService service,IValidation validation, ILogger<DepartmentController> logger)
         {
             _logger = logger;
-            _departmentService= service.DepartmentService;
-            _validation = service.Validation;
+            _departmentService= service;
+            _validation = validation;
         }
         /// <summary>
         /// Get all Departments
@@ -151,7 +155,7 @@ namespace TMS.API.Controllers
         /// <param name="department"></param>
         [HttpPut("department")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

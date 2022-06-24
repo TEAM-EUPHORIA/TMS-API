@@ -12,8 +12,8 @@ namespace TMS.API.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly ILogger<ReviewController> _logger;
-        private readonly ReviewService _reviewService;
-        private readonly Validation _validation;
+        private readonly IReviewService _reviewService;
+        private readonly IValidation _validation;
 
         public ReviewController(UnitOfService service,ILogger<ReviewController> logger)
         {

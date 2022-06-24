@@ -11,8 +11,8 @@ namespace TMS.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly UserService _userService;
-        private readonly Validation _validation;
+        private readonly IUserService _userService;
+        private readonly IValidation _validation;
 
         public UserController(UnitOfService service, ILogger<UserController> logger)
         {
