@@ -42,6 +42,8 @@ builder.Logging.AddSerilog(logger);
 // Making Db Context available for the App 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddTransient<IValidation,Validation>();
+builder.Services.AddTransient<IUnitOfService,UnitOfService>();
+builder.Services.AddTransient<UnitOfService>();
 builder.Services.AddTransient<IDepartmentService,DepartmentService>();
 builder.Services.AddTransient<UnitOfWork>();
 
