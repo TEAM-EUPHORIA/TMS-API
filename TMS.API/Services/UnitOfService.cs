@@ -2,20 +2,6 @@ using TMS.API.Repositories;
 
 namespace TMS.API.Services
 {
-    public interface IUnitOfService
-    {
-        IAuthService AuthService { get; set; }
-        IUserService UserService { get; set; }
-        IRoleService RoleService { get; set; }
-        IReviewService ReviewService { get; set; }
-        IFeedbackService FeedbackService { get; set; }
-        IDepartmentService DepartmentService { get; set; }
-        ICourseService CourseService { get; set; }
-        IValidation Validation { get; set; }
-
-        void Complete();
-    }
-
     public class UnitOfService : IUnitOfService
     {
         private readonly UnitOfWork _repo;
@@ -32,14 +18,14 @@ namespace TMS.API.Services
         public UnitOfService(UnitOfWork repo)
         {
             _repo = repo;
-            AuthService = new AuthService(_repo);
-            UserService = new UserService(_repo, _repo.stats);
-            RoleService = new RoleService(_repo);
-            ReviewService = new ReviewService(_repo);
-            FeedbackService = new FeedbackService(_repo);
-            DepartmentService = new DepartmentService(_repo);
-            CourseService = new CourseService(_repo);
-            Validation = _repo.Validation;
+            AuthService = new AuthService(repo);
+            UserService = new UserService(repo, repo.Stats);
+            RoleService = new RoleService(repo);
+            ReviewService = new ReviewService(repo);
+            FeedbackService = new FeedbackService(repo);
+            DepartmentService = new DepartmentService(repo);
+            CourseService = new CourseService(repo);
+            Validation = repo.Validation;
         }
 
         public void Complete()

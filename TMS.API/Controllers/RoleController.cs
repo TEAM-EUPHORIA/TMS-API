@@ -10,14 +10,12 @@ namespace TMS.API.Controllers
     public class RoleController : ControllerBase
     {
         private readonly ILogger<RoleController> _logger;
-        private readonly IRoleService _roleService;
-        private readonly IValidation _validation;
+        private readonly IUnitOfService _service;
 
-        public RoleController(UnitOfService service, ILogger<RoleController> logger)
+        public RoleController(IUnitOfService service, ILogger<RoleController> logger)
         {
             _logger = logger;
-            _roleService = service.RoleService;
-            _validation = service.Validation;
+            _service = service;
         }
 
         /// <summary>
@@ -34,12 +32,12 @@ namespace TMS.API.Controllers
         /// <response code="404">If role was not found.</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         [HttpGet("roles")]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult GetRoles()
         {
             try
             {
-                return Ok(_roleService.GetRoles());
+                return Ok(_service.RoleService.GetRoles());
             }
             catch (InvalidOperationException ex)
             {

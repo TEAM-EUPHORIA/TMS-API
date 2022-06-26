@@ -2,7 +2,7 @@ using TMS.API.Services;
 
 namespace TMS.API.Repositories
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext dbContext;
 
@@ -13,7 +13,7 @@ namespace TMS.API.Repositories
         public IFeedbackRepository Feedbacks { get; set; }
         public IDepartmentRepository Departments { get; set; }
         public Validation Validation { get; set; }
-        public Statistics stats { get; set; }
+        public Statistics Stats { get; set; }
         public UnitOfWork(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -24,7 +24,7 @@ namespace TMS.API.Repositories
             Feedbacks = new FeedbackRepository(dbContext);
             Departments = new DepartmentRepository(dbContext);
             Validation = new Validation(dbContext);
-            stats = new Statistics(dbContext);
+            Stats = new Statistics(dbContext);
         }
 
         public void Complete()

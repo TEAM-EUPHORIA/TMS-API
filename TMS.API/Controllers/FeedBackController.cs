@@ -12,14 +12,12 @@ namespace TMS.API.Controllers
     public class FeedBackController : ControllerBase
     {
         private readonly ILogger<FeedBackController> _logger;
-        private readonly IFeedbackService _feedbackService;
-        private readonly IValidation _validation;
+        private readonly IUnitOfService _service;
 
-        public FeedBackController(UnitOfService service, ILogger<FeedBackController> logger)
+        public FeedBackController(IUnitOfService service, ILogger<FeedBackController> logger)
         {
             _logger = logger;
-            _feedbackService = service.FeedbackService;
-            _validation = service.Validation;
+            _service = service;
         }
         
         /// <summary>
@@ -40,12 +38,12 @@ namespace TMS.API.Controllers
         [HttpGet("course/{courseId:int},{traineeId:int}")]
         public IActionResult GetCourseFeedbackByCourseIdAndTraineeId(int courseId,int traineeId)
         {
-            var feedbackExists = _validation.CourseFeedbackExists(courseId,traineeId);
+            var feedbackExists = _service.Validation.CourseFeedbackExists(courseId,traineeId);
             if(feedbackExists)
             {
                 try
                 {
-                    var result = _feedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId);
+                    var result = _service.FeedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -81,18 +79,18 @@ namespace TMS.API.Controllers
         /// <param name="feedback"></param>
         [HttpPost("course/feedback")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Trainee")]
+        // [Authorize(Roles = "Trainee")]
         public IActionResult CreateCourseFeedback(CourseFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateCourseFeedback(feedback);
+                var IsValid = _service.Validation.ValidateCourseFeedback(feedback);
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't submit the feedback. The feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     feedback.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _feedbackService.CreateCourseFeedback(feedback);
+                    var res = _service.FeedbackService.CreateCourseFeedback(feedback);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -129,20 +127,20 @@ namespace TMS.API.Controllers
         /// <param name="feedback"></param>
         [HttpPut("course/feedback")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Trainee")]
+        // [Authorize(Roles = "Trainee")]
         public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
         {
-            var feedbackExists = _validation.CourseFeedbackExists(feedback.CourseId,feedback.TraineeId);
+            var feedbackExists = _service.Validation.CourseFeedbackExists(feedback.CourseId,feedback.TraineeId);
             if(feedbackExists)
             {
             if (!ModelState.IsValid) return BadRequest(ModelState);
                 try
                 {
-                    var IsValid = _validation.ValidateCourseFeedback(feedback);
+                    var IsValid = _service.Validation.ValidateCourseFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
                         feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _feedbackService.UpdateCourseFeedback(feedback);
+                        var res = _service.FeedbackService.UpdateCourseFeedback(feedback);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -176,12 +174,12 @@ namespace TMS.API.Controllers
         [HttpGet("trainee/{courseId:int},{traineeId:int},{trainerId:int}")]
         public IActionResult GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(int courseId,int traineeId,int trainerId)
         {
-            var feedbackExists = _validation.TraineeFeedbackExists(courseId,traineeId,trainerId);
+            var feedbackExists = _service.Validation.TraineeFeedbackExists(courseId,traineeId,trainerId);
             if(feedbackExists)
             {
                 try
                 {
-                    var result = _feedbackService.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(courseId,traineeId,trainerId);
+                    var result = _service.FeedbackService.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(courseId,traineeId,trainerId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -218,18 +216,18 @@ namespace TMS.API.Controllers
         /// <param name="feedback"></param>
         [HttpPost("trainee/feedback")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Trainer")]
+        // [Authorize(Roles = "Trainer")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateTraineeFeedback(feedback);
+                var IsValid = _service.Validation.ValidateTraineeFeedback(feedback);
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create feedback. the feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     feedback.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _feedbackService.CreateTraineeFeedback(feedback);
+                    var res = _service.FeedbackService.CreateTraineeFeedback(feedback);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -267,20 +265,20 @@ namespace TMS.API.Controllers
         /// <param name="feedback"></param>
         [HttpPut("trainee/feedback")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Trainer")]
+        // [Authorize(Roles = "Trainer")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var feedbackExists = _validation.TraineeFeedbackExists(feedback.CourseId,feedback.TraineeId,feedback.TrainerId);
+            var feedbackExists = _service.Validation.TraineeFeedbackExists(feedback.CourseId,feedback.TraineeId,feedback.TrainerId);
             if(feedbackExists)
             {
                 try
                 {
-                    var IsValid = _validation.ValidateTraineeFeedback(feedback);
+                    var IsValid = _service.Validation.ValidateTraineeFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid"))
                     {
                         feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _feedbackService.UpdateTraineeFeedback(feedback);
+                        var res = _service.FeedbackService.UpdateTraineeFeedback(feedback);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }
                     return BadRequest(IsValid);

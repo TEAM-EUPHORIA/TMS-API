@@ -12,14 +12,12 @@ namespace TMS.API
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        private readonly IValidation _validation;
-        private readonly IAuthService _authService;
+        private readonly IUnitOfService _service;
 
-        public AuthController(UnitOfService service, ILogger<AuthController> logger)
+        public AuthController(IUnitOfService service, ILogger<AuthController> logger)
         {
             _logger = logger;
-            _validation = service.Validation;
-            _authService = service.AuthService;
+            _service = service;
         }
         
         /// <summary>
@@ -43,12 +41,12 @@ namespace TMS.API
         [HttpPost("login")]
         public IActionResult Login([FromBody]LoginModel user)
         {
-            var validation = _validation.ValidateLoginDetails(user);
+            var validation = _service.Validation.ValidateLoginDetails(user);
             try
             {
                 if(validation.ContainsKey("IsValid"))
                 {
-                    var result = _authService.Login(user);
+                    var result = _service.AuthService.Login(user);
                     if(result is not null) return (Ok(result));
                 }
                 return Unauthorized();

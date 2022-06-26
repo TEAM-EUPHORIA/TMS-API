@@ -40,10 +40,9 @@ var logger = new LoggerConfiguration()
 builder.Logging.AddSerilog(logger);
 
 // Making Db Context available for the App 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddTransient<IValidation,Validation>();
-builder.Services.AddTransient<IDepartmentService,DepartmentService>();
 builder.Services.AddTransient<UnitOfWork>();
+builder.Services.AddTransient<IUnitOfService,UnitOfService>();
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -60,12 +59,6 @@ builder.Services.AddCors((setup) =>
     setup.AddPolicy("default", (options) =>
     {
         options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
-    });
-});
-
-builder.Services.AddCors(setup => {
-    setup.AddPolicy("EnableCORS", builder => {
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
 

@@ -12,14 +12,12 @@ namespace TMS.API.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly ILogger<ReviewController> _logger;
-        private readonly IReviewService _reviewService;
-        private readonly IValidation _validation;
+        private readonly IUnitOfService _service;
 
-        public ReviewController(UnitOfService service,ILogger<ReviewController> logger)
+        public ReviewController(IUnitOfService service,ILogger<ReviewController> logger)
         {
             _logger = logger;
-            _reviewService = service.ReviewService;
-            _validation = service.Validation;
+            _service = service;
         }
 
         /// <summary>
@@ -38,12 +36,12 @@ namespace TMS.API.Controllers
        [HttpGet("review/status/{statusId:int}")]
         public IActionResult GetReviewByStatusId(int statusId)
         {
-            var statusExists = _validation.ReviewStatusExists(statusId);
+            var statusExists = _service.Validation.ReviewStatusExists(statusId);
             if(statusExists)
             {
                 try
                 {
-                    var result = _reviewService.GetReviewByStatusId(statusId);
+                    var result = _service.ReviewService.GetReviewByStatusId(statusId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -71,12 +69,12 @@ namespace TMS.API.Controllers
         [HttpGet("{reviewId:int}")]
         public IActionResult GetReviewById(int reviewId)
         {
-            var reviewExists = _validation.ReviewExists(reviewId);
+            var reviewExists = _service.Validation.ReviewExists(reviewId);
             if(reviewExists)
             {
                 try
                 {
-                    var result = _reviewService.GetReviewById(reviewId);
+                    var result = _service.ReviewService.GetReviewById(reviewId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -115,18 +113,18 @@ namespace TMS.API.Controllers
         /// <param name="review"></param>
         [HttpPost("review")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateReview(review);
+                var IsValid = _service.Validation.ValidateReview(review);
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the review. the review already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     review.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _reviewService.CreateReview(review);
+                    var res = _service.ReviewService.CreateReview(review);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -168,20 +166,20 @@ namespace TMS.API.Controllers
         /// <param name="review"></param>
         [HttpPut("review")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var reviewExists = _validation.ReviewExists(review.Id);
+            var reviewExists = _service.Validation.ReviewExists(review.Id);
             if(reviewExists)
             {
                 try
                 {
-                    var IsValid = _validation.ValidateReview(review);
+                    var IsValid = _service.Validation.ValidateReview(review);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
                         review.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _reviewService.UpdateReview(review);
+                        var res = _service.ReviewService.UpdateReview(review);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -213,12 +211,12 @@ namespace TMS.API.Controllers
         [HttpGet("mom/user/{userId:int}")]
         public IActionResult GetListOfMomByUserId(int userId)
         {
-            var userExists = _validation.UserExists(userId);
+            var userExists = _service.Validation.UserExists(userId);
             if(userExists)
             {
                 try
                 {
-                    var result = _reviewService.GetListOfMomByUserId(userId);
+                    var result = _service.ReviewService.GetListOfMomByUserId(userId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -248,12 +246,12 @@ namespace TMS.API.Controllers
         [HttpGet("mom/{reviewId:int},{traineeId:int}")]
         public IActionResult GetMomByReviewIdAndTraineeId(int reviewId,int traineeId)
         {
-            var momExists = _validation.MOMExists(reviewId,traineeId);
+            var momExists = _service.Validation.MOMExists(reviewId,traineeId);
             if(momExists)
             {
                 try
                 {
-                    var result = _reviewService.GetMomByReviewIdAndTraineeId(reviewId,traineeId);
+                    var result = _service.ReviewService.GetMomByReviewIdAndTraineeId(reviewId,traineeId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -292,18 +290,18 @@ namespace TMS.API.Controllers
         /// <param name="mom"></param>
         [HttpPost("mom")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Trainee")]
+        // [Authorize(Roles = "Trainee")]
         public IActionResult CreateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateMOM(mom);
+                var IsValid = _service.Validation.ValidateMOM(mom);
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the mom. The Mom Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     mom.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _reviewService.CreateMom(mom);
+                    var res = _service.ReviewService.CreateMom(mom);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -344,20 +342,20 @@ namespace TMS.API.Controllers
         /// <param name="mom"></param>
         [HttpPut("mom")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Trainee")]
+        // [Authorize(Roles = "Trainee")]
         public IActionResult UpdateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var momExists = _validation.MOMExists(mom.ReviewId,mom.TraineeId);
+            var momExists = _service.Validation.MOMExists(mom.ReviewId,mom.TraineeId);
             if(momExists)
             {
                 try
                 {
-                    var IsValid = _validation.ValidateMOM(mom);
+                    var IsValid = _service.Validation.ValidateMOM(mom);
                     if (IsValid.ContainsKey("IsValid"))
                     {
                         mom.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _reviewService.UpdateMom(mom);
+                        var res = _service.ReviewService.UpdateMom(mom);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Updated successfully" });
                     }
                     return BadRequest(IsValid);

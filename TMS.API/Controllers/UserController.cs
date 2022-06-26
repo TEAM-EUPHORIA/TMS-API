@@ -11,14 +11,12 @@ namespace TMS.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IUserService _userService;
-        private readonly IValidation _validation;
+        private readonly IUnitOfService _service;
 
-        public UserController(UnitOfService service, ILogger<UserController> logger)
+        public UserController(IUnitOfService service, ILogger<UserController> logger)
         {
             _logger = logger; 
-            _userService = service.UserService;
-            _validation = service.Validation;
+            _service = service;
         }
 
         /// <summary>
@@ -38,12 +36,12 @@ namespace TMS.API.Controllers
         [HttpGet("role/{roleId:int}")]
         public IActionResult GetAllUserByRole(int roleId)
         {
-            var roleExists = _validation.RoleExists(roleId);
+            var roleExists = _service.Validation.RoleExists(roleId);
             if(roleExists)
             {
                 try
                 {
-                    var result = _userService.GetUsersByRole(roleId);
+                    var result = _service.UserService.GetUsersByRole(roleId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -72,12 +70,12 @@ namespace TMS.API.Controllers
         [HttpGet("department/{departmentId:int}")]
         public IActionResult GetAllUserByDepartment(int departmentId)
         {
-            var departmentExists = _validation.DepartmentExists(departmentId);
+            var departmentExists = _service.Validation.DepartmentExists(departmentId);
             if(departmentExists)
             {
                 try
                 {
-                    var result = _userService.GetUsersByDepartment(departmentId);
+                    var result = _service.UserService.GetUsersByDepartment(departmentId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -108,13 +106,13 @@ namespace TMS.API.Controllers
         [HttpGet("GetUsersByDepartmentAndRole/{departmentId:int},{roleId:int}")]
         public IActionResult GetUsersByDeptandrole(int departmentId,int roleId)
         {
-            var departmentExists = _validation.DepartmentExists(departmentId);
-            var roleExists = _validation.RoleExists(roleId);
+            var departmentExists = _service.Validation.DepartmentExists(departmentId);
+            var roleExists = _service.Validation.RoleExists(roleId);
             if(departmentExists && roleExists)
             {
                 try
                 {
-                    var result = _userService.GetUsersByDeptandrole(departmentId,roleId);
+                    var result = _service.UserService.GetUsersByDeptandrole(departmentId,roleId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -143,12 +141,12 @@ namespace TMS.API.Controllers
         [HttpGet("{userId:int}")]
         public IActionResult GetUserById(int userId)
         {
-            var userExists = _validation.UserExists(userId);
+            var userExists = _service.Validation.UserExists(userId);
             if(userExists)
             {
                 try
                 {
-                    var result = _userService.GetUserById(userId);
+                    var result = _service.UserService.GetUserById(userId);
                     if (result is not null) return Ok(result);
                     return NotFound();
                 }
@@ -189,18 +187,18 @@ namespace TMS.API.Controllers
         /// <param name="user"></param>
         [HttpPost("user")]
         // [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Training Head, Training Coordinator")]
+        //// [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult CreateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateUser(user);
+                var IsValid = _service.Validation.ValidateUser(user);
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the user. The user Already exists.");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     //user.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _userService.CreateUser(user);
+                    var res = _service.UserService.CreateUser(user);
                     if (res.ContainsKey("IsValid")) return Ok(new { Message = "The User was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -241,20 +239,20 @@ namespace TMS.API.Controllers
         /// <param name="user"></param>
         [HttpPut("user")]
         // [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Training Head, Training Coordinator")]
+        //// [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult UpdateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var userExists = _validation.UserExists(user.Id);
+            var userExists = _service.Validation.UserExists(user.Id);
             if(userExists)
             {
                 try
                 {
-                    var IsValid = _validation.ValidateUser(user);
+                    var IsValid = _service.Validation.ValidateUser(user);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
                        // user.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _userService.UpdateUser(user);
+                        var res = _service.UserService.UpdateUser(user);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The User was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -284,16 +282,16 @@ namespace TMS.API.Controllers
         /// <param name="userId"></param>
         [HttpPut("disable/{userId:int}")]
         // [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Training Head, Training Coordinator")]
+        //// [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
         {
-            var userExists = _validation.UserExists(userId);
+            var userExists = _service.Validation.UserExists(userId);
             if(userExists)
             {
                 try
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _userService.DisableUser(userId,currentUserId);
+                    var res = _service.UserService.DisableUser(userId,currentUserId);
                     if (res) return Ok(new {message = "The User was Disabled successfully"});
                 }
                 catch (InvalidOperationException ex)
@@ -318,12 +316,12 @@ namespace TMS.API.Controllers
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <response code="500">If there is problem in server.</response>
         [HttpGet("Dashboard")]
-        //[Authorize (Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        //// [Authorize (Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult DashboardData()
         {
             //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
             int currentUserId = 1;
-            return Ok(_userService.Dashboard(currentUserId));
+            return Ok(_service.UserService.Dashboard(currentUserId));
         }        
     }
 }

@@ -14,13 +14,11 @@ namespace TMS.API.Controllers
     public class CourseController : ControllerBase
     {
         private readonly ILogger<CourseController> _logger;
-        private readonly ICourseService _courseService;
-        private readonly IValidation _validation;
-        public CourseController(UnitOfService service, ILogger<CourseController> logger)
+        private readonly IUnitOfService _service;
+        public CourseController(IUnitOfService service, ILogger<CourseController> logger)
         {
             _logger = logger;
-            _courseService = service.CourseService;
-            _validation = service.Validation;
+            _service = service;
         }
         /// <summary>
         /// Gets all courses
@@ -34,12 +32,12 @@ namespace TMS.API.Controllers
         /// <response code="200">Returns a list of courses. </response>
         /// <response code="500">If there is problem in server. </response>
         [HttpGet]
-        //[Authorize(Roles = "Training Head, Training Coordinator")]
+        //// [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCourses()
         {
             try
             {
-                return Ok(_courseService.GetCourses());
+                return Ok(_service.CourseService.GetCourses());
             }
             catch (InvalidOperationException ex)
             {
@@ -63,15 +61,15 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="userId"></param>
         [HttpGet("users/{userId:int}")]
-        //[Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        //// [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetCoursesByUserId(int userId)
         {
-            var userExists = _validation.UserExists(userId);
+            var userExists = _service.Validation.UserExists(userId);
             if(userExists)
             {
                 try
                 {
-                    return Ok(_courseService.GetCoursesByUserId(userId));
+                    return Ok(_service.CourseService.GetCoursesByUserId(userId));
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -97,15 +95,15 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
         [HttpGet("departments/{departmentId:int}")]
-        //[Authorize(Roles = "Training Head, Training Coordinator")]
+        //// [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCoursesByDepartmentId(int departmentId)
         {
-            var departmentExists = _validation.DepartmentExists(departmentId);
+            var departmentExists = _service.Validation.DepartmentExists(departmentId);
             if(departmentExists)
             {
                 try
                 {
-                    return Ok(_courseService.GetCoursesByDepartmentId(departmentId));
+                    return Ok(_service.CourseService.GetCoursesByDepartmentId(departmentId));
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -131,15 +129,15 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         [HttpGet("{courseId:int}")]
-        //[Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        //// [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetCourseById(int courseId)
         {
-            var courseExists = _validation.CourseExists(courseId);
+            var courseExists = _service.Validation.CourseExists(courseId);
             if(courseExists)
             {
                 try
                 {
-                    var result = _courseService.GetCourseById(courseId);
+                    var result = _service.CourseService.GetCourseById(courseId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -177,18 +175,18 @@ namespace TMS.API.Controllers
         /// <param name="course"></param>
         [HttpPost("course")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateCourse(Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateCourse(course);
+                var IsValid = _service.Validation.ValidateCourse(course);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create course. The course already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     course.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _courseService.CreateCourse(course);
+                    var res = _service.CourseService.CreateCourse(course);
                     if (res.ContainsKey("IsValid"))
                     {
                         return Ok(new { Response = "The Course was Created successfully" });
@@ -230,20 +228,20 @@ namespace TMS.API.Controllers
         /// <param name="course"></param>
         [HttpPut("course")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateCourse(Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var courseExists = _validation.CourseExists(course.Id);
+            var courseExists = _service.Validation.CourseExists(course.Id);
             if(courseExists)
             {
                 try
                 {
-                    var IsValid = _validation.ValidateCourse(course);
+                    var IsValid = _service.Validation.ValidateCourse(course);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
                         course.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _courseService.UpdateCourse(course);
+                        var res = _service.CourseService.UpdateCourse(course);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Course was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -273,16 +271,16 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         [HttpPut("disable/{courseId:int}")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]        
+        // [Authorize(Roles = "Training Coordinator")]        
         public IActionResult DisableCourse(int courseId)
         {
-            var courseExists = _validation.CourseExists(courseId);
+            var courseExists = _service.Validation.CourseExists(courseId);
             if(courseExists)
             {
                 try
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _courseService.DisableCourse(courseId,currentUserId);
+                    var res = _service.CourseService.DisableCourse(courseId,currentUserId);
                     if (res) return Ok("The Course disabled was successfully");
                 }
                 catch (InvalidOperationException ex)
@@ -311,12 +309,12 @@ namespace TMS.API.Controllers
         [HttpGet("{courseId:int}/topics")]
         public IActionResult GetTopicsByCourseId(int courseId)
         {
-            var courseExists = _validation.CourseExists(courseId);
+            var courseExists = _service.Validation.CourseExists(courseId);
             if(courseExists)
             {
                 try
                 {
-                    return Ok(_courseService.GetTopicsByCourseId(courseId));
+                    return Ok(_service.CourseService.GetTopicsByCourseId(courseId));
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -345,13 +343,13 @@ namespace TMS.API.Controllers
         [HttpGet("{courseId:int}/topics/{topicId:int}")]
         public IActionResult GetTopicByIds(int courseId, int topicId)
         {
-            var topicExists = _validation.TopicExists(topicId,courseId);
+            var topicExists = _service.Validation.TopicExists(topicId,courseId);
             if(topicExists)
             {
                 try
                 {
                     int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var result = _courseService.GetTopicById(courseId, topicId, userId);
+                    var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -389,18 +387,18 @@ namespace TMS.API.Controllers
         /// <param name="topic"></param>
         [HttpPost("topic")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateTopic(Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateTopic(topic);
+                var IsValid = _service.Validation.ValidateTopic(topic);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create topic. The topic already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     topic.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _courseService.CreateTopic(topic);
+                    var res = _service.CourseService.CreateTopic(topic);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Topic was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -439,20 +437,20 @@ namespace TMS.API.Controllers
         /// <param name="topic"></param>
         [HttpPut("topic")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateTopic(Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var topicExists = _validation.TopicExists(topic.TopicId,topic.CourseId);
+            var topicExists = _service.Validation.TopicExists(topic.TopicId,topic.CourseId);
             if(topicExists)
             {
                 try
                 {
-                    var IsValid = _validation.ValidateTopic(topic);
+                    var IsValid = _service.Validation.ValidateTopic(topic);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
                         topic.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _courseService.UpdateTopic(topic);
+                        var res = _service.CourseService.UpdateTopic(topic);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Topic was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -483,16 +481,16 @@ namespace TMS.API.Controllers
         /// <param name="topicId"></param>
         [HttpPut("{courseId:int}/topics/disable/{topicId:int}")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableTopic(int courseId,int topicId)
         {
-            var topicExists = _validation.TopicExists(topicId,courseId);
+            var topicExists = _service.Validation.TopicExists(topicId,courseId);
             if(topicExists)
             {
                 try
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _courseService.DisableTopic(courseId,topicId,currentUserId);
+                    var res = _service.CourseService.DisableTopic(courseId,topicId,currentUserId);
                     if (res) return Ok("The topic was Disabled successfully");
                 }
                 catch (InvalidOperationException ex)
@@ -535,14 +533,14 @@ namespace TMS.API.Controllers
         /// <param name="data"></param>
         [HttpPut("assignUsers")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult AssignUsersToCourse(AddUsersToCourse data)
         {
-            var courseExists = _validation.CourseExists(data.CourseId);
+            var courseExists = _service.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
                 int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                var result = _courseService.AddUsersToCourse(data,currentUserId);
+                var result = _service.CourseService.AddUsersToCourse(data,currentUserId);
                 return Ok(result);
             }
             return NotFound();
@@ -578,14 +576,14 @@ namespace TMS.API.Controllers
         /// <param name="data"></param>
         [HttpPut("removeUsers")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")]
         public IActionResult RemoveUsersFromCourse(AddUsersToCourse data)
         {
-            var courseExists = _validation.CourseExists(data.CourseId);
+            var courseExists = _service.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
                 int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                var result = _courseService.RemoveUsersFromCourse(data,currentUserId);
+                var result = _service.CourseService.RemoveUsersFromCourse(data,currentUserId);
                 return Ok(result);
             }
             return NotFound();
@@ -609,12 +607,12 @@ namespace TMS.API.Controllers
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments")]
         public IActionResult GetAssignmentsByTopicId(int courseId, int topicId)
         {
-            var topicExists = _validation.TopicExists(topicId,courseId);
+            var topicExists = _service.Validation.TopicExists(topicId,courseId);
             if(topicExists)
             {
                 try
                 {
-                    return Ok(_courseService.GetAssignmentsByTopicId(topicId));
+                    return Ok(_service.CourseService.GetAssignmentsByTopicId(topicId));
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -644,12 +642,12 @@ namespace TMS.API.Controllers
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments/{ownerId:int}")]
         public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
-            var assignmentExists = _validation.AssignmentExists(courseId,topicId,ownerId);
+            var assignmentExists = _service.Validation.AssignmentExists(courseId,topicId,ownerId);
             if(assignmentExists)
             {
                 try
                 {
-                    var result = _courseService.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId,topicId,ownerId);
+                    var result = _service.CourseService.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId,topicId,ownerId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -686,18 +684,18 @@ namespace TMS.API.Controllers
         /// <param name="assignment"></param>
         [HttpPost("assignment")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Trainer,Trainee")]
+        // [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult CreateAssignment(Assignment assignment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateAssignment(assignment);
+                var IsValid = _service.Validation.ValidateAssignment(assignment);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create assignment. The assignment already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     assignment.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _courseService.CreateAssignment(assignment);
+                    var res = _service.CourseService.CreateAssignment(assignment);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Assignment was submitted successfully" });
                 }
                 return BadRequest(IsValid);
@@ -735,20 +733,20 @@ namespace TMS.API.Controllers
         /// <param name="assignment"></param>
         [HttpPut("assignment")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Trainer,Trainee")]
+        // [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult UpdateAssignment(Assignment assignment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var assignmentExists = _validation.AssignmentExists(assignment.CourseId,assignment.TopicId,assignment.OwnerId);
+            var assignmentExists = _service.Validation.AssignmentExists(assignment.CourseId,assignment.TopicId,assignment.OwnerId);
             if(assignmentExists)
             {
                 try
                 {
-                    var IsValid = _validation.ValidateAssignment(assignment);
+                    var IsValid = _service.Validation.ValidateAssignment(assignment);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
                         assignment.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _courseService.UpdateAssignment(assignment);
+                        var res = _service.CourseService.UpdateAssignment(assignment);
                         if (res.ContainsKey("IsValid") && IsValid.ContainsKey("Exists")) return Ok(new { Response = "The Assignment was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -764,20 +762,20 @@ namespace TMS.API.Controllers
 
         [HttpPut("attendance")]
         // [ValidateAntiForgeryToken]
-        [Authorize(Roles ="Trainer, Trainee")]
+        // [Authorize(Roles ="Trainer, Trainee")]
         public IActionResult MarkAttendance(Attendance attendance)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                var IsValid = _validation.ValidateAttendance(attendance);
+                var IsValid = _service.Validation.ValidateAttendance(attendance);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't mark. The attendance already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     attendance.CreatedBy = currentUserId;
                     attendance.OwnerId = currentUserId;
-                    var res = _courseService.MarkAttendance(attendance);
+                    var res = _service.CourseService.MarkAttendance(attendance);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The attendance was marked successfully" });
                 }
                 return BadRequest(IsValid);

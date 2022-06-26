@@ -12,7 +12,7 @@ namespace TMS.API.Services
         public UserService(UnitOfWork repo,Statistics stats)
         {
             _repo = repo;
-            _stats = _repo.stats;
+            _stats = _repo.Stats;
         }
         public IEnumerable<User> GetUsersByDepartment(int departmentId)
         {
