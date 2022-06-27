@@ -309,5 +309,116 @@ namespace TMS.TEST.Controller
             var Result = _courseController.DisableTopic(Topic.CourseId, Topic.TopicId) as ObjectResult;
             Assert.Equal(200, Result?.StatusCode);
         }
+         [Fact]
+
+        public void GetTopicsByCourseId_Return500Status()
+        {
+            _unitofService.Setup(obj => obj.CourseService.GetTopicsByCourseId(Topic.CourseId)).Throws(new InvalidOperationException());
+            var Result = _courseController.GetTopicsByCourseId(Topic.CourseId) as ObjectResult;
+            Assert.Equal(500, Result?.StatusCode);
+
+        }
+         [Fact]
+        public void GetTopicByIds_Return500Status()
+        {
+            AddIsValid();
+             _unitofService.Setup(obj => obj.CourseService.GetTopicById(Topic.CourseId,Topic.TopicId, userId)).Throws(new InvalidOperationException());
+            var Result = _courseController.GetTopicByIds(Topic.CourseId, Topic.TopicId) as ObjectResult;
+            Assert.Equal(500, Result?.StatusCode);
+        
     }
+    [Fact]
+        public void CreateTopic_Return500Status()
+        {
+            AddIsValid();
+             _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Throws(new InvalidOperationException());
+            var Result = _courseController.CreateTopic(Topic) as ObjectResult;
+            Assert.Equal(500, Result?.StatusCode);
+}
+ [Fact]
+        public void UpdateTopic_Return500Status()
+        {
+            AddIsValid();
+            AddExists();
+             _unitofService.Setup(obj => obj.CourseService.UpdateTopic(Topic)).Throws(new InvalidOperationException());
+            var Result = _courseController.UpdateTopic(Topic) as ObjectResult;
+            Assert.Equal(500, Result?.StatusCode);
+}
+[Fact]
+        public void DisableTopic_Return500Status()
+        {
+             _unitofService.Setup(obj => obj.CourseService.DisableTopic(Topic.CourseId,Topic.TopicId,1)).Throws(new InvalidOperationException());
+            var Result = _courseController.DisableTopic(Topic.CourseId, Topic.TopicId) as ObjectResult;
+            Assert.Equal(500, Result?.StatusCode);
+        }
+        [Fact]
+
+        public void GetTopicsByCourseId_Return404Status()
+        {
+            _unitofService.Setup(obj => obj.Validation.CourseExists(Topic.CourseId)).Returns(false);
+            var Result = _courseController.GetTopicsByCourseId(Topic.CourseId) as ObjectResult;
+            Assert.Equal(404, Result?.StatusCode);
+
+        }
+         [Fact]
+        public void GetTopicByIds_Return404Status()
+        {
+            AddExists();
+               _unitofService.Setup(obj => obj.Validation.TopicExists(Topic.TopicId, Topic.CourseId)).Returns(false);
+            var Result = _courseController.GetTopicByIds(Topic.CourseId, Topic.TopicId) as ObjectResult;
+            Assert.Equal(404, Result?.StatusCode);
+        }
+        [Fact]
+        public void CreateTopic_Return400tatus_IsValid()
+        {
+        
+            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Returns(result);
+            var Result = _courseController.CreateTopic(Topic) as ObjectResult;
+            Assert.Equal(400, Result?.StatusCode);
+}
+ [Fact]
+        public void CreateTopic_Return400tatus_Exists()
+        {
+             AddExists();
+            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Returns(result);
+            var Result = _courseController.CreateTopic(Topic) as ObjectResult;
+            Assert.Equal(400, Result?.StatusCode);
+
+
+        
+    }
+    [Fact]
+        public void UpdateTopic_Return400Status_IsValid()
+        {
+        
+             _unitofService.Setup(obj => obj.CourseService.UpdateTopic(Topic)).Returns(result);
+            var Result = _courseController.UpdateTopic(Topic) as ObjectResult;
+            Assert.Equal(400, Result?.StatusCode);
+}
+[Fact]
+        public void UpdateTopic_Return400Status_Exists()
+        {
+        AddExists();
+             _unitofService.Setup(obj => obj.CourseService.UpdateTopic(Topic)).Returns(result);
+            var Result = _courseController.UpdateTopic(Topic) as ObjectResult;
+            Assert.Equal(400, Result?.StatusCode);
+}
+[Fact]
+        public void UpdateTopic_Return404Status()
+        {
+             _unitofService.Setup(obj => obj.Validation.TopicExists(Topic.TopicId, Topic.CourseId)).Returns(false);
+            var Result = _courseController.UpdateTopic(Topic) as ObjectResult;
+            Assert.Equal(404, Result?.StatusCode);
+}
+[Fact]
+        public void DisableTopic_Return404Status()
+        {
+              _unitofService.Setup(obj => obj.Validation.TopicExists(Topic.TopicId, Topic.CourseId)).Returns(false);
+            var Result = _courseController.DisableTopic(Topic.CourseId, Topic.TopicId) as ObjectResult;
+            Assert.Equal(404, Result?.StatusCode);
+        }
+
+
+
+}
 }
