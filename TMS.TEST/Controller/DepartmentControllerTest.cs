@@ -17,6 +17,7 @@ namespace TMS.TEST.Controller
         private readonly Dictionary<string,string> result = new();
         readonly List<Department> Departments = DeparmentMock.GetDepartments();
         readonly Department Department = DeparmentMock.GetDepartment();
+        int departmentId = 1;
 
         private void AddIsValid()
         {
@@ -35,6 +36,7 @@ namespace TMS.TEST.Controller
             _unitOfService.Setup(obj => obj.Validation.ValidateDepartment(Department)).Returns(result);
 
             _unitOfService.Setup(obj => obj.DepartmentService.GetDepartments()).Returns(Departments);
+            _unitOfService.Setup(obj => obj.DepartmentService.GetDepartmentById(departmentId)).Returns(Department);
             _unitOfService.Setup(obj => obj.DepartmentService.CreateDepartment(Department)).Returns(result);
             _unitOfService.Setup(obj => obj.DepartmentService.UpdateDepartment(Department)).Returns(result);
             _unitOfService.Setup(obj => obj.DepartmentService.DisableDepartment(Department.Id, 1)).Returns(true);
@@ -42,11 +44,19 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
-
         public void GetDepartments()
         {
             // Act
             var Result = _departmentController.GetDepartments() as ObjectResult;
+            // Assert
+            Assert.Equal(200, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void GetDepartmentById()
+        {
+            // Act
+            var Result = _departmentController.GetDepartmentById(departmentId) as ObjectResult;
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }

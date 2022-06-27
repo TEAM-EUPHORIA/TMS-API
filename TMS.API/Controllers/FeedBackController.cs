@@ -89,7 +89,7 @@ namespace TMS.API.Controllers
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't submit the feedback. The feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    feedback.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    //feedback.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.FeedbackService.CreateCourseFeedback(feedback);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                 }
@@ -139,7 +139,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateCourseFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        //feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.FeedbackService.UpdateCourseFeedback(feedback);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }
@@ -226,7 +226,7 @@ namespace TMS.API.Controllers
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create feedback. the feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    feedback.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    // feedback.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.FeedbackService.CreateTraineeFeedback(feedback);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                 }
@@ -277,7 +277,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateTraineeFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid"))
                     {
-                        feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        //feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.FeedbackService.UpdateTraineeFeedback(feedback);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }
