@@ -50,7 +50,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("NotFound");
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("NotFound");
         }
 
         /// <summary>
@@ -290,8 +290,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.UserService.DisableUser(userId,currentUserId);
+                    // int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.UserService.DisableUser(userId,1);
                     if (res) return Ok(new {message = "The User was Disabled successfully"});
                 }
                 catch (InvalidOperationException ex)
@@ -300,7 +300,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("NotFound");
         }
         
         /// <summary>
