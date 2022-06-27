@@ -6,19 +6,6 @@ using Moq;
 using TMS.API.Controllers;
 using Xunit;
 using TMS.BAL;
-<<<<<<< HEAD
-
-namespace TMS.TEST.Controller
-{
-    public class CourseCourseControllerTest
-    {
-        private readonly Mock<ILogger<FeedBackController>> _Logger = new();
-        private readonly Mock<IUnitOfService> _unitOfService = new();
-        private readonly FeedBackController _feedbackController;
-        private readonly Dictionary<string,string> result = new();
-        readonly List<CourseFeedback>CourseFeedbacks= CourseFeedbackMock.GetCourseFeedbacks();
-        readonly CourseFeedback CourseFeedback =CourseFeedbackMock.GetCourseFeedback();
-=======
 using System;
 
 namespace TMS.TEST.Controller
@@ -38,7 +25,6 @@ namespace TMS.TEST.Controller
         int userId = 1;
         int departmentId = 1;
         int courseId = 1;
->>>>>>> 5362509541748093645dbbd45fc474b33f6dfab0
 
         private void AddIsValid()
         {
@@ -48,30 +34,6 @@ namespace TMS.TEST.Controller
         {
             result.Add("Exists", "true");
         }
-<<<<<<< HEAD
-        public CourseCourseControllerTest()
-        {
-            _feedbackController = new FeedBackController(_unitOfService.Object, _Logger.Object);
-
-            // Arrange
-            _unitOfService.Setup(obj => obj.Validation.CourseFeedbackExists(CourseFeedback.CourseId,CourseFeedback.TraineeId)).Returns(true);
-            _unitOfService.Setup(obj => obj.Validation.ValidateCourseFeedback(CourseFeedback)).Returns(result);
-
-            _unitOfService.Setup(obj => obj.FeedbackService.CreateCourseFeedback(CourseFeedback)).Returns(result);
-            _unitOfService.Setup(obj => obj.FeedbackService.UpdateCourseFeedback(CourseFeedback)).Returns(result);
-         
-
-        }
-
-
-    
-        [Fact]
-        public void CreateCourseFeedback()
-        {
-            AddIsValid();
-            // Act
-            var Result = _feedbackController.CreateCourseFeedback(CourseFeedback) as ObjectResult;
-=======
         public CourseControllerTest()
         {
             _courseController = new CourseController(_unitofService.Object, _Logger.Object);
@@ -107,15 +69,11 @@ namespace TMS.TEST.Controller
         {
             // Act
             var Result = _courseController.GetCourses() as ObjectResult;
->>>>>>> 5362509541748093645dbbd45fc474b33f6dfab0
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
 
         [Fact]
-<<<<<<< HEAD
-        public void UpdateCourseFeedback()
-=======
         public void GetCourse_Return500Status()
         {
             // Arrange
@@ -165,26 +123,15 @@ namespace TMS.TEST.Controller
 
         [Fact]
         public void UpdateCourse_Return200Status()
->>>>>>> 5362509541748093645dbbd45fc474b33f6dfab0
         {
             AddIsValid();
             AddExists();
             // Act
-<<<<<<< HEAD
-            var Result = _feedbackController.UpdateCourseFeedback(CourseFeedback) as ObjectResult;
-=======
             var Result = _courseController.UpdateCourse(Course) as ObjectResult;
->>>>>>> 5362509541748093645dbbd45fc474b33f6dfab0
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
 
-<<<<<<< HEAD
-        
-        
-    }
-}
-=======
         [Fact]
         public void DisableCourse_Return200Status()
         {
@@ -236,4 +183,3 @@ namespace TMS.TEST.Controller
         }
     }
 }
->>>>>>> 5362509541748093645dbbd45fc474b33f6dfab0
