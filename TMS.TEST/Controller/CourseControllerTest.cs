@@ -65,7 +65,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
-        public void GetCourses()
+        public void GetCourses_Return200Status()
         {
             // Act
             var Result = _courseController.GetCourses() as ObjectResult;
@@ -86,7 +86,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
-        public void GetCoursesByUserId()
+        public void GetCoursesByUserId_Return200Status()
         {
             // Act
             var Result = _courseController.GetCoursesByUserId(userId) as ObjectResult;
@@ -95,7 +95,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
-        public void GetCoursesByDepartmentId()
+        public void GetCoursesByDepartmentId_Return200Status()
         {
             // Act
             var Result = _courseController.GetCoursesByDepartmentId(departmentId) as ObjectResult;
@@ -104,7 +104,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
-        public void GetCourseById()
+        public void GetCourseById_Return200Status()
         {
             // Act
             var Result = _courseController.GetCourseById(courseId) as ObjectResult;
@@ -112,7 +112,7 @@ namespace TMS.TEST.Controller
             Assert.Equal(200, Result?.StatusCode);
         }
         [Fact]
-        public void CreateCourse()
+        public void CreateCourse_Return200Status()
         {
             AddIsValid();
             // Act
@@ -122,7 +122,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
-        public void UpdateCourse()
+        public void UpdateCourse_Return200Status()
         {
             AddIsValid();
             AddExists();
@@ -133,7 +133,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
-        public void DisableCourse()
+        public void DisableCourse_Return200Status()
         {
             // Act
             var Result = _courseController.DisableCourse(Course.Id) as ObjectResult;
@@ -144,14 +144,14 @@ namespace TMS.TEST.Controller
 
         [Fact]
 
-        public void GetTopicsByCourseId()
+        public void GetTopicsByCourseId_Return200Status()
         {
             var Result = _courseController.GetTopicsByCourseId(Topic.CourseId) as ObjectResult;
             Assert.Equal(200, Result?.StatusCode);
 
         }
         [Fact]
-        public void GetTopicByIds()
+        public void GetTopicByIds_Return200Status()
         {
             AddIsValid();
             var Result = _courseController.GetTopicByIds(Topic.CourseId, Topic.TopicId) as ObjectResult;
@@ -159,7 +159,7 @@ namespace TMS.TEST.Controller
 
         }
         [Fact]
-        public void CreateTopic()
+        public void CreateTopic_Return200Status()
         {
             AddIsValid();
             var Result = _courseController.CreateTopic(Topic) as ObjectResult;
@@ -167,7 +167,7 @@ namespace TMS.TEST.Controller
 
         }
         [Fact]
-        public void UpdateTopic()
+        public void UpdateTopic_Return200Status()
         {
             AddIsValid();
             AddExists();
@@ -176,7 +176,7 @@ namespace TMS.TEST.Controller
 
         }
         [Fact]
-        public void DisableTopic()
+        public void DisableTopic_Return200Status()
         {
             var Result = _courseController.DisableTopic(Topic.CourseId, Topic.TopicId) as ObjectResult;
             Assert.Equal(200, Result?.StatusCode);
