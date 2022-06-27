@@ -349,7 +349,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                   // int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                   int userId = 1;
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
@@ -398,7 +399,7 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create topic. The topic already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    topic.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    //topic.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.CourseService.CreateTopic(topic);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Topic was Created successfully" });
                 }
@@ -450,7 +451,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateTopic(topic);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        topic.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        // topic.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.CourseService.UpdateTopic(topic);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Topic was Updated successfully" });
                     }
@@ -490,7 +491,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    // int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int currentUserId = 1;
                     var res = _service.CourseService.DisableTopic(courseId,topicId,currentUserId);
                     if (res) return Ok("The topic was Disabled successfully");
                 }

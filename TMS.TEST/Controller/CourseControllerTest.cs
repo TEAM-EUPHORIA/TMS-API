@@ -15,13 +15,16 @@ namespace TMS.TEST.Controller
         private readonly Mock<ILogger<CourseController>> _Logger = new();
         private readonly Mock<IUnitOfService> _unitofService = new();
         private readonly CourseController _courseController;
-        private readonly Dictionary<string,string> result = new();
+        private readonly UserController _UserController;
+
+        private readonly Dictionary<string, string> result = new();
         readonly List<Course> Courses = CourseMock.GetCourses();
         readonly Course Course = CourseMock.GetCourse();
+        readonly List<Topic> topics = TopicMock.GetTopics();
+        readonly Topic Topic = TopicMock.GetTopic();
         int userId = 1;
         int departmentId = 1;
         int courseId = 1;
-
 
         private void AddIsValid()
         {
@@ -49,8 +52,15 @@ namespace TMS.TEST.Controller
             _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Returns(result);
             _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course)).Returns(result);
 
-            _unitofService.Setup(obj => obj.CourseService.GetCourses()).Throws(new InvalidOperationException());
+            _unitofService.Setup(obj => obj.Validation.TopicExists(Topic.TopicId, Topic.CourseId)).Returns(true);
+            _unitofService.Setup(obj => obj.Validation.CourseExists(Topic.CourseId)).Returns(true);
+            _unitofService.Setup(obj => obj.Validation.ValidateTopic(Topic)).Returns(result);
 
+            _unitofService.Setup(obj => obj.CourseService.GetTopicsByCourseId(Topic.CourseId)).Returns(topics);
+            _unitofService.Setup(obj => obj.CourseService.GetTopicById(Topic.CourseId, Topic.TopicId, userId)).Returns(Topic);
+            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.UpdateTopic(Topic)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.DisableTopic(Topic.CourseId, Topic.TopicId, 1)).Returns(true);
 
         }
 
@@ -62,15 +72,18 @@ namespace TMS.TEST.Controller
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
+
         [Fact]
-         public void GetCourse_Return500Status()
-         {
+        public void GetCourse_Return500Status()
+        {
+            // Arrange
+            _unitofService.Setup(obj => obj.CourseService.GetCourses()).Throws(new InvalidOperationException());
             // Act
-            var Result= _courseController.GetCourses() as ObjectResult;
+            var Result = _courseController.GetCourses() as ObjectResult;
             // Assert
             Assert.Equal(500, Result?.StatusCode);
 
-         }
+        }
 
         [Fact]
         public void GetCoursesByUserId()
@@ -105,7 +118,7 @@ namespace TMS.TEST.Controller
             // Act
             var Result = _courseController.CreateCourse(Course) as ObjectResult;
             // Assert
-            Assert.Equal(200,Result?.StatusCode);
+            Assert.Equal(200, Result?.StatusCode);
         }
 
         [Fact]
@@ -125,6 +138,47 @@ namespace TMS.TEST.Controller
             // Act
             var Result = _courseController.DisableCourse(Course.Id) as ObjectResult;
             // Assert
+            Assert.Equal(200, Result?.StatusCode);
+        }
+
+
+        [Fact]
+
+        public void GetTopicsByCourseId()
+        {
+            var Result = _courseController.GetTopicsByCourseId(Topic.CourseId) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+
+        }
+        [Fact]
+        public void GetTopicByIds()
+        {
+            AddIsValid();
+            var Result = _courseController.GetTopicByIds(Topic.CourseId, Topic.TopicId) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+
+        }
+        [Fact]
+        public void CreateTopic()
+        {
+            AddIsValid();
+            var Result = _courseController.CreateTopic(Topic) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+
+        }
+        [Fact]
+        public void UpdateTopic()
+        {
+            AddIsValid();
+            AddExists();
+            var Result = _courseController.UpdateTopic(Topic) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+
+        }
+        [Fact]
+        public void DisableTopic()
+        {
+            var Result = _courseController.DisableTopic(Topic.CourseId, Topic.TopicId) as ObjectResult;
             Assert.Equal(200, Result?.StatusCode);
         }
     }
