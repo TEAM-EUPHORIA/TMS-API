@@ -74,7 +74,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
-        public void GetCourse_Return500Status()
+        public void GetCourses_Return500Status()
         {
             // Arrange
             _unitofService.Setup(obj => obj.CourseService.GetCourses()).Throws(new InvalidOperationException());
@@ -95,12 +95,42 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
+        public void GetCoursesByUserId_Return404Status()
+        {
+            _unitofService.Setup(obj => obj.Validation.CourseExists(courseId)).Returns(false);
+            // Act
+           var Result=_courseController.GetCourseById(courseId) as ObjectResult;
+        //    Assert
+           Assert.Equal(404,Result?.StatusCode);
+        }
+
+        [Fact]
+        public void GetCoursesByUserId_Return500Status()
+        {
+            _unitofService.Setup(obj => obj.CourseService.GetCoursesByUserId(userId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.GetCoursesByUserId(userId) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
+        [Fact]
         public void GetCoursesByDepartmentId_Return200Status()
         {
             // Act
             var Result = _courseController.GetCoursesByDepartmentId(departmentId) as ObjectResult;
             // Assert
             Assert.Equal(200, Result?.StatusCode);
+        }
+
+         [Fact]
+        public void GetCoursesByDepartmentId_Return500Status()
+        {
+            _unitofService.Setup(obj => obj.CourseService.GetCoursesByDepartmentId(departmentId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.GetCoursesByDepartmentId(departmentId) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
         }
 
         [Fact]
@@ -111,6 +141,17 @@ namespace TMS.TEST.Controller
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
+
+         [Fact]
+        public void GetCourseById_Return500Status()
+        {
+            _unitofService.Setup(obj => obj.CourseService.GetCourseById(courseId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.GetCourseById(courseId) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
         [Fact]
         public void CreateCourse_Return200Status()
         {
@@ -119,6 +160,38 @@ namespace TMS.TEST.Controller
             var Result = _courseController.CreateCourse(Course) as ObjectResult;
             // Assert
             Assert.Equal(200, Result?.StatusCode);
+        }
+
+         [Fact]
+        public void CreateCourse_Return400Status_AddExists()
+        {
+            AddExists();
+            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Returns(result);
+            // Act
+            var Result = _courseController.CreateCourse(Course) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
+         [Fact]
+        public void CreateCourse_Return400Status_IsValid()
+        {
+            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Returns(result);
+            // Act
+            var Result = _courseController.CreateCourse(Course) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void CreateCourse_Return500Status()
+        {
+            AddIsValid();
+            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.CreateCourse(Course) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
         }
 
         [Fact]
@@ -133,17 +206,72 @@ namespace TMS.TEST.Controller
         }
 
         [Fact]
+        public void UpdateCourse_Return500Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.UpdateCourse(Course) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void UpdateCourse_Return404Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.Validation.CourseExists(courseId)).Returns(false);
+            // Act
+            var Result = _courseController.UpdateCourse(Course) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void UpdateCourse_Return400Status()
+        {
+            //AddIsValid();
+            // AddExists();
+            _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course)).Returns(result);
+            // Act
+            var Result = _courseController.UpdateCourse(Course) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
+        [Fact]
         public void DisableCourse_Return200Status()
         {
             // Act
-            var Result = _courseController.DisableCourse(Course.Id) as ObjectResult;
+            var Result = _courseController.DisableCourse(courseId) as ObjectResult;
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
 
+         [Fact]
+        public void DisableCourse_Return500Status()
+        {
+            _unitofService.Setup(obj => obj.CourseService.DisableCourse(courseId,userId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.DisableCourse(Course.Id) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
 
         [Fact]
+        public void DisableCourse_Return404Status()
+        {
+            // _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course)).Returns(result);
+            _unitofService.Setup(obj => obj.Validation.CourseExists(courseId)).Returns(false);
+            // Act
+            var Result = _courseController.DisableCourse(courseId) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
+        }
 
+        [Fact]
         public void GetTopicsByCourseId_Return200Status()
         {
             var Result = _courseController.GetTopicsByCourseId(Topic.CourseId) as ObjectResult;
