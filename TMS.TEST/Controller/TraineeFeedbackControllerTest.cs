@@ -9,14 +9,14 @@ using TMS.BAL;
 
 namespace TMS.TEST.Controller
 {
-    public class CourseCourseControllerTest
+    public class TraineeFeedbackControllerTest
     {
         private readonly Mock<ILogger<FeedBackController>> _Logger = new();
         private readonly Mock<IUnitOfService> _unitOfService = new();
         private readonly FeedBackController _feedbackController;
         private readonly Dictionary<string,string> result = new();
-        readonly List<CourseFeedback>CourseFeedbacks= CourseFeedbackMock.GetCourseFeedbacks();
-        readonly CourseFeedback CourseFeedback =CourseFeedbackMock.GetCourseFeedback();
+        readonly List<TraineeFeedback>TraineeFeedbacks= TraineeFeedbackMock.GetTraineeFeedbacks();
+        readonly TraineeFeedback TraineeFeedback =TraineeFeedbackMock.GetTraineeFeedback();
 
         private void AddIsValid()
         {
@@ -26,16 +26,16 @@ namespace TMS.TEST.Controller
         {
             result.Add("Exists", "true");
         }
-        public CourseCourseControllerTest()
+        public TraineeFeedbackControllerTest()
         {
             _feedbackController = new FeedBackController(_unitOfService.Object, _Logger.Object);
 
             // Arrange
-            _unitOfService.Setup(obj => obj.Validation.CourseFeedbackExists(CourseFeedback.CourseId,CourseFeedback.TraineeId)).Returns(true);
-            _unitOfService.Setup(obj => obj.Validation.ValidateCourseFeedback(CourseFeedback)).Returns(result);
+            _unitOfService.Setup(obj => obj.Validation.TraineeFeedbackExists(TraineeFeedback.CourseId,TraineeFeedback.TraineeId,TraineeFeedback.TrainerId)).Returns(true);
+            _unitOfService.Setup(obj => obj.Validation.ValidateTraineeFeedback(TraineeFeedback)).Returns(result);
 
-            _unitOfService.Setup(obj => obj.FeedbackService.CreateCourseFeedback(CourseFeedback)).Returns(result);
-            _unitOfService.Setup(obj => obj.FeedbackService.UpdateCourseFeedback(CourseFeedback)).Returns(result);
+            _unitOfService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Returns(result);
+            _unitOfService.Setup(obj => obj.FeedbackService.UpdateTraineeFeedback(TraineeFeedback)).Returns(result);
          
 
         }
@@ -43,22 +43,22 @@ namespace TMS.TEST.Controller
 
     
         [Fact]
-        public void CreateCourseFeedback()
+        public void CreateTraineeFeedback()
         {
             AddIsValid();
             // Act
-            var Result = _feedbackController.CreateCourseFeedback(CourseFeedback) as ObjectResult;
+            var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
 
         [Fact]
-        public void UpdateCourseFeedback()
+        public void UpdateTraineeFeedback()
         {
             AddIsValid();
             AddExists();
             // Act
-            var Result = _feedbackController.UpdateCourseFeedback(CourseFeedback) as ObjectResult;
+            var Result = _feedbackController.UpdateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
