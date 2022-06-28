@@ -139,7 +139,7 @@ namespace TMS.API
             checkIdAndAddEntery(review.TraineeId,nameof(review.TraineeId));
             checkIdAndAddEntery(review.StatusId,nameof(review.StatusId));
             validateAndAddEntery(nameof(review.ReviewDate),review.ReviewDate.ToShortDateString(),dateValidation);
-            validateAndAddEntery(nameof(review.ReviewTime),review.ReviewTime.ToShortTimeString(),timeValidation);
+            validateAndAddEntery(nameof(review.ReviewTime),review.ReviewTime.ToString("hh:mm tt"),timeValidation);
             validateAndAddEntery(nameof(review.Mode),review.Mode,modeValidation);
             if(result.Count==0)
             {

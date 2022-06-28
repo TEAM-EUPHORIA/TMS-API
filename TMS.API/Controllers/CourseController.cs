@@ -542,7 +542,8 @@ namespace TMS.API.Controllers
             var courseExists = _service.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
-                int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                int currentUserId = 1;
                 var result = _service.CourseService.AddUsersToCourse(data,currentUserId);
                 return Ok(result);
             }
@@ -585,7 +586,8 @@ namespace TMS.API.Controllers
             var courseExists = _service.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
-                int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                int currentUserId = 1;
                 var result = _service.CourseService.RemoveUsersFromCourse(data,currentUserId);
                 return Ok(result);
             }
@@ -697,7 +699,7 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create assignment. The assignment already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    assignment.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    //assignment.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.CourseService.CreateAssignment(assignment);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Assignment was submitted successfully" });
                 }
@@ -748,7 +750,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateAssignment(assignment);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        assignment.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        //assignment.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.CourseService.UpdateAssignment(assignment);
                         if (res.ContainsKey("IsValid") && IsValid.ContainsKey("Exists")) return Ok(new { Response = "The Assignment was Updated successfully" });
                     }
@@ -775,7 +777,8 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't mark. The attendance already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int currentUserId = 1;
                     attendance.CreatedBy = currentUserId;
                     attendance.OwnerId = currentUserId;
                     var res = _service.CourseService.MarkAttendance(attendance);

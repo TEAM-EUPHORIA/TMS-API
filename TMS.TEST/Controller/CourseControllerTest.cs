@@ -7,6 +7,7 @@ using TMS.API.Controllers;
 using Xunit;
 using TMS.BAL;
 using System;
+using TMS.API.ViewModels;
 
 namespace TMS.TEST.Controller
 {
@@ -22,9 +23,16 @@ namespace TMS.TEST.Controller
         readonly Course Course = CourseMock.GetCourse();
         readonly List<Topic> topics = TopicMock.GetTopics();
         readonly Topic Topic = TopicMock.GetTopic();
+        readonly List<Attendance> attendances = AttendanceMock.GetAttendances();
+        readonly Attendance attendance = AttendanceMock.GetAttendance();
+        readonly AddUsersToCourse data = CourseMock.GetData();
+        Dictionary<string, List<CourseUsers>> _result = new Dictionary<string, List<CourseUsers>>();
         int userId = 1;
         int departmentId = 1;
         int courseId = 1;
+        Assignment assignment = AssignmentMock.GetAssignment();
+        int topicId = 3;
+        int ownerId = 1;
 
         private void AddIsValid()
         {
@@ -36,9 +44,10 @@ namespace TMS.TEST.Controller
         }
         public CourseControllerTest()
         {
+            _result.Add("hello", CourseMock.GetResult());
             _courseController = new CourseController(_unitofService.Object, _Logger.Object);
 
-            // Arrange
+            // Arrange Course
             _unitofService.Setup(obj => obj.Validation.CourseExists(Course.Id)).Returns(true);
             _unitofService.Setup(obj => obj.Validation.UserExists(userId)).Returns(true);
             _unitofService.Setup(obj => obj.Validation.DepartmentExists(departmentId)).Returns(true);
@@ -52,15 +61,32 @@ namespace TMS.TEST.Controller
             _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Returns(result);
             _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course)).Returns(result);
 
+            // Arrange Topic
             _unitofService.Setup(obj => obj.Validation.TopicExists(Topic.TopicId, Topic.CourseId)).Returns(true);
             _unitofService.Setup(obj => obj.Validation.CourseExists(Topic.CourseId)).Returns(true);
             _unitofService.Setup(obj => obj.Validation.ValidateTopic(Topic)).Returns(result);
+            _unitofService.Setup(obj => obj.Validation.TopicExists(Topic.TopicId)).Returns(true);
+
 
             _unitofService.Setup(obj => obj.CourseService.GetTopicsByCourseId(Topic.CourseId)).Returns(topics);
             _unitofService.Setup(obj => obj.CourseService.GetTopicById(Topic.CourseId, Topic.TopicId, userId)).Returns(Topic);
             _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Returns(result);
             _unitofService.Setup(obj => obj.CourseService.UpdateTopic(Topic)).Returns(result);
             _unitofService.Setup(obj => obj.CourseService.DisableTopic(Topic.CourseId, Topic.TopicId, 1)).Returns(true);
+            
+
+            // Arrange 
+            _unitofService.Setup(obj => obj.Validation.AttendanceExists(3, 3, 3)).Returns(true);
+            _unitofService.Setup(obj => obj.Validation.ValidateAttendance(attendance)).Returns(result);
+            _unitofService.Setup(obj => obj.Validation.ValidateAssignment(assignment)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.GetAssignmentByCourseIdTopicIdAndOwnerId(1, 3, 1)).Returns(assignment);
+            _unitofService.Setup(obj => obj.Validation.AssignmentExists(1, 3, 1)).Returns(true);
+            _unitofService.Setup(obj => obj.CourseService.MarkAttendance(attendance)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.AddUsersToCourse(data, userId)).Returns(_result);
+            _unitofService.Setup(obj => obj.CourseService.RemoveUsersFromCourse(data, userId)).Returns(_result);
+            _unitofService.Setup(obj => obj.CourseService.GetAssignmentsByTopicId(topicId)).Returns(Topic.Assignments);
+            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment)).Returns(result);
 
         }
 
@@ -438,6 +464,62 @@ namespace TMS.TEST.Controller
             var Result = _courseController.DisableTopic(Topic.CourseId, Topic.TopicId) as ObjectResult;
             Assert.Equal(404, Result?.StatusCode);
         }
+        public void Attendance_Return200Status()
+        {
+            AddIsValid();
+            // AddExists();
+            // Act
+            var Result = _courseController.MarkAttendance(attendance) as ObjectResult;
+            // Assert
+            Assert.Equal(200, Result?.StatusCode);
+        }
+        [Fact]
+        public void AssignUser_Return200Status()
+        {
+            var Result = _courseController.AssignUsersToCourse(data) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void RemoveUser_Return200Status()
+        {
+            var Result = _courseController.RemoveUsersFromCourse(data) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+
+        }
+        [Fact]
+        public void GetAssignmentsByTopicId_Return200Status()
+        {
+            var Result = _courseController.GetAssignmentsByTopicId(courseId, topicId) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void GetAssignmentByCourseIdTopicIdAndOwnerId_Return200Status()
+        {
+            AddIsValid();
+            var Result = _courseController.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void CreateAssignment_Return200Status()
+        {
+            AddIsValid();
+            var Result = _courseController.CreateAssignment(assignment) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void UpdateAssignment_Return200Status()
+        {
+            AddIsValid();
+            AddExists();
+            var Result = _courseController.UpdateAssignment(assignment) as ObjectResult;
+            Assert.Equal(200, Result?.StatusCode);
+        }
 
     }
 }
+
+
