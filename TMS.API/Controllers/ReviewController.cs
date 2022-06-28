@@ -178,7 +178,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateReview(review);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        review.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        // review.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.ReviewService.UpdateReview(review);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
                     }
