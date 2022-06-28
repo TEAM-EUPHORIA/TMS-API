@@ -6,6 +6,7 @@ using Moq;
 using TMS.API.Controllers;
 using Xunit;
 using TMS.BAL;
+using System;
 
 namespace TMS.TEST.Controller
 {
@@ -13,6 +14,8 @@ namespace TMS.TEST.Controller
     {
         private readonly Mock<ILogger<FeedBackController>> _Logger = new();
         private readonly Mock<IUnitOfService> _unitOfService = new();
+          private readonly Mock<IUnitOfService> _unitofService = new();
+
         private readonly FeedBackController _feedbackController;
         private readonly Dictionary<string,string> result = new();
         readonly List<TraineeFeedback>TraineeFeedbacks= TraineeFeedbackMock.GetTraineeFeedbacks();
@@ -50,6 +53,17 @@ namespace TMS.TEST.Controller
             var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
             Assert.Equal(200, Result?.StatusCode);
+        }
+         [Fact]
+        public void CreateTraineeFeedback_Return500Status()
+        {
+            // Arrange
+            _unitofService.Setup(obj => obj.FeedbackService. CreateTraineeFeedback(TraineeFeedback )).Throws(new InvalidOperationException());
+            // Act
+            var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+
         }
 
         [Fact]

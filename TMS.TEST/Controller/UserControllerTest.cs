@@ -19,6 +19,8 @@ namespace TMS.TEST.Controller
         readonly List<User> Users = UserMock.GetAllUserByRole();
         readonly User User = UserMock.GetUserById();
         int role=1;
+        int dept=1;
+        int id=1;
 
 
         private void AddIsValid()
@@ -35,9 +37,13 @@ namespace TMS.TEST.Controller
             // Arrange
             _unitOfService.Setup(obj => obj.Validation.UserExists(User.Id)).Returns(true);
             _unitOfService.Setup(obj => obj.Validation.RoleExists(User.Id)).Returns(true);
+            _unitOfService.Setup(obj => obj.Validation.DepartmentExists(User.Id)).Returns(true);
             _unitOfService.Setup(obj => obj.Validation.ValidateUser(User)).Returns(result);
 
             _unitOfService.Setup(obj => obj.UserService.GetUsersByRole(role)).Returns(Users);
+            _unitOfService.Setup(obj => obj.UserService.GetUsersByDepartment(dept)).Returns(Users);
+            _unitOfService.Setup(obj => obj.UserService.GetUsersByDeptandrole(dept,role)).Returns(Users);
+            _unitOfService.Setup(obj => obj.UserService.GetUserById(id)).Returns(User);
             _unitOfService.Setup(obj => obj.UserService.CreateUser(User)).Returns(result);
             _unitOfService.Setup(obj => obj.UserService.UpdateUser(User)).Returns(result);
             _unitOfService.Setup(obj => obj.UserService.DisableUser(User.Id, 1)).Returns(true);
@@ -45,7 +51,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact] 
-        public void GetUsers_Return200Status()
+        public void GetUsersRole_Return200Status()
         {
             // Act
             var Result = _userController.GetAllUserByRole(role) as ObjectResult;
@@ -56,7 +62,7 @@ namespace TMS.TEST.Controller
 
         [Fact]
 
-        public void GetUsers_Return500Status()
+        public void GetUsersRole_Return500Status()
         {
             _unitOfService.Setup(obj => obj.UserService.GetUsersByRole(role)).Throws(new InvalidOperationException());
             // Act
@@ -66,7 +72,7 @@ namespace TMS.TEST.Controller
         }
 
         [Fact] 
-        public void GetUsers_Return404Status()
+        public void GetUsersRole_Return404Status()
         {
             _unitOfService.Setup(obj => obj.Validation.RoleExists(User.Id)).Returns(false);
             // Act
@@ -74,6 +80,70 @@ namespace TMS.TEST.Controller
             // Assert
             Assert.Equal(404, Result?.StatusCode);
         }
+
+        [Fact] 
+        public void GetAllUserByDepartment_Return200Status()
+        {
+            // Act
+            var Result = _userController.GetAllUserByDepartment(dept) as ObjectResult;
+            // Assert
+            Assert.Equal(200, Result?.StatusCode);
+        }
+
+
+        [Fact]
+        public void GetAllUserByDepartment_Return404Status()
+        {
+
+            _unitOfService.Setup(obj => obj.Validation.UserExists(User.Id)).Returns(false);
+            // Act
+            var Result = _userController.UpdateUser(User) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void GetAllUserByDepartment_Return500Status()
+        {
+            AddIsValid();
+            _unitOfService.Setup(obj => obj.UserService.GetUsersByDepartment(dept)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _userController.GetAllUserByDepartment(dept) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
+        [Fact] 
+        public void GetUsersByDeptandrole_Return200Status()
+        {
+            // Act
+            var Result = _userController.GetUsersByDeptandrole(dept,role) as ObjectResult;
+            // Assert
+            Assert.Equal(200, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void GetUsersByDeptandrole_Return404Status()
+        {
+
+            _unitOfService.Setup(obj => obj.Validation.RoleExists(User.Id)).Returns(false);
+            // Act
+            var Result = _userController.GetUsersByDeptandrole(dept,role) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void GetUsersByDeptandrole_Return500Status()
+        {
+            AddIsValid();
+            _unitOfService.Setup(obj => obj.UserService.GetUsersByDeptandrole(dept,role)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _userController.GetUsersByDeptandrole(dept,role) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
 
         [Fact]
         public void CreateUsers_Return200Status()
