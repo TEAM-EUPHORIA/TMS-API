@@ -8,7 +8,6 @@ namespace TMS.API.Services
     {
         private readonly UnitOfWork _repo;
 
-
         public DepartmentService(UnitOfWork repo)
         {
             _repo = repo;

@@ -58,7 +58,7 @@ namespace TMS.API.Repositories
         public Course GetCourseById(int courseId)
         {
             var result = dbContext.Courses
-                            .Where(c=>c.Id == courseId)
+                            .Where(c=>c.Id == courseId && c.isDisabled == false)
                             .Include(c=>c.Topics)
                             .FirstOrDefault();
 
@@ -72,7 +72,7 @@ namespace TMS.API.Repositories
         public Topic GetTopicById(int courseId,int topicId,int userId)
         {
             var result = dbContext.Topics
-                            .Where(t=>t.CourseId == courseId && t.TopicId == topicId)
+                            .Where(t=>t.CourseId == courseId && t.TopicId == topicId && t.isDisabled == false)
                             .FirstOrDefault();
 
             var trainerId = dbContext.CourseUsers
@@ -96,7 +96,7 @@ namespace TMS.API.Repositories
         public Topic GetTopicById(int courseId,int topicId)
         {
             var result = dbContext.Topics
-                            .Where(t=>t.CourseId == courseId && t.TopicId == topicId)
+                            .Where(t=>t.CourseId == courseId && t.TopicId == topicId && t.isDisabled == false)
                             .FirstOrDefault();
             return result;
         }
@@ -110,26 +110,26 @@ namespace TMS.API.Repositories
 
         public IEnumerable<Course> GetCourses()
         {
-            return dbContext.Courses.ToList();
+            return dbContext.Courses.Where(c => c.isDisabled == false).ToList();
         }
 
         public IEnumerable<Course> GetCoursesByDepartmentId(int departmentId)
         {
             return dbContext.Courses
-                    .Where(c=>c.DepartmentId == departmentId);
+                    .Where(c=>c.DepartmentId == departmentId && c.isDisabled == false);
         }
 
         public IEnumerable<Course> GetCoursesByUserId(int userId)
         {
            return dbContext.CourseUsers
-                    .Where(cu=>cu.UserId == userId)
+                    .Where(cu=>cu.UserId == userId )
                     .Select(cu=>cu.Course);
         }
 
         public IEnumerable<Topic> GetTopicsByCourseId(int courseId)
         {
             return dbContext.Topics
-                    .Where(t=>t.CourseId == courseId);   
+                    .Where(t=>t.CourseId == courseId && t.isDisabled == false);   
         }
 
         public void UpdateAssignment(Assignment assignment)
