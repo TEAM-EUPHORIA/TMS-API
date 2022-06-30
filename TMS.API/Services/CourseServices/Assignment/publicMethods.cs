@@ -7,10 +7,10 @@ namespace TMS.API.Services
 
     public partial class CourseService
     {
-        private readonly UnitOfWork _repo;
+        private readonly IUnitOfWork _repo;
         
 
-        public CourseService(UnitOfWork repo)
+        public CourseService(IUnitOfWork repo)
         {
             _repo = repo;
             

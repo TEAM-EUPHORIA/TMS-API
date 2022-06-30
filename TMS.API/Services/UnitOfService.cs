@@ -4,7 +4,7 @@ namespace TMS.API.Services
 {
     public class UnitOfService : IUnitOfService
     {
-        private readonly UnitOfWork _repo;
+        private readonly IUnitOfWork _repo;
 
         public IAuthService AuthService { get; set; }
         public IUserService UserService { get; set; }
@@ -15,7 +15,7 @@ namespace TMS.API.Services
         public ICourseService CourseService { get; set; }
         public IValidation Validation { get; set; }
 
-        public UnitOfService(UnitOfWork repo)
+        public UnitOfService(IUnitOfWork repo)
         {
             _repo = repo;
             AuthService = new AuthService(repo);

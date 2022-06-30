@@ -6,10 +6,10 @@ namespace TMS.API.Services
 {
     public partial class ReviewService : IReviewService
     {
-        private readonly UnitOfWork _repo;
+        private readonly IUnitOfWork _repo;
 
 
-        public ReviewService(UnitOfWork repo)
+        public ReviewService(IUnitOfWork repo)
         {
             _repo = repo;
 

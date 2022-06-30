@@ -121,7 +121,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("not found");
         }
 
         /// <summary>
@@ -198,8 +198,11 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     //user.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.UserService.CreateUser(user);
-                    if (res.ContainsKey("IsValid")) return Ok(new { Message = "The User was Created successfully" });
+                    var res = _service.UserService.CreateUser(user); 
+                    if (res.ContainsKey("IsValid")){
+                       var response = _service.UserService.GetUsersByRole(user.RoleId);  
+                       return Ok(new { response });
+                    } 
                 }
                 return BadRequest(IsValid);
             }
@@ -253,7 +256,11 @@ namespace TMS.API.Controllers
                     {
                        // user.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.UserService.UpdateUser(user);
-                        if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The User was Updated successfully" });
+                        if (res.ContainsKey("IsValid") && res.ContainsKey("Exists"))
+                        {
+                            var response = _service.UserService.GetUsersByRole(user.RoleId);
+                            return Ok(new {response});
+                        } 
                     }
                     return BadRequest(IsValid);
                 }

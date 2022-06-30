@@ -139,7 +139,7 @@ namespace TMS.API
             checkIdAndAddEntery(review.TraineeId,nameof(review.TraineeId));
             checkIdAndAddEntery(review.StatusId,nameof(review.StatusId));
             validateAndAddEntery(nameof(review.ReviewDate),review.ReviewDate.ToShortDateString(),dateValidation);
-            validateAndAddEntery(nameof(review.ReviewTime),review.ReviewTime.ToShortTimeString(),timeValidation);
+            validateAndAddEntery(nameof(review.ReviewTime),review.ReviewTime.ToString("hh:mm tt"),timeValidation);
             validateAndAddEntery(nameof(review.Mode),review.Mode,modeValidation);
             if(result.Count==0)
             {
@@ -214,10 +214,11 @@ namespace TMS.API
         }
         public Dictionary<string, string> ValidateUser(User user)
         {
+            departmentExists = true;
             roleExists = RoleExists(user.RoleId);
-            departmentExists = DepartmentExists(user.DepartmentId);
+            if(user.DepartmentId != 0 || user.DepartmentId != null) departmentExists = DepartmentExists((int)user.DepartmentId);
             if(!roleExists) AddEntery(nameof(user.RoleId),"can't find the role");
-            if((roleExists && user.RoleId >= 3) && !departmentExists) AddEntery(nameof(user.DepartmentId),"can't find the department");
+            if(!departmentExists) AddEntery(nameof(user.DepartmentId),"can't find the department");
             if(result.Count==0 && roleExists)
             {
                 validateAndAddEntery(nameof(user.FullName),user.FullName,fullNameValidation);

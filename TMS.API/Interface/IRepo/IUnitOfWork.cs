@@ -10,7 +10,7 @@ namespace TMS.API.Repositories
         IReviewRepository Reviews { get; set; }
         IFeedbackRepository Feedbacks { get; set; }
         IDepartmentRepository Departments { get; set; }
-        Validation Validation { get; set; }
+        IValidation Validation { get; set; }
         Statistics Stats { get; set; }
 
         void Complete();

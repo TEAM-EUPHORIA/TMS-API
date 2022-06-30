@@ -12,7 +12,7 @@ namespace TMS.API.Repositories
         public IReviewRepository Reviews { get; set; }
         public IFeedbackRepository Feedbacks { get; set; }
         public IDepartmentRepository Departments { get; set; }
-        public Validation Validation { get; set; }
+        public IValidation Validation { get; set; }
         public Statistics Stats { get; set; }
         public UnitOfWork(AppDbContext dbContext)
         {

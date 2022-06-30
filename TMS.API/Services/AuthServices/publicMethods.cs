@@ -5,8 +5,8 @@ namespace TMS.API.Services
 {
     public partial class AuthService : IAuthService
     {
-        private readonly UnitOfWork _repo;
-        public AuthService(UnitOfWork repo)
+        private readonly IUnitOfWork _repo;
+        public AuthService(IUnitOfWork repo)
         {
             _repo = repo;
         }

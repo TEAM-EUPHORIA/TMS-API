@@ -91,7 +91,11 @@ namespace TMS.TEST.Controller
         public void CreateTraineeFeedback_Return500Status()
         {
             // Arrange
+<<<<<<< HEAD
       _unitOfService.Setup(obj => obj.Validation.ValidateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
+=======
+            _unitofService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
+>>>>>>> fd1e2fbed4a8664c1c10f0ab9b406c9612f34e19
             // Act
             var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
