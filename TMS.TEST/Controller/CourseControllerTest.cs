@@ -33,6 +33,7 @@ namespace TMS.TEST.Controller
         Assignment assignment = AssignmentMock.GetAssignment();
         int topicId = 3;
         int ownerId = 1;
+        int currentUserId = 1;
 
         private void AddIsValid()
         {
@@ -464,6 +465,7 @@ namespace TMS.TEST.Controller
             var Result = _courseController.DisableTopic(Topic.CourseId, Topic.TopicId) as ObjectResult;
             Assert.Equal(404, Result?.StatusCode);
         }
+        [Fact]
         public void Attendance_Return200Status()
         {
             AddIsValid();
@@ -473,11 +475,59 @@ namespace TMS.TEST.Controller
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
+         [Fact]
+        public void Attendance_Return400Status()
+        {
+            // Arrange
+            _unitofService.Setup(obj => obj.CourseService.MarkAttendance(attendance)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.MarkAttendance(attendance) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+
+        }
+         [Fact]
+        public void Attendance_Return500Status()
+        {
+            AddIsValid();
+            _unitofService.Setup(obj => obj.CourseService.MarkAttendance(attendance)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.MarkAttendance(attendance) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+        
+        
+
         [Fact]
         public void AssignUser_Return200Status()
         {
             var Result = _courseController.AssignUsersToCourse(data) as ObjectResult;
             Assert.Equal(200, Result?.StatusCode);
+        }
+         [Fact]
+        public void AssignUser_Return500Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.CourseService.AddUsersToCourse(data, currentUserId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.AssignUsersToCourse(data) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+        
+
+         [Fact]
+        public void AssignUser_Return404Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.Validation.AssignmentExists(courseId, topicId, ownerId)).Returns(false);
+            // Act
+            var Result = _courseController.UpdateAssignment(assignment) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
         }
 
         [Fact]
@@ -487,6 +537,29 @@ namespace TMS.TEST.Controller
             Assert.Equal(200, Result?.StatusCode);
 
         }
+         [Fact]
+        public void RemoveUser_Return500Status()
+        {
+            AddIsValid();
+            _unitofService.Setup(obj => obj.CourseService.RemoveUsersFromCourse(data, currentUserId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.RemoveUsersFromCourse(data) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+         [Fact]
+        public void RemoveUser_Return404Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.Validation.CourseExists(courseId)).Returns(false);
+            // Act
+            var Result = _courseController.RemoveUsersFromCourse(data) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
+        }
+
+    
         [Fact]
         public void GetAssignmentsByTopicId_Return200Status()
         {
@@ -494,13 +567,61 @@ namespace TMS.TEST.Controller
             Assert.Equal(200, Result?.StatusCode);
         }
 
+       [Fact]
+        public void GetAssignmentsByTopicId_Return404Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.Validation.TopicExists(topicId, courseId)).Returns(false);
+            // Act
+            var Result = _courseController.GetAssignmentsByTopicId(courseId, topicId) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
+        }
+
+
+        [Fact]
+        public void GetAssignmentsByTopicId_Return500Status()
+        {
+            _unitofService.Setup(obj => obj.CourseService.GetAssignmentsByTopicId(topicId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.GetAssignmentsByTopicId(courseId, topicId) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
+
         [Fact]
         public void GetAssignmentByCourseIdTopicIdAndOwnerId_Return200Status()
         {
             AddIsValid();
             var Result = _courseController.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId) as ObjectResult;
-            Assert.Equal(200, Result?.StatusCode);
+            Assert.
+            Equal(200, Result?.StatusCode);
         }
+
+          [Fact]
+        public void GetAssignmentByCourseIdTopicIdAndOwnerId_Return404Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.Validation.AssignmentExists(courseId, topicId, ownerId)).Returns(false);
+            // Act
+            var Result = _courseController.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
+        }
+        [Fact]
+        public void GetAssignmentByCourseIdTopicIdAndOwnerId_Return500Status()
+        {
+            _unitofService.Setup(obj => obj.CourseService.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
+        
 
         [Fact]
         public void CreateAssignment_Return200Status()
@@ -510,6 +631,31 @@ namespace TMS.TEST.Controller
             Assert.Equal(200, Result?.StatusCode);
         }
 
+         [Fact]
+        public void  CreateAssignment_Return400Status_AddExists()
+        {
+            AddExists();
+            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment)).Returns(result);
+            // Act
+            var Result = _courseController.CreateAssignment(assignment) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
+       
+
+        [Fact]
+        public void CreateAssignment_Return500Status()
+        {
+            AddIsValid();
+            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.CreateAssignment(assignment) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
+
         [Fact]
         public void UpdateAssignment_Return200Status()
         {
@@ -518,6 +664,43 @@ namespace TMS.TEST.Controller
             var Result = _courseController.UpdateAssignment(assignment) as ObjectResult;
             Assert.Equal(200, Result?.StatusCode);
         }
+
+         [Fact]
+        public void UpdateAssignment_Return500Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _courseController.UpdateAssignment(assignment) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void UpdateAssignment_Return404Status()
+        {
+            AddIsValid();
+            AddExists();
+            _unitofService.Setup(obj => obj.Validation.AssignmentExists(courseId, topicId, ownerId)).Returns(false);
+            // Act
+            var Result = _courseController.UpdateAssignment(assignment) as ObjectResult;
+            // Assert
+            Assert.Equal(404, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void UpdateAssignment_Return400Status()
+        {
+            //AddIsValid();
+            // AddExists();
+            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment)).Returns(result);
+            // Act
+            var Result = _courseController.UpdateAssignment(assignment) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
 
     }
 }

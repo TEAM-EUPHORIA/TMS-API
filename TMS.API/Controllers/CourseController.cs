@@ -542,10 +542,17 @@ namespace TMS.API.Controllers
             var courseExists = _service.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
+                try{
                 //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                 int currentUserId = 1;
                 var result = _service.CourseService.AddUsersToCourse(data,currentUserId);
                 return Ok(result);
+                }
+                catch(InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(AssignUsersToCourse));
+                    return Problem();
+                }
             }
             return NotFound();
         }
@@ -585,13 +592,21 @@ namespace TMS.API.Controllers
         {
             var courseExists = _service.Validation.CourseExists(data.CourseId);
             if(courseExists)
-            {
+            { 
+                try
+                {
                 //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                 int currentUserId = 1;
                 var result = _service.CourseService.RemoveUsersFromCourse(data,currentUserId);
                 return Ok(result);
             }
-            return NotFound();
+            catch(InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(RemoveUsersFromCourse));
+                    return Problem();
+                }
+            }
+            return NotFound("Not found");
         }
 
         /// <summary>
@@ -625,8 +640,10 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("Not found");
         }
+
+        
 
         /// <summary>
         /// Gets a single assigments in a topic by courseId, topicId and ownerId
@@ -661,7 +678,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("Happy");
         }
 
         /// <summary>
@@ -762,7 +779,7 @@ namespace TMS.API.Controllers
                 }
                 return Problem();
             }
-            return NotFound();
+            return NotFound("Not found");
         }
 
         [HttpPut("attendance")]
