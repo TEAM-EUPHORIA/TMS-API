@@ -46,7 +46,7 @@ namespace TMS.TEST.Controller
 
         [Fact]
 
-        public void Login_Return400Status()
+        public void Login_Return200Status()
         {
             AddIsValid();
             // Act

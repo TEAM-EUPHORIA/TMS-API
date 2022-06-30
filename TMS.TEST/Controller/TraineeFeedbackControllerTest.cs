@@ -67,7 +67,10 @@ namespace TMS.TEST.Controller
             //    Assert
             Assert.Equal(404,Result?.StatusCode);
         }
-    [Fact]
+    
+    
+    
+        [Fact]
         public void CreateTraineeFeedback()
         {
             AddIsValid();
@@ -76,26 +79,12 @@ namespace TMS.TEST.Controller
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
-    
-    
-        // [Fact]
-        // public void CreateTraineeFeedback()
-        // {
-        //     AddIsValid();
-        //     // Act
-        //     var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
-        //     // Assert
-        //     Assert.Equal(200, Result?.StatusCode);
-        // }
          [Fact]
         public void CreateTraineeFeedback_Return500Status()
         {
+             AddIsValid();
             // Arrange
-<<<<<<< HEAD
-      _unitOfService.Setup(obj => obj.Validation.ValidateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
-=======
-            _unitofService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
->>>>>>> fd1e2fbed4a8664c1c10f0ab9b406c9612f34e19
+            _unitOfService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
             // Act
             var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
