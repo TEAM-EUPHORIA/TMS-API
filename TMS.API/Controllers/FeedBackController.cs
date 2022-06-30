@@ -52,7 +52,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("NotFound");
         }
         
         /// <summary>
@@ -151,7 +151,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("NotFound");
         }
         
         /// <summary>
@@ -188,7 +188,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("NotFound");
         }
         
         /// <summary>
@@ -289,7 +289,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("NotFound");
 
         }
     }

@@ -29,6 +29,8 @@ namespace TMS.TEST.Controller
         {
             result.Add("Exists", "true");
         }
+         int courseId = 1;
+         int traineeId=1;
         public CourseFeedbackControllerTest()
         {
             _feedbackController = new FeedBackController(_unitOfService.Object, _Logger.Object);
@@ -36,17 +38,59 @@ namespace TMS.TEST.Controller
             // Arrange
             _unitOfService.Setup(obj => obj.Validation.CourseFeedbackExists(CourseFeedback.CourseId,CourseFeedback.TraineeId)).Returns(true);
             _unitOfService.Setup(obj => obj.Validation.ValidateCourseFeedback(CourseFeedback)).Returns(result);
-
+             
             _unitOfService.Setup(obj => obj.FeedbackService.CreateCourseFeedback(CourseFeedback)).Returns(result);
             _unitOfService.Setup(obj => obj.FeedbackService.UpdateCourseFeedback(CourseFeedback)).Returns(result);
+            _unitOfService.Setup(obj => obj.FeedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId)).Returns(CourseFeedback);
+          
          
 
         }
-
+        [Fact]
+        public void GetCourseFeedbackByCourseIdAndTraineeId_Return200Status()
+        {
+            //AddIsValid();
+            // Act
+            var Result = _feedbackController.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId) as ObjectResult;
+            // Assert
+            Assert.Equal(200, Result?.StatusCode);
+        }
+        // [Fact]
+        // public void GetCourseFeedbackByCourseIdAndTraineeId_500ReturnStatus()
+        // {
+        //     _unitOfService.Setup(obj=> obj.FeedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId)).Throws(new InvalidOperationException());
+        //     // Act        
+        //     AddExists();
+           
+        //     var Result = _feedbackController.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId) as ObjectResult;
+        //     // Assert
+        //     Assert.Equal(500, Result?.StatusCode);
+        // }
+        [Fact]
+        public void GetCourseFeedbackByCourseIdAndTraineeId_Return500Status()
+        {
+            _unitOfService.Setup(obj => obj.FeedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId, traineeId)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _feedbackController.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+          [Theory] 
+          [InlineData(6,7)]
+        
+        public void GetCourseFeedbackByCourseIdAndTraineeId_Return404Status(int courseId,int traineeId)
+        {
+            // AddExists();
+             _unitOfService.Setup(obj => obj.Validation.CourseFeedbackExists(courseId,traineeId)).Returns(false);
+            // Act
+            var Result = _feedbackController.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId) as ObjectResult;
+            //    Assert
+            Assert.Equal(404,Result?.StatusCode);
+        }
 
     
         [Fact]
-        public void CreateCourseFeedback()
+        public void CreateCourseFeedback_Return200Status()
         {
             AddIsValid();
             // Act
@@ -65,9 +109,33 @@ namespace TMS.TEST.Controller
             Assert.Equal(500, Result?.StatusCode);
 
         }
+         [Fact]
+        public void CreateCourseFeedback_Return400Status_AddExists()
+        {
+            // AddExists();
+            _unitofService.Setup(obj => obj.FeedbackService. CreateCourseFeedback(CourseFeedback)).Returns(result);
+            // Act
+            var Result = _feedbackController.CreateCourseFeedback(CourseFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
 
         [Fact]
-        public void UpdateCourseFeedback()
+        public void CreateCourseFeedback_Return400Status_IsValid()
+        {
+            //  AddIsValid();
+         _unitofService.Setup(obj => obj.FeedbackService.CreateCourseFeedback(CourseFeedback)).Returns(result);
+            // Act
+            var Result = _feedbackController.CreateCourseFeedback(CourseFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+        
+       
+
+
+        [Fact]
+        public void UpdateCourseFeedback_Return200Status()
         {
             AddIsValid();
             AddExists();
@@ -76,7 +144,54 @@ namespace TMS.TEST.Controller
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
+      
+        [Fact]
+        
+        public void UpdateCourseFeedback_Return500Status()
+        {
+            // Arrange
+            _unitOfService.Setup(obj => obj.Validation.ValidateCourseFeedback(CourseFeedback)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _feedbackController.UpdateCourseFeedback(CourseFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
 
+        }
+        [Fact]
+        public void UpdateCourseFeedback_Return400Status_AddExists()
+        {
+            // AddExists();
+            _unitofService.Setup(obj => obj.FeedbackService. UpdateCourseFeedback(CourseFeedback)).Returns(result);
+            // Act
+            var Result = _feedbackController.UpdateCourseFeedback(CourseFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void UpdateCourseFeedback_Return400Status_IsValid()
+        {
+            //  AddIsValid();
+         _unitofService.Setup(obj => obj.FeedbackService.UpdateCourseFeedback(CourseFeedback)).Returns(result);
+            // Act
+            var Result = _feedbackController.UpdateCourseFeedback(CourseFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
+         [Fact] 
+        
+        public void UpdateCourseFeedback_Return404Status()
+        {
+             //AddExists();
+            _unitOfService.Setup(obj => obj.Validation.CourseFeedbackExists(CourseFeedback.CourseId,CourseFeedback.TraineeId)).Returns(false);
+            // Act
+            var Result = _feedbackController.UpdateCourseFeedback(CourseFeedback) as ObjectResult;
+            //    Assert
+            Assert.Equal(404,Result?.StatusCode);
+        }
+
+       
         
         
     }
