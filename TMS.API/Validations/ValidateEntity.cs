@@ -44,6 +44,9 @@ namespace TMS.API
                 AddEnteryValidateAttendance(courseExists,topicExists,userExists);
                 if(courseExists && topicExists && userExists)
                 {
+                    if(attendance.Status == false){
+                        attendance.Status = true;
+                    };
                     attendanceExists = AttendanceExists(attendance.CourseId,attendance.TopicId,attendance.OwnerId);                   
                     if(attendanceExists) AddEntery("Exists","true");
                 }

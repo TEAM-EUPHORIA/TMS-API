@@ -349,8 +349,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                   // int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                   int userId = 1;
+                   int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                //    int userId = 1;
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
@@ -784,7 +784,7 @@ namespace TMS.API.Controllers
 
         [HttpPut("attendance")]
         // [ValidateAntiForgeryToken]
-        // [Authorize(Roles ="Trainer, Trainee")]
+        [Authorize(Roles ="Trainer, Trainee")]
         public IActionResult MarkAttendance(Attendance attendance)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -795,9 +795,9 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    int currentUserId = 1;
-                    attendance.CreatedBy = currentUserId;
-                    attendance.OwnerId = currentUserId;
+                    // int currentUserId = 1;
+                    // attendance.CreatedBy = currentUserId;
+                    // attendance.OwnerId = currentUserId;
                     var res = _service.CourseService.MarkAttendance(attendance);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The attendance was marked successfully" });
                 }
