@@ -10,7 +10,7 @@ namespace TMS.API
         bool CourseExists(int courseId);
         bool CourseFeedbackExists(int courseId, int traineeId);
         bool CourseUserExists(int courseId, int userId, int roleId);
-        bool DepartmentExists(int? departmentId);
+        bool DepartmentExists(int departmentId);
         bool IsCourseNameAvailable(int courseId, int departmentId, string name);
         bool IsTopicNameAvailabe(int topicId, int courseId, string name);
         bool MOMExists(int reviewId, int traineeId);

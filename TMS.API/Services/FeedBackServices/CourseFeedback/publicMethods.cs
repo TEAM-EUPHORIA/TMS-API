@@ -6,10 +6,10 @@ namespace TMS.API.Services
 {
     public partial class FeedbackService : IFeedbackService
     {
-        private readonly UnitOfWork _repo;
+        private readonly IUnitOfWork _repo;
 
 
-        public FeedbackService(UnitOfWork repo)
+        public FeedbackService(IUnitOfWork repo)
         {
             _repo = repo;
 

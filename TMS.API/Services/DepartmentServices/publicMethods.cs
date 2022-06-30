@@ -6,10 +6,10 @@ namespace TMS.API.Services
 {
     public partial class DepartmentService : IDepartmentService
     {
-        private readonly UnitOfWork _repo;
+        private readonly IUnitOfWork _repo;
 
 
-        public DepartmentService(UnitOfWork repo)
+        public DepartmentService(IUnitOfWork repo)
         {
             _repo = repo;
 

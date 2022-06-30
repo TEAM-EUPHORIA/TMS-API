@@ -2,7 +2,7 @@ using TMS.BAL;
 
 namespace TMS.API.Repositories
 {
-    class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : IDepartmentRepository
     {
         private readonly AppDbContext dbContext;
 

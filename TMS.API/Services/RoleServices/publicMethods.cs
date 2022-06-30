@@ -6,10 +6,10 @@ namespace TMS.API.Services
 {
     public class RoleService : IRoleService
     {
-        private readonly UnitOfWork _repo;
+        private readonly IUnitOfWork _repo;
 
 
-        public RoleService(UnitOfWork repo)
+        public RoleService(IUnitOfWork repo)
         {
             _repo = repo;
 

@@ -214,10 +214,11 @@ namespace TMS.API
         }
         public Dictionary<string, string> ValidateUser(User user)
         {
+            departmentExists = true;
             roleExists = RoleExists(user.RoleId);
-            departmentExists = DepartmentExists(user.DepartmentId);
+            if(user.DepartmentId != 0 || user.DepartmentId != null) departmentExists = DepartmentExists((int)user.DepartmentId);
             if(!roleExists) AddEntery(nameof(user.RoleId),"can't find the role");
-            if((roleExists && user.RoleId >= 3) && !departmentExists) AddEntery(nameof(user.DepartmentId),"can't find the department");
+            if(!departmentExists) AddEntery(nameof(user.DepartmentId),"can't find the department");
             if(result.Count==0 && roleExists)
             {
                 validateAndAddEntery(nameof(user.FullName),user.FullName,fullNameValidation);

@@ -31,7 +31,7 @@ namespace TMS.API
             return dbContext.Topics.Any(c=>c.TopicId!=topicId && c.CourseId == courseId && c.Name==name);
         } 
 
-        public bool DepartmentExists(int? departmentId)
+        public bool DepartmentExists(int departmentId)
         {
             return dbContext.Departments.Any(d=>d.Id == departmentId);
         } 
