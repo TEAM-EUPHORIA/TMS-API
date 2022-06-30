@@ -282,7 +282,7 @@ namespace TMS.API.Controllers
                     //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     int currentUserId = 1;
                     var res = _service.CourseService.DisableCourse(courseId,currentUserId);
-                    if (res) return Ok("The Course disabled was successfully");
+                    if (res) return Ok(new {message = "The User was Disabled successfully"});
                 }
                 catch (InvalidOperationException ex)
                 {
