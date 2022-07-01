@@ -152,5 +152,19 @@ namespace TMS.API.Repositories
         {
             dbContext.Attendances.Add(attendance);
         }
+
+        public object GetCourseUsers(int courseId)
+        {
+            var data = dbContext.CourseUsers.Where(cu => cu.CourseId == courseId).Include(cu => cu.User).Select(data => new {
+                courseId = data.CourseId,
+                department = data.Course.Department.Name,
+                courseName = data.Course.Name,
+                id = data.UserId,
+                fullName = data.User.FullName,
+                roleId = 4
+            });
+            
+            return data;
+        }
     }
 }
