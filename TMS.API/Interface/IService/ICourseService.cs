@@ -18,6 +18,7 @@ namespace TMS.API.Services
         IEnumerable<Course> GetCourses();
         IEnumerable<Course> GetCoursesByDepartmentId(int departmentId);
         IEnumerable<Course> GetCoursesByUserId(int userId);
+        object GetCourseUsers(int courseId);
         Topic GetTopicById(int courseId, int topicId, int userId);
         IEnumerable<Topic> GetTopicsByCourseId(int courseId);
         Dictionary<string, string> MarkAttendance(Attendance attendance);

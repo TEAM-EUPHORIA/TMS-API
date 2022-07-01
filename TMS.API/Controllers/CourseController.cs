@@ -593,6 +593,17 @@ namespace TMS.API.Controllers
             }
             return NotFound();
         }
+        [HttpGet("getCourseUser/{courseId:int}")]
+        public IActionResult GetCourseUser(int courseId)
+        {
+            var courseExists = _service.Validation.CourseExists(courseId);
+            if(courseExists)
+            {
+                var result = _service.CourseService.GetCourseUsers(courseId);
+                return Ok(result);
+            }
+            return NotFound();
+        }
 
         /// <summary>
         /// Gets a list of assigments in a topic by courseId and topicId
