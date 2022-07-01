@@ -52,7 +52,7 @@ namespace TMS.API.Repositories
         {
             return dbContext.Reviews
                     .Where(r=>r.StatusId == statusId)
-                    .Include(r=>r.Status);
+                    .Include(r=>r.Status).Include(r=>r.Reviewer).Include(r=>r.Trainee);
         }
 
         public void UpdateMom(MOM mom)

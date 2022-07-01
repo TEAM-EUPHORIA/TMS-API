@@ -123,7 +123,7 @@ namespace TMS.API.Controllers
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the review. the review already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    review.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    //review.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.ReviewService.CreateReview(review);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Created successfully" });
                 }

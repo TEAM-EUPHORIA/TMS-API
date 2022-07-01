@@ -282,7 +282,7 @@ namespace TMS.API.Controllers
                     //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     int currentUserId = 1;
                     var res = _service.CourseService.DisableCourse(courseId,currentUserId);
-                    if (res) return Ok("The Course disabled was successfully");
+                    if (res) return Ok(new {message = "The User was Disabled successfully"});
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -349,8 +349,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                   // int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                   int userId = 1;
+                   int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                //    int userId = 1;
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
@@ -542,10 +542,17 @@ namespace TMS.API.Controllers
             var courseExists = _service.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
+                try{
                 //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                 int currentUserId = 1;
                 var result = _service.CourseService.AddUsersToCourse(data,currentUserId);
                 return Ok(result);
+                }
+                catch(InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(AssignUsersToCourse));
+                    return Problem();
+                }
             }
             return NotFound();
         }
@@ -585,13 +592,21 @@ namespace TMS.API.Controllers
         {
             var courseExists = _service.Validation.CourseExists(data.CourseId);
             if(courseExists)
-            {
+            { 
+                try
+                {
                 //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                 int currentUserId = 1;
                 var result = _service.CourseService.RemoveUsersFromCourse(data,currentUserId);
                 return Ok(result);
             }
-            return NotFound();
+            catch(InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(RemoveUsersFromCourse));
+                    return Problem();
+                }
+            }
+            return NotFound("Not found");
         }
         [HttpGet("getCourseUser/{courseId:int}")]
         public IActionResult GetCourseUser(int courseId)
@@ -636,8 +651,10 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("Not found");
         }
+
+        
 
         /// <summary>
         /// Gets a single assigments in a topic by courseId, topicId and ownerId
@@ -672,7 +689,7 @@ namespace TMS.API.Controllers
                     return Problem();
                 }
             }
-            return NotFound();
+            return NotFound("Happy");
         }
 
         /// <summary>
@@ -773,12 +790,12 @@ namespace TMS.API.Controllers
                 }
                 return Problem();
             }
-            return NotFound();
+            return NotFound("Not found");
         }
 
         [HttpPut("attendance")]
         // [ValidateAntiForgeryToken]
-        // [Authorize(Roles ="Trainer, Trainee")]
+        [Authorize(Roles ="Trainer, Trainee")]
         public IActionResult MarkAttendance(Attendance attendance)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -789,9 +806,9 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    int currentUserId = 1;
-                    attendance.CreatedBy = currentUserId;
-                    attendance.OwnerId = currentUserId;
+                    // int currentUserId = 1;
+                    // attendance.CreatedBy = currentUserId;
+                    // attendance.OwnerId = currentUserId;
                     var res = _service.CourseService.MarkAttendance(attendance);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The attendance was marked successfully" });
                 }

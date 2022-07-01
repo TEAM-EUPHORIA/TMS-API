@@ -29,6 +29,9 @@ namespace TMS.TEST.Controller
         {
             result.Add("Exists", "true");
         }
+        int courseId = 1;
+         int traineeId=1;
+         int trainerId=1;
         public TraineeFeedbackControllerTest()
         {
             _feedbackController = new FeedBackController(_unitOfService.Object, _Logger.Object);
@@ -39,11 +42,33 @@ namespace TMS.TEST.Controller
 
             _unitOfService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Returns(result);
             _unitOfService.Setup(obj => obj.FeedbackService.UpdateTraineeFeedback(TraineeFeedback)).Returns(result);
-         
+         _unitOfService.Setup(obj => obj.FeedbackService.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(courseId,traineeId,trainerId)).Returns(TraineeFeedback);
 
+         }
+         [Fact]
+        public void GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId_Return200Status()
+        {
+           
+            // Act
+           _unitOfService.Setup(obj => obj.Validation.TraineeFeedbackExists(courseId,traineeId,trainerId)).Returns(true);
+            var Result = _feedbackController.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(courseId,traineeId,trainerId) as ObjectResult;
+            // Assert
+            Assert.Equal(200, Result?.StatusCode);
         }
-
-
+       
+          [Theory] 
+          [InlineData(6,7,8)]
+            public void GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId_Return404Status(int courseId,int traineeId,int trainerId)
+        {
+            // AddExists();
+             _unitOfService.Setup(obj => obj.Validation.TraineeFeedbackExists(courseId,traineeId,trainerId)).Returns(false);
+            // Act
+            var Result = _feedbackController.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(courseId,traineeId,trainerId) as ObjectResult;
+            //    Assert
+            Assert.Equal(404,Result?.StatusCode);
+        }
+    
+    
     
         [Fact]
         public void CreateTraineeFeedback()
@@ -57,13 +82,35 @@ namespace TMS.TEST.Controller
          [Fact]
         public void CreateTraineeFeedback_Return500Status()
         {
+             AddIsValid();
             // Arrange
-            _unitofService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
+            _unitOfService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
             // Act
             var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
             Assert.Equal(500, Result?.StatusCode);
 
+        }
+         [Fact]
+        public void CreateTraineeFeedback_Return400Status_AddExists()
+        {
+            // AddExists();
+            _unitofService.Setup(obj => obj.FeedbackService. CreateTraineeFeedback(TraineeFeedback)).Returns(result);
+            // Act
+            var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void CreateTraineeFeedback_Return400Status_IsValid()
+        {
+            //  AddIsValid();
+         _unitofService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Returns(result);
+            // Act
+            var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
         }
 
         [Fact]
@@ -76,6 +123,53 @@ namespace TMS.TEST.Controller
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
+         [Fact]
+        
+        public void UpdateTraineeFeedback_Return500Status()
+        {
+            // Arrange
+            _unitOfService.Setup(obj => obj.Validation.ValidateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _feedbackController.UpdateTraineeFeedback(TraineeFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+
+        }
+         [Fact]
+        public void UpdateTraineeFeedback_Return400Status_AddExists()
+        {
+            // AddExists();
+            _unitofService.Setup(obj => obj.FeedbackService. UpdateTraineeFeedback(TraineeFeedback)).Returns(result);
+            // Act
+            var Result = _feedbackController.UpdateTraineeFeedback(TraineeFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+
+        [Fact]
+        public void UpdateTraineeFeedback_Return400Status_IsValid()
+        {
+            //  AddIsValid();
+         _unitofService.Setup(obj => obj.FeedbackService.UpdateTraineeFeedback(TraineeFeedback)).Returns(result);
+            // Act
+            var Result = _feedbackController.UpdateTraineeFeedback(TraineeFeedback) as ObjectResult;
+            // Assert
+            Assert.Equal(400, Result?.StatusCode);
+        }
+        //  [Fact]
+        // public void UpdateTraineeFeedback_Return404Status()
+        // {
+        //    // AddIsValid();
+        //    // AddExists();
+        //     _unitofService.Setup(obj => obj.Validation.TraineeFeedbackExists( courseId, traineeId, trainerId)).Returns(false);
+        //     // Act
+        //     var Result = _feedbackController.UpdateTraineeFeedback(TraineeFeedback) as ObjectResult;
+        //     // Assert
+        //     Assert.Equal(404, Result?.StatusCode);
+        // }
+
+
+        
 
         
         

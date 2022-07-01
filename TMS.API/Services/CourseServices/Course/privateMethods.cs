@@ -48,6 +48,7 @@ namespace TMS.API.Services
         }
         private void SetUpCourseDetails(Course course)
         {
+            course.isDisabled = false;
             var user = _repo.Users.GetUserById(course.TrainerId);
             var courseTrainer = new CourseUsers(){
                 CourseId=course.Id,
@@ -67,6 +68,7 @@ namespace TMS.API.Services
             dbCourse.Name = course.Name;
             dbCourse.Duration = course.Duration;
             dbCourse.Description = course.Description;
+            dbCourse.isDisabled = course.isDisabled;
             dbCourse.UpdatedOn = DateTime.Now;
         }
         private void disable(int currentUserId,Course dbCourse)

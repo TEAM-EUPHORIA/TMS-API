@@ -67,12 +67,13 @@ namespace TMS.API.Repositories
                                 .Include(u=>u.User)
                                 .Select(cu=>cu.User)
                                 .FirstOrDefault();
+            result.TrainerId = result.Trainer.Id;
             return result;
         }
         public Topic GetTopicById(int courseId,int topicId,int userId)
         {
             var result = dbContext.Topics
-                            .Where(t=>t.CourseId == courseId && t.TopicId == topicId && t.isDisabled == false)
+                            .Where(t=>t.CourseId == courseId && t.TopicId == topicId).Include(a => a.Attendances)
                             .FirstOrDefault();
 
             var trainerId = dbContext.CourseUsers

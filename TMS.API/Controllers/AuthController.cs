@@ -49,13 +49,14 @@ namespace TMS.API
                     var result = _service.AuthService.Login(user);
                     if(result is not null) return (Ok(result));
                 }
-                return Unauthorized();
+                
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(AuthController), nameof(Login));
                 return Problem();
             }
+            return Unauthorized("Unauthorized");
         }
     }
 }

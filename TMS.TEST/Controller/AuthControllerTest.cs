@@ -8,6 +8,7 @@ using Xunit;
 using TMS.BAL;
 using TMS.API;
 using TMS.API.ViewModels;
+using System;
 
 namespace TMS.TEST.Controller
 {
@@ -19,6 +20,7 @@ namespace TMS.TEST.Controller
         private readonly Dictionary<string,string> result = new();
      
         readonly LoginModel user = AuthMock.Login();
+        private readonly object _unityService;
 
         private void token()
         {
@@ -28,7 +30,7 @@ namespace TMS.TEST.Controller
         {
             result.Add("IsValid", "true");
         }
-       
+          
         public AuthControllerTest()
         {
             _authController = new AuthController(_unitOfService.Object, _Logger.Object);
@@ -44,7 +46,7 @@ namespace TMS.TEST.Controller
 
         [Fact]
 
-        public void Login()
+        public void Login_Return200Status()
         {
             AddIsValid();
             // Act
@@ -53,6 +55,28 @@ namespace TMS.TEST.Controller
             Assert.Equal(200, Result?.StatusCode);
         }
        
+         [Fact]
+        public void Login_Return401Status()
+        {
+          
+            // Act
+            var Result = _authController.Login(user) as ObjectResult;
+            // Assert
+            Assert.Equal(401, Result?.StatusCode);
+        }
         
-    }
+        [Fact]
+        public void Login_Return500Status()
+        {
+            AddIsValid();
+             
+            _unitOfService.Setup(obj => obj.AuthService.Login( user)).Throws(new InvalidOperationException());
+            // Act
+            var Result = _authController.Login(user) as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
+        }
+
+
+}
 }

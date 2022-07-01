@@ -6,6 +6,7 @@ using Moq;
 using TMS.API.Controllers;
 using Xunit;
 using TMS.BAL;
+using System;
 
 namespace TMS.TEST.Controller
 {
@@ -38,13 +39,15 @@ namespace TMS.TEST.Controller
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
-      
-        
-
-        public override bool Equals(object? obj)
+     [Fact]
+        public void GetRoles_Return500Status()
         {
-            return obj is RoleControllerTest test &&
-                   EqualityComparer<Role>.Default.Equals(Role, test.Role);
+            _unitOfService.Setup(obj => obj.RoleService.GetRoles()).Throws<InvalidOperationException>();
+            // Act
+            var Result = _roleController.GetRoles() as ObjectResult;
+            // Assert
+            Assert.Equal(500, Result?.StatusCode);
         }
+        
     }
 }

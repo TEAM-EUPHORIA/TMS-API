@@ -14,6 +14,8 @@ namespace TMS.API.Repositories
         public IDepartmentRepository Departments { get; set; }
         public IValidation Validation { get; set; }
         public Statistics Stats { get; set; }
+        public object DepartmentService { get; set; }
+
         public UnitOfWork(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
