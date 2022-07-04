@@ -42,6 +42,10 @@ namespace TMS.API.Services
         {
             return dbContext.CourseUsers.Where(cu=>cu.UserId == userId && cu.Course.isDisabled == false).Count();
         }
+        public int GetCourseCount()
+        {
+            return dbContext.Courses.Where(c=>c.isDisabled == false).Count();
+        }
         public int GetCompletedReviews(int userId)
         {
             return dbContext.Reviews.Where(r=>r.StatusId == 2 && r.ReviewerId == userId && r.Reviewer.isDisabled == false).Count();
