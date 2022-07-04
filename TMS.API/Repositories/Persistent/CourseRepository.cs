@@ -67,12 +67,13 @@ namespace TMS.API.Repositories
                                 .Include(u=>u.User)
                                 .Select(cu=>cu.User)
                                 .FirstOrDefault();
+            result.TrainerId = result.Trainer.Id;
             return result;
         }
         public Topic GetTopicById(int courseId,int topicId,int userId)
         {
             var result = dbContext.Topics
-                            .Where(t=>t.CourseId == courseId && t.TopicId == topicId && t.isDisabled == false)
+                            .Where(t=>t.CourseId == courseId && t.TopicId == topicId).Include(a => a.Attendances)
                             .FirstOrDefault();
 
             var trainerId = dbContext.CourseUsers
@@ -150,6 +151,20 @@ namespace TMS.API.Repositories
         public void MarkAttendance(Attendance attendance)
         {
             dbContext.Attendances.Add(attendance);
+        }
+
+        public object GetCourseUsers(int courseId)
+        {
+            var data = dbContext.CourseUsers.Where(cu => cu.CourseId == courseId).Include(cu => cu.User).Select(data => new {
+                courseId = data.CourseId,
+                department = data.Course.Department.Name,
+                courseName = data.Course.Name,
+                id = data.UserId,
+                fullName = data.User.FullName,
+                roleId = 4
+            });
+            
+            return data;
         }
     }
 }

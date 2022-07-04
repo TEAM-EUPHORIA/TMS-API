@@ -74,6 +74,15 @@ namespace TMS.API.Services
             }
             return courseExists;        
         }
+        public object GetCourseUsers(int courseId)
+        {
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            if(courseExists)
+            {
+                return _repo.Courses.GetCourseUsers(courseId);
+            }
+            else throw new ArgumentException(nameof(courseId));
+        }
         public Dictionary<string,List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data, int currentUserId)
         {
             var courseExists = _repo.Validation.CourseExists(data.CourseId);

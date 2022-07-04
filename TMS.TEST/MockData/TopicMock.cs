@@ -32,7 +32,8 @@ namespace TMS.TEST
                 new Topic(){
                     TopicId= 3,
                     Name="Angular",
-                    CourseId = 1
+                    CourseId = 1,
+                    isDisabled = false
                 };
 
         }

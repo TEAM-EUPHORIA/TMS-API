@@ -282,7 +282,7 @@ namespace TMS.API.Controllers
                     //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     int currentUserId = 1;
                     var res = _service.CourseService.DisableCourse(courseId,currentUserId);
-                    if (res) return Ok("The Course disabled was successfully");
+                    if (res) return Ok(new {message = "The User was Disabled successfully"});
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -349,8 +349,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                   // int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                   int userId = 1;
+                   //int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int userId = 1;
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
@@ -608,6 +608,17 @@ namespace TMS.API.Controllers
             }
             return NotFound("Not found");
         }
+        [HttpGet("getCourseUser/{courseId:int}")]
+        public IActionResult GetCourseUser(int courseId)
+        {
+            var courseExists = _service.Validation.CourseExists(courseId);
+            if(courseExists)
+            {
+                var result = _service.CourseService.GetCourseUsers(courseId);
+                return Ok(result);
+            }
+            return NotFound();
+        }
 
         /// <summary>
         /// Gets a list of assigments in a topic by courseId and topicId
@@ -795,7 +806,7 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    int currentUserId = 1;
+                     int currentUserId = 1;
                     attendance.CreatedBy = currentUserId;
                     attendance.OwnerId = currentUserId;
                     var res = _service.CourseService.MarkAttendance(attendance);

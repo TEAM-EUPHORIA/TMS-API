@@ -23,29 +23,7 @@ namespace TMS.TEST.Services
             _courseFeedbacks = CourseFeedbackMock.GetCourseFeedbacks();
             _courseFeedback = CourseFeedbackMock.GetCourseFeedback();
         }
-        // [Fact]
-        // public void  CreateCourseFeedback()
-        // {
-        //     // Arrange
-        //     _unitOfWork.Setup(obj => obj.Feedbacks.CreateCourseFeedback()).Returns(_courseFeedback);
-        //     // Act
-        //     var result = _feedbackService.CreateCourseFeedback();
-        //     // Assert
-        //     Assert.Equal(_courseFeedback,result);
-        // }
-
-    
-        // [Fact]
-        // public void GetCourseFeedbackByCourseIdAndTraineeId()
-        // {
-        //     // Arrange
-        //     _unitOfWork.Setup(obj => obj.Validation. CourseFeedbackExists(_courseFeedback.CourseId!,_courseFeedback.TraineeId!)).Returns(true);
-        //     _unitOfWork.Setup(obj => obj.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(_courseFeedback.CourseId!,_courseFeedback.TraineeId!)).Returns(_courseFeedback);
-        //     // Act
-        //     var result = _feedbackService.GetCourseFeedbackByCourseIdAndTraineeId(_courseFeedback.CourseId,_courseFeedback.TraineeId);
-        //     // Assert
-        //     Assert.Equal(_courseFeedback,result);
-        // }
+       
           [Fact]
        public void GetCourseFeedbackByCourseIdAndTraineeId()
        {
