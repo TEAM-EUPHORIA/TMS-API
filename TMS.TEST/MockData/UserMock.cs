@@ -26,7 +26,8 @@ namespace TMS.TEST
             return new User ()
             {
                 Id = 1,
-                FullName= "Thomas"
+                FullName= "Thomas",
+                Password = ""
             };
         }
     }

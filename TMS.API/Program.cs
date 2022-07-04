@@ -43,6 +43,7 @@ builder.Logging.AddSerilog(logger);
 builder.Services.AddTransient<IValidation,Validation>();
 builder.Services.AddTransient<IUnitOfWork,UnitOfWork>();
 builder.Services.AddTransient<IUnitOfService,UnitOfService>();
+builder.Services.AddTransient<IStatistics,Statistics>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

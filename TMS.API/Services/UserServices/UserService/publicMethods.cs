@@ -7,9 +7,9 @@ namespace TMS.API.Services
     public partial class UserService
     {
         private readonly IUnitOfWork _repo;
-        private readonly Statistics _stats;
+        private readonly IStatistics _stats;
 
-        public UserService(IUnitOfWork repo,Statistics stats)
+        public UserService(IUnitOfWork repo)
         {
             _repo = repo;
             _stats = _repo.Stats;

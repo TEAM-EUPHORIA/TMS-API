@@ -7,7 +7,7 @@ namespace TMS.API.Services
     {
         private void GenerateUserId(User user)
         {
-            var count  = _stats.GetUserCount();
+            var count  = _repo.Stats.GetUserCount();
             int newId = 1;
             if(count > 0)
             {
