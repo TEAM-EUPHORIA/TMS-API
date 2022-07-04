@@ -21,6 +21,7 @@ namespace TMS.TEST.Services
        private readonly Course _course;
         private readonly List<Topic> _topics;
         private readonly Topic _topic;
+        private readonly User _User;
         private readonly Dictionary<string,string> result = new();
         private int courseId;
         private int topicId;
@@ -28,6 +29,7 @@ namespace TMS.TEST.Services
         private int userId;
         private int currentUserId;
         private int departmentId;
+        private int id;
          private void AddIsValid()
         {
             result.Add("IsValid", "true");
@@ -125,11 +127,37 @@ namespace TMS.TEST.Services
       _unitOfWork.Setup(obj => obj.Validation.ValidateCourse(_course)).Returns(result);
       _unitOfWork.Setup(obj => obj.Courses.CreateCourse(_course));
       _unitOfWork.Setup(obj => obj.Complete());
+      _unitOfWork.Setup(obj => obj.Validation.UserExists(id)).Returns(true);
+      _unitOfWork.Setup(obj => obj.Users.GetUserById(id)).Returns(_User);
       var Result = _courseService.CreateCourse(_course);
       Assert.Equal(result,Result);
     
 
     }
+    [Fact]
+    public void UpdateCourse()
+    {
+      AddIsValid();
+      _unitOfWork.Setup(obj => obj.Validation.ValidateCourse(_course)).Returns(result);
+      _unitOfWork.Setup(obj => obj.Courses.UpdateCourse(_course));
+      _unitOfWork.Setup(obj => obj.Complete());
+      _unitOfWork.Setup(obj => obj.Validation.CourseExists(courseId)).Returns(true);
+      _unitOfWork.Setup(obj => obj.Courses.GetCourseById(courseId)).Returns(_course);
+      var Result = _courseService.UpdateCourse(_course);
+      Assert.Equal(result,Result);
+    }
+    [Fact]
+    public void DisableCourse()
+    {
+      _unitOfWork.Setup(obj => obj.Validation.CourseExists(courseId)).Returns(true);
+      _unitOfWork.Setup(obj => obj.Courses.GetCourseById(courseId)).Returns(_course);
+      _unitOfWork.Setup(obj => obj.Complete());
+      var Result = _courseService.DisableCourse(courseId, currentUserId);
+      Assert.Equal(true,Result);
+
+    }
+  
+    
     }
 }
 
