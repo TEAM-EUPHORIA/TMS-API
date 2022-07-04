@@ -131,8 +131,6 @@ namespace TMS.TEST.Services
       _unitOfWork.Setup(obj => obj.Users.GetUserById(id)).Returns(_User);
       var Result = _courseService.CreateCourse(_course);
       Assert.Equal(result,Result);
-    
-
     }
     [Fact]
     public void UpdateCourse()

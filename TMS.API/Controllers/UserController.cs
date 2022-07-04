@@ -327,7 +327,7 @@ namespace TMS.API.Controllers
         public IActionResult DashboardData()
         {
             //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            int currentUserId = 1;
+            int currentUserId = 11;
             return Ok(_service.UserService.Dashboard(currentUserId));
         }        
     }

@@ -23,7 +23,7 @@ namespace TMS.API.Services
         }
         public int GetCoordinatorCount()
         {
-            return dbContext.Users.Where(u => u.RoleId == 2).Count();
+            return dbContext.Users.Where(u=>u.RoleId == 2 && u.isDisabled == false).Count();
         }
         public int GetDepartmentsCount()
         {
@@ -31,31 +31,34 @@ namespace TMS.API.Services
         }
         public int GetTraineesCount()
         {
-            return dbContext.Users.Where(u => u.RoleId == 4).Count();
+            return dbContext.Users.Where(u=>u.RoleId == 4 && u.isDisabled == false).Count();
         }
         public int GetTrainersCount()
         {
-            return dbContext.Users.Where(u => u.RoleId == 3).Count();
+            return dbContext.Users.Where(u=>u.RoleId == 3 && u.isDisabled == false).Count();
         }
-        public int GetReviewersCount()
-        {
-            return dbContext.Users.Where(u => u.RoleId == 5).Count();
+        public int GetReviewersCount(){
+            return dbContext.Users.Where(u=>u.RoleId == 5 && u.isDisabled == false).Count();
         }
         public int GetCourseCount(int userId)
         {
-            return dbContext.CourseUsers.Where(cu => cu.UserId == userId).Count();
+            return dbContext.CourseUsers.Where(cu=>cu.UserId == userId && cu.Course.isDisabled == false).Count();
+        }
+        public int GetCourseCount()
+        {
+            return dbContext.Courses.Where(c=>c.isDisabled == false).Count();
         }
         public int GetCompletedReviews(int userId)
         {
-            return dbContext.Reviews.Where(r => r.StatusId == 2 && r.ReviewerId == userId).Count();
+            return dbContext.Reviews.Where(r=>r.StatusId == 2 && r.ReviewerId == userId && r.Reviewer.isDisabled == false).Count();
         }
         public int GetUpComingReviews(int userId)
         {
-            return dbContext.Reviews.Where(r => r.TraineeId == userId && r.StatusId == 1 && r.ReviewDate.Day >= DateTime.Now.Day).Count();
+            return dbContext.Reviews.Where(r=>r.TraineeId == userId && r.StatusId == 1 && r.ReviewDate.Day >= DateTime.Now.Day && (r.Reviewer.isDisabled == false && r.Trainee.isDisabled == false) ).Count();
         }
         public int GetCanceledReviews()
         {
-            return dbContext.Reviews.Where(r => r.StatusId == 3).Count();
+            return dbContext.Reviews.Where(r=>r.StatusId == 3 && (r.Trainee.isDisabled == false && r.Reviewer.isDisabled == false) ).Count();
         }
         public int GetAttendanceCount(int courseId, List<int>? topicIds, int userId)
         {
@@ -73,7 +76,7 @@ namespace TMS.API.Services
         }
         public Dictionary<string, string> GetCourseStats(int userId)
         {
-            var courseIds = dbContext.CourseUsers.Where(cu => cu.UserId == userId).Select(cu => cu.CourseId).ToList();
+            var courseIds = dbContext.CourseUsers.Where(cu=>cu.UserId == userId && cu.Course.isDisabled == false).Select(cu=>cu.CourseId).ToList();
             bool isCompleted = false;
             int courseCount = courseIds.Count();
             int completedCourseCount = 0;

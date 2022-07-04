@@ -29,7 +29,7 @@ namespace TMS.TEST
     //     //         },
     //     //     };
     // }
-       public static LoginModel Login()
+       public static LoginModel GetUseCredentials()
         {
             return new LoginModel()
                 {  
