@@ -7,6 +7,7 @@ namespace TMS.API.Services
         int GetCompletedReviews(int userId);
         int GetCoordinatorCount();
         int GetCourseCount(int userId);
+        int GetCourseCount();
         Dictionary<string, string> GetCourseStats(int userId);
         int GetDepartmentsCount();
         int GetReviewersCount();
