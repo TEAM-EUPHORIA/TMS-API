@@ -27,7 +27,7 @@ namespace TMS.API.Services
         }
         public int GetDepartmentsCount()
         {
-            return dbContext.Departments.Count();
+            return dbContext.Departments.Where(d=>d.isDisabled == false).Count();
         }
         public int GetTraineesCount()
         {
