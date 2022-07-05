@@ -322,11 +322,15 @@ namespace TMS.API.Controllers
         /// <response code="200">Returns the Dashboard</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <response code="500">If there is problem in server.</response>
-        [HttpGet("Dashboard")]
+        [HttpGet("Dashboard/{currentUserId:int}")]
         //// [Authorize (Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
-        public IActionResult DashboardData()
+        public IActionResult DashboardData(int currentUserId)
         {
+<<<<<<< HEAD
+            //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+=======
             int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+>>>>>>> bf3d51cd35b6b2c0a1ec101f16a0a1c36a0d334b
             // int currentUserId = 11;
             return Ok(_service.UserService.Dashboard(currentUserId));
         }        
