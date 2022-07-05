@@ -111,7 +111,7 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create department. The department already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    //department.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    department.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.DepartmentService.CreateDepartment(department);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Department was Created successfully" });
                 }
@@ -160,7 +160,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateDepartment(department);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        //department.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        department.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.DepartmentService.UpdateDepartment(department);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Department was Updated successfully" });
                     }
@@ -199,8 +199,7 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    int currentUserId = 1;
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.DepartmentService.DisableDepartment(departmentId, currentUserId);
                     if (res) return Ok("The Department was Disabled successfully");
                 }
