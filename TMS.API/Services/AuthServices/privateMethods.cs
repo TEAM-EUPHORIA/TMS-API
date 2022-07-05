@@ -29,7 +29,7 @@ namespace TMS.API.Services
             {
                 new Claim("Email",dbUser.Email),
                 new Claim("Name", dbUser.FullName),
-                new Claim("Role", dbUser.Role.Name),
+                new Claim("Role", dbUser.Role!.Name),
                 new Claim(ClaimTypes.Role, dbUser.Role.Name),
                 new Claim("RoleId", dbUser.RoleId.ToString()),
                 new Claim("UserId", dbUser.Id.ToString())

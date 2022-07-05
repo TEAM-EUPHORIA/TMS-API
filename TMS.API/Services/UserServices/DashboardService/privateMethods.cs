@@ -31,13 +31,18 @@ namespace TMS.API.Services
         {
             var result = _stats.userDetails(userId);
             AddCourseStats(userId, result);
-            AddUpcomingReviewCount(userId, result);
+            ReviewStats(userId, result);
             return result;
         }
 
-        private void AddUpcomingReviewCount(int userId, Dictionary<string, string> result)
+        private void ReviewStats(int userId, Dictionary<string, string> result)
         {
-            result.Add("upCompingReviews", _stats.GetUpComingReviews(userId).ToString());
+             var upComping = _stats.GetUpComingReviews(userId).ToString();
+            var completed = _stats.GetUpComingReviews(userId).ToString();
+            var canceled = _stats.GetUpComingReviews(userId).ToString();
+            result.Add("Upcomming Review",upComping);
+            result.Add("Canceled Review",canceled);
+            result.Add("Completed Review",completed);
         }
 
         private void AddCourseStats(int userId, Dictionary<string, string> result)
@@ -58,7 +63,7 @@ namespace TMS.API.Services
         private Dictionary<string,string> prepareReviewerDashboard(int userId)
         {
             var result = _stats.userDetails(userId);
-            AddUpcomingReviewCount(userId, result);
+            ReviewStats(userId, result);
             return result;
         }
     }

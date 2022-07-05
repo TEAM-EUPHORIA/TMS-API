@@ -14,7 +14,7 @@ namespace TMS.API.Repositories
         public void CreateMom(MOM mom)
         {
             var review = dbContext.Reviews.Find(mom.ReviewId);
-            review.StatusId = 2;
+            review!.StatusId = 2;
             dbContext.MOMs.Add(mom);
         }
 
@@ -34,9 +34,9 @@ namespace TMS.API.Repositories
         {
             return dbContext.MOMs
                     .Where(m=>m.ReviewId == reviewId && m.TraineeId == traineeId)
-                    .Include(m=>m.Review).ThenInclude(r=>r.Reviewer)
+                    .Include(m=>m.Review).ThenInclude(r=>r!.Reviewer)
                     .Include(m=>m.Trainee)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
         }
 
         public Review GetReviewById(int reviewId)
@@ -45,7 +45,7 @@ namespace TMS.API.Repositories
                     .Where(r=>r.Id == reviewId)
                     .Include(r=>r.Reviewer)
                     .Include(r=>r.Trainee)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
         }
 
         public IEnumerable<Review> GetReviewByStatusId(int statusId)
