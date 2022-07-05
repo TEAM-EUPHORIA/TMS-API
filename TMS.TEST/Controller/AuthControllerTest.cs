@@ -19,7 +19,7 @@ namespace TMS.TEST.Controller
         private readonly AuthController _authController;
         private readonly Dictionary<string,string> result = new();
      
-        readonly LoginModel user = AuthMock.Login();
+        readonly LoginModel user = AuthMock.GetUseCredentials();
         private readonly object _unityService;
 
         private void token()
@@ -38,7 +38,7 @@ namespace TMS.TEST.Controller
             // Arrange
         
             _unitOfService.Setup(obj => obj.Validation.ValidateLoginDetails(user)).Returns(result);
-
+            // _unitOfService.Setup(obj => obj)
             _unitOfService.Setup(obj => obj.AuthService.Login(user)).Returns(result);
            
 

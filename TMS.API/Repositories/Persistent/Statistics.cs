@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TMS.API.Services
 {
-    public class Statistics
+
+    public class Statistics : IStatistics
     {
         private readonly AppDbContext dbContext;
 
@@ -13,11 +14,12 @@ namespace TMS.API.Services
         }
         public int GetUserCount()
         {
-            return dbContext.Users.Count();
+            // return dbContext.Users.Count();
+            return 1;
         }
         public int lastUserId()
         {
-            return dbContext.Users.OrderBy(u=>u.Id).Last().Id;
+            return dbContext.Users.OrderBy(u => u.Id).Last().Id;
         }
         public int GetCoordinatorCount()
         {
@@ -58,21 +60,21 @@ namespace TMS.API.Services
         {
             return dbContext.Reviews.Where(r=>r.StatusId == 3 && (r.Trainee.isDisabled == false && r.Reviewer.isDisabled == false) ).Count();
         }
-        public int GetAttendanceCount(int courseId,List<int>? topicIds,int userId)
+        public int GetAttendanceCount(int courseId, List<int>? topicIds, int userId)
         {
             bool present = false;
             int result = 0;
-            if(topicIds != null)
+            if (topicIds != null)
             {
                 foreach (var topicId in topicIds)
                 {
-                    present = dbContext.Attendances.Any(a=>a.CourseId == courseId && a.TopicId == topicId && a.OwnerId == userId);
-                    if(present) result++;
+                    present = dbContext.Attendances.Any(a => a.CourseId == courseId && a.TopicId == topicId && a.OwnerId == userId);
+                    if (present) result++;
                 }
             }
             return result;
         }
-        public Dictionary<string,string> GetCourseStats(int userId)
+        public Dictionary<string, string> GetCourseStats(int userId)
         {
             var courseIds = dbContext.CourseUsers.Where(cu=>cu.UserId == userId && cu.Course.isDisabled == false).Select(cu=>cu.CourseId).ToList();
             bool isCompleted = false;
@@ -80,34 +82,34 @@ namespace TMS.API.Services
             int completedCourseCount = 0;
             foreach (var courseId in courseIds)
             {
-                isCompleted = IsCourseCompleted(userId,courseId);
-                if(isCompleted) 
+                isCompleted = IsCourseCompleted(userId, courseId);
+                if (isCompleted)
                     completedCourseCount++;
             }
             int inProgressCourseCount = courseCount - completedCourseCount;
-            var result = new Dictionary<string,string>();
-            result.Add(nameof(courseCount),courseCount.ToString());
-            result.Add(nameof(completedCourseCount),completedCourseCount.ToString());
-            result.Add(nameof(inProgressCourseCount),inProgressCourseCount.ToString());
+            var result = new Dictionary<string, string>();
+            result.Add(nameof(courseCount), courseCount.ToString());
+            result.Add(nameof(completedCourseCount), completedCourseCount.ToString());
+            result.Add(nameof(inProgressCourseCount), inProgressCourseCount.ToString());
             return result;
         }
-        public bool IsCourseCompleted(int userId,int courseId)
+        public bool IsCourseCompleted(int userId, int courseId)
         {
-            var topicIds = dbContext.Topics.Where(t=>t.CourseId == courseId).Select(t=>t.TopicId).ToList();
+            var topicIds = dbContext.Topics.Where(t => t.CourseId == courseId).Select(t => t.TopicId).ToList();
             int topicsCount = topicIds.Count();
-            int attendanceCount = GetAttendanceCount(courseId,topicIds,userId);
-            return topicsCount == attendanceCount ? true: false;
+            int attendanceCount = GetAttendanceCount(courseId, topicIds, userId);
+            return topicsCount == attendanceCount ? true : false;
         }
-        public Dictionary<string,string> userDetails(int userId)
+        public Dictionary<string, string> userDetails(int userId)
         {
-            var user = dbContext.Users.Where(u=>u.Id == userId).Include(u=>u.Role).FirstOrDefault();
-            var result = new Dictionary<string,string>();
-            if(user!=null)
+            var user = dbContext.Users.Where(u => u.Id == userId).Include(u => u.Role).FirstOrDefault();
+            var result = new Dictionary<string, string>();
+            if (user != null)
             {
-                result.Add("Name",user.FullName);
-                result.Add("Role",user.Role.Name);
-                result.Add("Base64",user.Base64 );
-                result.Add("Image",Convert.ToBase64String(user.Image));
+                result.Add("Name", user.FullName);
+                result.Add("Role", user.Role.Name);
+                result.Add("Base64", user.Base64);
+                result.Add("Image", Convert.ToBase64String(user.Image));
             }
             return result;
         }

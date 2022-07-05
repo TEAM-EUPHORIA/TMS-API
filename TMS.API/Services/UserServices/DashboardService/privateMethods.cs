@@ -1,8 +1,10 @@
+using TMS.API.Repositories;
+
 namespace TMS.API.Services
 {
     public partial class UserService
-    {   
-       private Dictionary<string,string> prepareHeadDashboard(int userId)
+    {
+        private Dictionary<string,string> prepareHeadDashboard(int userId)
         {
             var result = _stats.userDetails(userId);
             result.Add("coordinatorsCount", _stats.GetCoordinatorCount().ToString());
