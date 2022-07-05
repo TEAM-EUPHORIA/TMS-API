@@ -7,11 +7,10 @@ namespace TMS.API.UtilityFunctions
     {
         public static int GetCurrentUserId(HttpContext context)
         {
-            var identity = context.User.Identity as ClaimsIdentity;
             int userId = 0;
-            if (identity != null)
+            if (context.User.Identity is ClaimsIdentity identity)
             {
-                int.TryParse(identity.FindFirst("UserId").Value,out userId);
+                userId = int.Parse(identity.FindFirst("UserId")!.Value);
             }
             return userId;
         } 

@@ -17,7 +17,7 @@ namespace TMS.API.Repositories
 
         public Department GetDepartmentById(int departmentId)
         {
-            return dbContext.Departments.Find(departmentId);
+            return dbContext.Departments.Find(departmentId)!;
         }
 
         public IEnumerable<Department> GetDepartments()

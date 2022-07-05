@@ -24,7 +24,7 @@ namespace TMS.API.Repositories
         {
             return dbContext.CourseFeedbacks
                     .Where(cf=> cf.CourseId == courseId && cf.TraineeId == traineeId)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
         }
         public IEnumerable<CourseFeedback> GetCourseFeedbacksByCourseId(int courseId)
         {
@@ -36,7 +36,7 @@ namespace TMS.API.Repositories
             return dbContext.TraineeFeedbacks
                     .Where(tf=> tf.CourseId == courseId && tf.TraineeId == traineeId && tf.TrainerId == trainerId)
                     .Include(tf=>tf.Trainee).Include(tf=>tf.Trainer)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
         }
 
         public void UpdateCourseFeedback(CourseFeedback courseFeedback)
