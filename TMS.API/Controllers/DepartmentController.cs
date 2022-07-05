@@ -201,7 +201,7 @@ namespace TMS.API.Controllers
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.DepartmentService.DisableDepartment(departmentId, currentUserId);
-                    if (res) return Ok("The Department was Disabled successfully");
+                    if (res) return Ok(new { Response = "The Department was Deleted successfully" });
                 }
                 catch (InvalidOperationException ex)
                 {
