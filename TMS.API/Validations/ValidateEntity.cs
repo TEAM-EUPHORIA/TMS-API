@@ -219,7 +219,7 @@ namespace TMS.API
         {
             departmentExists = true;
             roleExists = RoleExists(user.RoleId);
-            if(user.DepartmentId != 0 || user.DepartmentId != null) departmentExists = DepartmentExists((int)user.DepartmentId);
+            if(user.DepartmentId != null) departmentExists = DepartmentExists((int)user.DepartmentId);
             if(!roleExists) AddEntery(nameof(user.RoleId),"can't find the role");
             if(!departmentExists) AddEntery(nameof(user.DepartmentId),"can't find the department");
             if(result.Count==0 && roleExists)
