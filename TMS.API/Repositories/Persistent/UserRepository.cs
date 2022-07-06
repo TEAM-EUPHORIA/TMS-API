@@ -23,7 +23,7 @@ namespace TMS.API.Repositories
             return dbContext.Users
                     .Where(u => u.Email == user.Email && 
                            u.Password == HashPassword.Sha256(user.Password))
-                    .Include(u => u.Role).FirstOrDefault();
+                    .Include(u => u.Role).FirstOrDefault()!;
         }
 
         public User GetUserById(int id)
@@ -32,7 +32,7 @@ namespace TMS.API.Repositories
                     .Where(u=>u.Id == id)
                     .Include(u=>u.Role)
                     .Include(u=>u.Department)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
                     
         }
         public IEnumerable<User> GetUsersByRole(int roleId)

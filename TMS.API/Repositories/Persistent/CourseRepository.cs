@@ -44,7 +44,7 @@ namespace TMS.API.Repositories
                     a.CourseId == courseId && 
                     a.TopicId == topicId && 
                     a.OwnerId == ownerId
-                ).Include(a=>a.Owner).FirstOrDefault();
+                ).Include(a=>a.Owner).FirstOrDefault()!;
         }
         public Attendance GetAttendanceByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
@@ -52,7 +52,7 @@ namespace TMS.API.Repositories
                     a.CourseId == courseId && 
                     a.TopicId == topicId && 
                     a.OwnerId == ownerId
-                ).Include(a=>a.Owner).FirstOrDefault();
+                ).Include(a=>a.Owner).FirstOrDefault()!;
         }
 
         public Course GetCourseById(int courseId)
@@ -62,12 +62,12 @@ namespace TMS.API.Repositories
                             .Include(c=>c.Topics)
                             .FirstOrDefault();
 
-            result.Trainer = dbContext.CourseUsers
+            result!.Trainer = dbContext.CourseUsers
                                 .Where(cu=>cu.CourseId == result.Id && cu.RoleId == 3)
                                 .Include(u=>u.User)
                                 .Select(cu=>cu.User)
                                 .FirstOrDefault();
-            result.TrainerId = result.Trainer.Id;
+            result.TrainerId = result!.Trainer!.Id;
             return result;
         }
         public Topic GetTopicById(int courseId,int topicId,int userId)
@@ -78,19 +78,19 @@ namespace TMS.API.Repositories
 
             var trainerId = dbContext.CourseUsers
                                 .Where(cu=>cu.CourseId == courseId && cu.RoleId == 3)
-                                .FirstOrDefault()
+                                .FirstOrDefault()!
                                 .UserId;
 
             var assignment = GetAssignmentByCourseIdTopicIdAndOwnerId(courseId,topicId,trainerId);
 
             var present = dbContext.Assignments.Any(a=>a.CourseId == courseId && a.TopicId == topicId && a.OwnerId == userId);
 
-            result.Assignments = new List<Assignment>(){assignment};
+            result!.Assignments = new List<Assignment>(){assignment!};
             if(present)
             {
                 var attendance = GetAttendanceByCourseIdTopicIdAndOwnerId(courseId,topicId,userId);
                 result.Attendances = new List<Attendance>();
-                result.Attendances.Add(attendance);
+                result.Attendances.Add(attendance!);
             }
             return result;
         }
@@ -99,7 +99,7 @@ namespace TMS.API.Repositories
             var result = dbContext.Topics
                             .Where(t=>t.CourseId == courseId && t.TopicId == topicId && t.isDisabled == false)
                             .FirstOrDefault();
-            return result;
+            return result!;
         }
 
         public IEnumerable<Assignment> GetAssignmentsByTopicId(int topicId)
@@ -124,7 +124,7 @@ namespace TMS.API.Repositories
         {
            return dbContext.CourseUsers
                     .Where(cu=>cu.UserId == userId )
-                    .Select(cu=>cu.Course);
+                    .Select(cu=>cu.Course)!;
         }
 
         public IEnumerable<Topic> GetTopicsByCourseId(int courseId)
@@ -157,10 +157,10 @@ namespace TMS.API.Repositories
         {
             var data = dbContext.CourseUsers.Where(cu => cu.CourseId == courseId).Include(cu => cu.User).Select(data => new {
                 courseId = data.CourseId,
-                department = data.Course.Department.Name,
+                department = data.Course!.Department!.Name,
                 courseName = data.Course.Name,
                 id = data.UserId,
-                fullName = data.User.FullName,
+                fullName = data.User!.FullName,
                 roleId = 4
             });
             
