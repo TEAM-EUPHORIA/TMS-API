@@ -59,7 +59,7 @@ namespace TMS.API.Repositories
         {
             var result = dbContext.Courses
                             .Where(c=>c.Id == courseId && c.isDisabled == false)
-                            .Include(c=>c.Topics)
+                            .Include(c=>c.Topics).Include(c=>c.Feedbacks)
                             .FirstOrDefault();
 
             result!.Trainer = dbContext.CourseUsers
