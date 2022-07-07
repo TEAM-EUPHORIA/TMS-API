@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
@@ -123,7 +122,7 @@ namespace TMS.API.Controllers
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the review. the review already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    //review.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    review.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.ReviewService.CreateReview(review);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Created successfully" });
                 }
@@ -178,7 +177,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateReview(review);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        // review.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        review.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.ReviewService.UpdateReview(review);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
                     }

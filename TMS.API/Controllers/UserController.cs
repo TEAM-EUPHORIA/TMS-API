@@ -197,7 +197,7 @@ namespace TMS.API.Controllers
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't create the user. The user Already exists.");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    //user.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    user.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var res = _service.UserService.CreateUser(user); 
                     if (res.ContainsKey("IsValid")){
                        var response = _service.UserService.GetUsersByRole(user.RoleId);  
@@ -254,7 +254,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateUser(user);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                       // user.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                       user.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         var res = _service.UserService.UpdateUser(user);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists"))
                         {
@@ -297,8 +297,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    // int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.UserService.DisableUser(userId,1);
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.UserService.DisableUser(userId,currentUserId);
                     if (res) return Ok(new {message = "The User was Disabled successfully"});
                 }
                 catch (InvalidOperationException ex)

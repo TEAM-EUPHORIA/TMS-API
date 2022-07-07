@@ -146,35 +146,56 @@ namespace TMS.API
             validateAndAddEntery(nameof(review.Mode),review.Mode,modeValidation);
             if(result.Count==0)
             {
-                userExists = UserExists(review.ReviewerId,5);
-                traineeExists = UserExists(review.TraineeId,4);
+                userExists = UserExists(review.ReviewerId, 5);
+                traineeExists = UserExists(review.TraineeId, 4);
                 reviewStatusExists = ReviewStatusExists(review.StatusId);
-                if(!reviewStatusExists) AddEntery(nameof(review.StatusId),"Invalid Id");
-                
-                if(review.ReviewDate < DateTime.Now) 
-                    AddEntery(nameof(review.ReviewDate),"Invalid Date");
-                
-                if(review.Id != 0) 
-                    revieweExists = ReviewExists(review.Id);
-                
-                if(userExists && traineeExists && reviewStatusExists)
-                    reviewerAvailabilityExists = ReviewerAvailabilityExists(review.Id,review.ReviewerId,review.ReviewDate,review.ReviewTime,review.StatusId);
-
-                if(reviewerAvailabilityExists)
-                    AddEntery("reviewerId","is not available");
-                
-                if(userExists && traineeExists && reviewStatusExists)
-                    traineeAvailabilityExists = TraineeAvailabilityExists(review.Id,review.TraineeId,review.ReviewDate,review.ReviewTime,review.StatusId);
-
-                if(traineeAvailabilityExists)
-                    AddEntery("traineeId","is not available");
-
-                if(revieweExists) 
-                    AddEntery("Exists","true");
+                CheckStatus(review.StatusId);
+                CheckReviewDate(review);
+                CheckReviewExists(review);
+                CheckReviewerAvailablity(review);
+                CheckTraineeAvailablity(review);
+                if (revieweExists)
+                    AddEntery("Exists", "true");
             }
-            if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
+            if (result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
+
+        private void CheckTraineeAvailablity(Review review)
+        {
+            if (userExists && traineeExists && reviewStatusExists)
+                traineeAvailabilityExists = TraineeAvailabilityExists(review.Id, review.TraineeId, review.ReviewDate, review.ReviewTime, review.StatusId);
+
+            if (traineeAvailabilityExists)
+                AddEntery("traineeId", "is not available");
+        }
+
+        private void CheckReviewerAvailablity(Review review)
+        {
+            if (userExists && traineeExists && reviewStatusExists)
+                reviewerAvailabilityExists = ReviewerAvailabilityExists(review.Id, review.ReviewerId, review.ReviewDate, review.ReviewTime, review.StatusId);
+
+            if (reviewerAvailabilityExists)
+                AddEntery("reviewerId", "is not available");
+        }
+
+        private void CheckReviewExists(Review review)
+        {
+            if (review.Id != 0)
+                revieweExists = ReviewExists(review.Id);
+        }
+
+        private void CheckReviewDate(Review review)
+        {
+            if (review.ReviewDate < DateTime.Now)
+                AddEntery(nameof(review.ReviewDate), "Invalid Date");
+        }
+
+        private void CheckStatus(int statusId)
+        {
+            if (!reviewStatusExists) AddEntery(nameof(statusId), "Invalid Id");
+        }
+
         public Dictionary<string, string> ValidateTopic(Topic topic)
         {
             checkIdAndAddEntery(topic.CourseId,nameof(topic.CourseId));
@@ -219,7 +240,7 @@ namespace TMS.API
         {
             departmentExists = true;
             roleExists = RoleExists(user.RoleId);
-            if(user.DepartmentId != 0 || user.DepartmentId != null) departmentExists = DepartmentExists((int)user.DepartmentId);
+            if(user.DepartmentId != null) departmentExists = DepartmentExists((int)user.DepartmentId);
             if(!roleExists) AddEntery(nameof(user.RoleId),"can't find the role");
             if(!departmentExists) AddEntery(nameof(user.DepartmentId),"can't find the department");
             if(result.Count==0 && roleExists)
@@ -232,7 +253,7 @@ namespace TMS.API
                 userExists = UserExists(user.Id);
                 if(userExists) AddEntery("Exists","true");
             }
-            if(result.Count==0 || ((result.ContainsKey("Exists") && !result.ContainsKey("IsValid")) && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
+            if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
 

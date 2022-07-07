@@ -28,7 +28,7 @@ namespace TMS.API.Services
                         result = prepareReviewerDashboard(userId);
                         break;
                 }
-                return result;
+                return result!;
             }
             throw new ArgumentException("Invalid User");
         }
