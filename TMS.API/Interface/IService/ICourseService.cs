@@ -15,6 +15,7 @@ namespace TMS.API.Services
         Assignment GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId);
         IEnumerable<Assignment> GetAssignmentsByTopicId(int topicId);
         Course GetCourseById(int courseId);
+        Course GetCourseById(int courseId,int userId);
         IEnumerable<Course> GetCourses();
         IEnumerable<Course> GetCoursesByDepartmentId(int departmentId);
         IEnumerable<Course> GetCoursesByUserId(int userId);

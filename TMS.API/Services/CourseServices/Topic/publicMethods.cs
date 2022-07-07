@@ -73,5 +73,10 @@ namespace TMS.API.Services
             if(courseExists && topicExists) return _repo.Courses.GetAttendanceList(courseId,topicId);
             else throw new ArgumentException("Invalid Id");
         }
+
+        public Course GetCourseById(int courseId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
