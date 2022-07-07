@@ -326,6 +326,8 @@ namespace TMS.API.Controllers
         //// [Authorize (Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult DashboardData(int currentUserId)
         {
+            //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            // int currentUserId = 11;
             return Ok(_service.UserService.Dashboard(currentUserId));
         }        
     }
