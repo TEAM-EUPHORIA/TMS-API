@@ -153,6 +153,10 @@ namespace TMS.API.Repositories
             dbContext.Attendances.Add(attendance);
         }
 
+        public IEnumerable<Attendance> GetAttendanceList(int courseId,int topicId){
+            return dbContext.Attendances.Where(a => a.CourseId == courseId && a.TopicId == topicId).Include(a=>a.Owner).ToList();
+        }
+
         public object GetCourseUsers(int courseId)
         {
             var data = dbContext.CourseUsers.Where(cu => cu.CourseId == courseId).Include(cu => cu.User).Select(data => new {
