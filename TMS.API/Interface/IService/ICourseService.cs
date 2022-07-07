@@ -22,6 +22,7 @@ namespace TMS.API.Services
         Topic GetTopicById(int courseId, int topicId, int userId);
         IEnumerable<Topic> GetTopicsByCourseId(int courseId);
         Dictionary<string, string> MarkAttendance(Attendance attendance);
+        IEnumerable<Attendance> GetAttendanceList(int courseId,int topicId);
         Dictionary<string, List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int currentUserId);
         Dictionary<string, string> UpdateAssignment(Assignment assignment);
         Dictionary<string, string> UpdateCourse(Course course);

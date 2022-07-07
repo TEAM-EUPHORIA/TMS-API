@@ -814,5 +814,24 @@ namespace TMS.API.Controllers
             }
             return Problem();
         }
+        [HttpGet("getAttendance")]
+        public IActionResult GetAttendanceList(int courseId,int topicId)
+        {
+            var courseExists = _service.Validation.CourseExists(courseId);
+            if(courseExists)
+            {
+                try
+                {
+                    var result = _service.CourseService.GetAttendanceList(courseId,topicId);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
+                    return Problem();
+                }
+            }
+            return NotFound("Happy");   
+        }
     }
 }

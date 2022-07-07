@@ -67,5 +67,11 @@ namespace TMS.API.Services
             }
             return validation;
         }
+        public IEnumerable<Attendance> GetAttendanceList(int courseId,int topicId){
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            var topicExists = _repo.Validation.TopicExists(topicId);
+            if(courseExists && topicExists) return _repo.Courses.GetAttendanceList(courseId,topicId);
+            else throw new ArgumentException("Invalid Id");
+        }
     }
 }
