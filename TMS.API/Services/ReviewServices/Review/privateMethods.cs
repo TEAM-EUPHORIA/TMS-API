@@ -11,6 +11,7 @@ namespace TMS.API.Services
         private void SetUpReviewDetails(Review review, Review dbReview)
         {
             dbReview.Mode = review.Mode;
+            dbReview.DepartmentId = review.DepartmentId;
             dbReview.ReviewerId = review.ReviewerId;
             dbReview.TraineeId = review.TraineeId;
             dbReview.ReviewDate = review.ReviewDate;

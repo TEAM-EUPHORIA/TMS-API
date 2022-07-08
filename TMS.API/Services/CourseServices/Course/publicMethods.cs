@@ -29,12 +29,13 @@ namespace TMS.API.Services
         {
             return _repo.Courses.GetCourses();   
         }
-        public Course GetCourseById(int courseId)
+        public Course GetCourseById(int courseId,int userId)
         {
             var courseExists = _repo.Validation.CourseExists(courseId);
+            var userExists = _repo.Validation.UserExists(userId);
             if(courseExists)
             {
-                return _repo.Courses.GetCourseById(courseId);
+                return _repo.Courses.GetCourseById(courseId,userId);
             }
             throw new ArgumentException(nameof(courseId));
         }

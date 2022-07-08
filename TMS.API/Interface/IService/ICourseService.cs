@@ -15,6 +15,7 @@ namespace TMS.API.Services
         Assignment GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId);
         IEnumerable<Assignment> GetAssignmentsByTopicId(int topicId);
         Course GetCourseById(int courseId);
+        Course GetCourseById(int courseId,int userId);
         IEnumerable<Course> GetCourses();
         IEnumerable<Course> GetCoursesByDepartmentId(int departmentId);
         IEnumerable<Course> GetCoursesByUserId(int userId);
@@ -22,6 +23,7 @@ namespace TMS.API.Services
         Topic GetTopicById(int courseId, int topicId, int userId);
         IEnumerable<Topic> GetTopicsByCourseId(int courseId);
         Dictionary<string, string> MarkAttendance(Attendance attendance);
+        IEnumerable<Attendance> GetAttendanceList(int courseId,int topicId);
         Dictionary<string, List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int currentUserId);
         Dictionary<string, string> UpdateAssignment(Assignment assignment);
         Dictionary<string, string> UpdateCourse(Course course);

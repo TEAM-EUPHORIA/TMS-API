@@ -137,7 +137,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    var result = _service.CourseService.GetCourseById(courseId);
+                    var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var result = _service.CourseService.GetCourseById(courseId,userId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
@@ -348,7 +349,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    //int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int userId = 2041;
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
@@ -489,9 +491,10 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    // int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int currentUserId = 2041;
                     var res = _service.CourseService.DisableTopic(courseId,topicId,currentUserId);
-                    if (res) return Ok("The topic was Disabled successfully");
+                    if (res) return Ok(new {message = "The User was Disabled successfully"});
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -813,6 +816,25 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(MarkAttendance));
             }
             return Problem();
+        }
+        [HttpGet("getAttendance")]
+        public IActionResult GetAttendanceList(int courseId,int topicId)
+        {
+            var courseExists = _service.Validation.CourseExists(courseId);
+            if(courseExists)
+            {
+                try
+                {
+                    var result = _service.CourseService.GetAttendanceList(courseId,topicId);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
+                    return Problem();
+                }
+            }
+            return NotFound("Happy");   
         }
     }
 }

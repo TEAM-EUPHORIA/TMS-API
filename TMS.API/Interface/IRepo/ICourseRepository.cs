@@ -7,6 +7,8 @@ namespace TMS.API.Repositories
     public partial interface ICourseRepository
     {
         IEnumerable<Assignment> GetAssignmentsByTopicId(int topicId);
+        IEnumerable<Attendance> GetAttendanceList(int couresId,int topicId);
+
         Assignment GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId);
         void CreateAssignment(Assignment assignment);
         void UpdateAssignment(Assignment assignment);
@@ -15,6 +17,7 @@ namespace TMS.API.Repositories
         IEnumerable<Course> GetCoursesByDepartmentId(int departmentId);
         IEnumerable<Course> GetCoursesByUserId(int userId);
         object GetCourseUsers(int courseId);
+        Course GetCourseById(int courseId,int userId);
         Course GetCourseById(int courseId);
         void CreateCourse(Course course);
         void UpdateCourse(Course course);
@@ -22,6 +25,7 @@ namespace TMS.API.Repositories
         void AddUsersToCourse(List<CourseUsers> data);
         void RemoveUsersFromCourse(List<CourseUsers> data);
         void MarkAttendance(Attendance attendance);
+
 
         IEnumerable<Topic> GetTopicsByCourseId(int courseId);
         Topic GetTopicById(int courseId,int topicId,int userId);
