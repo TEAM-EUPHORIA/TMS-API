@@ -1,12 +1,10 @@
-using TMS.API.Repositories;
-
 namespace TMS.API.Services
 {
     public partial class UserService
     {
         private Dictionary<string,string> prepareHeadDashboard(int userId)
         {
-            var result = _stats.userDetails(userId);
+            var result = _stats.UserDetails(userId);
             result.Add("coordinatorsCount", _stats.GetCoordinatorCount().ToString());
             AddTraineeTrainerDepartmentCount(result);
             return result;
@@ -22,14 +20,14 @@ namespace TMS.API.Services
 
         private Dictionary<string,string>? prepareCoordinatorDashboard(int userId)
         {
-            var result = _stats.userDetails(userId);
+            var result = _stats.UserDetails(userId);
             result.Add("courseCount",_stats.GetCourseCount().ToString());
             AddTraineeTrainerDepartmentCount(result);
             return result;
         }
         private Dictionary<string,string> prepareTraineeDashboard(int userId)
         {
-            var result = _stats.userDetails(userId);
+            var result = _stats.UserDetails(userId);
             AddCourseStats(userId, result);
             ReviewStats(userId, result);
             return result;
@@ -56,13 +54,13 @@ namespace TMS.API.Services
 
         private Dictionary<string,string> prepareTrainerDashboard(int userId)
         {
-            var result = _stats.userDetails(userId);
+            var result = _stats.UserDetails(userId);
             AddCourseStats(userId,result);
             return result;
         }
         private Dictionary<string,string> prepareReviewerDashboard(int userId)
         {
-            var result = _stats.userDetails(userId);
+            var result = _stats.UserDetails(userId);
             ReviewStats(userId, result);
             return result;
         }

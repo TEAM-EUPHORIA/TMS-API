@@ -5,11 +5,14 @@ namespace TMS.API
 {
     public partial class Validation
     {
+        // validate course users
+        // checks course exists
+        // checks users exists
         public Dictionary<string, string> ValidateCourseUser(CourseUsers user)
         {
             courseExists = CourseExists(user.CourseId);
             userExists = UserExists(user.UserId,user.RoleId);
-            AddEnteryValidateCourseUser(courseExists,userExists);
+            AddEnteryValidateCourseUser(courseExists);
             if(result.Count == 0 && courseExists && userExists)
             {
                 courseUsertExists = CourseUserExists(user.CourseId,user.UserId,user.RoleId);
@@ -18,12 +21,16 @@ namespace TMS.API
             if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
+        // validate assignment 
+        // check course exists
+        // check topic exists
+        // check user exists
         public Dictionary<string, string> ValidateAssignment(Assignment assignment)
         {
             courseExists = CourseExists(assignment.CourseId);
             topicExists = TopicExists(assignment.TopicId);
             userExists = UserExists(assignment.OwnerId);
-            AddEnteryValidateAssignment(courseExists,topicExists,userExists);
+            AddEnteryValidateAssignment(courseExists,topicExists);
             if(result.Count == 0 && courseExists && topicExists && userExists)
             { 
                 assignmentExists = AssignmentExists(assignment.CourseId,assignment.TopicId,assignment.OwnerId);          
@@ -33,15 +40,19 @@ namespace TMS.API
             if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
+        // validate attendance 
+        // check course exists
+        // check topic exists
+        // check user exists
         public Dictionary<string, string> ValidateAttendance(Attendance attendance)
         {
-            checkIdForCourseTopicUser(attendance.CourseId,attendance.TopicId,attendance.OwnerId);
+            CheckIdForCourseTopicUser(attendance.CourseId,attendance.TopicId,attendance.OwnerId);
             if(result.Count == 0)
             {
                 courseExists = CourseExists(attendance.CourseId);
                 topicExists = TopicExists(attendance.TopicId);
                 userExists = UserExists(attendance.OwnerId);
-                AddEnteryValidateAttendance(courseExists,topicExists,userExists);
+                AddEnteryValidateAttendance(courseExists,topicExists);
                 if(courseExists && topicExists && userExists)
                 {
                     if(attendance.Status == false){
@@ -54,10 +65,12 @@ namespace TMS.API
             }
             return result;
         }
+        // validate login model
+        // regex validation for email, password
         public Dictionary<string, string> ValidateLoginDetails(LoginModel user)
         {            
-            validateAndAddEntery(nameof(user.Email),user.Email,emailValidation);
-            validateAndAddEntery(nameof(user.Password),user.Password,passwordValidation);
+            ValidateAndAddEntery(nameof(user.Email),user.Email,emailValidation);
+            ValidateAndAddEntery(nameof(user.Password),user.Password,passwordValidation);
             if(result.Count == 0)
             {
                 userExists = UserExists(user);
@@ -65,14 +78,18 @@ namespace TMS.API
             }
             return result;
         }
-
+        // validate course model
+        // check trainer exists
+        // check department exists
+        // check course name available
+        // regex validation for Name, Duration, Description
         public Dictionary<string, string> ValidateCourse(Course course)
         {       
-            checkIdAndAddEntery(course.TrainerId,nameof(course.TrainerId));
-            checkIdAndAddEntery(course.DepartmentId,nameof(course.DepartmentId));
-            validateAndAddEntery(nameof(course.Name),course.Name,nameValidation);
-            validateAndAddEntery(nameof(course.Duration),course.Duration,durationValidation);
-            validateAndAddEntery(nameof(course.Description),course.Description,contentValidation);
+            CheckIdAndAddEntery(course.TrainerId,nameof(course.TrainerId));
+            CheckIdAndAddEntery(course.DepartmentId,nameof(course.DepartmentId));
+            ValidateAndAddEntery(nameof(course.Name),course.Name,nameValidation);
+            ValidateAndAddEntery(nameof(course.Duration),course.Duration,durationValidation);
+            ValidateAndAddEntery(nameof(course.Description),course.Description,contentValidation);
             
             if(result.Count == 0)
             {
@@ -91,11 +108,16 @@ namespace TMS.API
             if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
+        // validate course feedback model
+        // check course exists
+        // check trainee exists
+        // rating validation
+        // rexgex validation for feedback
         public Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback)
         {
-            checkIdAndAddEntery(feedback.CourseId,nameof(feedback.CourseId));
-            checkIdAndAddEntery(feedback.TraineeId,nameof(feedback.TraineeId));
-            validateAndAddEntery(nameof(feedback.Feedback),feedback.Feedback,feedbackValidation);
+            CheckIdAndAddEntery(feedback.CourseId,nameof(feedback.CourseId));
+            CheckIdAndAddEntery(feedback.TraineeId,nameof(feedback.TraineeId));
+            ValidateAndAddEntery(nameof(feedback.Feedback),feedback.Feedback,feedbackValidation);
             if(feedback.Rating <= 0 || feedback.Rating > 5) AddEntery("rating","rating must be between 0 to 5");
             if(result.Count == 0)
             {
@@ -109,22 +131,27 @@ namespace TMS.API
             if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
+        // validate department
+        // regex validation for name 
         public Dictionary<string, string> ValidateDepartment(Department dpet)
         {
-            validateAndAddEntery(nameof(dpet.Name),dpet.Name,userNameValidation);
+            ValidateAndAddEntery(nameof(dpet.Name),dpet.Name,userNameValidation);
             if(dpet.Id != 0) departmentExists=DepartmentExists(dpet.Id);
             if(departmentExists && !result.ContainsKey("Exists"))AddEntery("Exists","true");
             if(result.Count == 0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
-
+        // validate Mom
+        // check review exists
+        // check trainee exists
+        // regex validation for meeting notes, purpose if meeting, agenda
         public Dictionary<string, string> ValidateMOM(MOM mom)
         {
-            checkIdAndAddEntery(mom.ReviewId,nameof(mom.ReviewId));
-            checkIdAndAddEntery(mom.TraineeId,nameof(mom.TraineeId));
-            validateAndAddEntery(nameof(mom.Agenda),mom.Agenda,contentValidation);
-            validateAndAddEntery(nameof(mom.MeetingNotes),mom.MeetingNotes,contentValidation);
-            validateAndAddEntery(nameof(mom.PurposeOfMeeting),mom.PurposeOfMeeting,contentValidation);
+            CheckIdAndAddEntery(mom.ReviewId,nameof(mom.ReviewId));
+            CheckIdAndAddEntery(mom.TraineeId,nameof(mom.TraineeId));
+            ValidateAndAddEntery(nameof(mom.Agenda),mom.Agenda,contentValidation);
+            ValidateAndAddEntery(nameof(mom.MeetingNotes),mom.MeetingNotes,contentValidation);
+            ValidateAndAddEntery(nameof(mom.PurposeOfMeeting),mom.PurposeOfMeeting,contentValidation);
             if(result.Count==0)
             {
                 userExists = UserExists(mom.TraineeId,4);
@@ -136,14 +163,20 @@ namespace TMS.API
             if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
+        // validate Review model
+        // check trainee exists
+        // check reviewer exists
+        // check review status exists
+        // check availablity for trainee and reviewer
+        // regex validation for review data, review time
         public Dictionary<string, string> ValidateReview(Review review)
         {
-            checkIdAndAddEntery(review.ReviewerId,nameof(review.ReviewerId));
-            checkIdAndAddEntery(review.TraineeId,nameof(review.TraineeId));
-            checkIdAndAddEntery(review.StatusId,nameof(review.StatusId));
-            validateAndAddEntery(nameof(review.ReviewDate),review.ReviewDate.ToShortDateString(),dateValidation);
-            validateAndAddEntery(nameof(review.ReviewTime),review.ReviewTime.ToString("hh:mm tt"),timeValidation);
-            validateAndAddEntery(nameof(review.Mode),review.Mode,modeValidation);
+            CheckIdAndAddEntery(review.ReviewerId,nameof(review.ReviewerId));
+            CheckIdAndAddEntery(review.TraineeId,nameof(review.TraineeId));
+            CheckIdAndAddEntery(review.StatusId,nameof(review.StatusId));
+            ValidateAndAddEntery(nameof(review.ReviewDate),review.ReviewDate.ToShortDateString(),dateValidation);
+            ValidateAndAddEntery(nameof(review.ReviewTime),review.ReviewTime.ToString("hh:mm tt"),timeValidation);
+            ValidateAndAddEntery(nameof(review.Mode),review.Mode,modeValidation);
             if(result.Count==0)
             {
                 userExists = UserExists(review.ReviewerId, 5);
@@ -160,7 +193,7 @@ namespace TMS.API
             if (result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
-
+        // check for trainee availablity 
         private void CheckTraineeAvailablity(Review review)
         {
             if (userExists && traineeExists && reviewStatusExists)
@@ -169,7 +202,7 @@ namespace TMS.API
             if (traineeAvailabilityExists)
                 AddEntery("traineeId", "is not available");
         }
-
+        // check for reviewer availablity 
         private void CheckReviewerAvailablity(Review review)
         {
             if (userExists && traineeExists && reviewStatusExists)
@@ -178,29 +211,32 @@ namespace TMS.API
             if (reviewerAvailabilityExists)
                 AddEntery("reviewerId", "is not available");
         }
-
+        // check if review exists or not
         private void CheckReviewExists(Review review)
         {
             if (review.Id != 0)
                 revieweExists = ReviewExists(review.Id);
         }
-
+        // validation for review date
         private void CheckReviewDate(Review review)
         {
             if (review.ReviewDate < DateTime.Now)
                 AddEntery(nameof(review.ReviewDate), "Invalid Date");
         }
-
+        // used to add msg to result if the status is not found
         private void CheckStatus(int statusId)
         {
             if (!reviewStatusExists) AddEntery(nameof(statusId), "Invalid Id");
         }
-
+        // validate Topic model
+        // check course exists
+        // check the topic name is available
+        // regex validation for name and duration
         public Dictionary<string, string> ValidateTopic(Topic topic)
         {
-            checkIdAndAddEntery(topic.CourseId,nameof(topic.CourseId));
-            validateAndAddEntery(nameof(topic.Name),topic.Name,nameValidation);
-            validateAndAddEntery(nameof(topic.Duration),topic.Duration,durationValidation);
+            CheckIdAndAddEntery(topic.CourseId,nameof(topic.CourseId));
+            ValidateAndAddEntery(nameof(topic.Name),topic.Name,nameValidation);
+            ValidateAndAddEntery(nameof(topic.Duration),topic.Duration,durationValidation);
             if(result.Count==0) 
             {
                 courseExists = CourseExists(topic.CourseId);
@@ -210,19 +246,23 @@ namespace TMS.API
                     AddEnteryTopicNotFound(topicExists);
                 } 
                 isTopicNameAvailabe = IsTopicNameAvailabe(topic.TopicId,topic.CourseId,topic.Name);
-                AddEnteryValidateTopic(isTopicNameAvailabe,courseExists,topicExists);
+                AddEnteryValidateTopic(isTopicNameAvailabe,courseExists);
                 if(topicExists) AddEntery("Exists","true");
             }
             if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
+        // validate trainee feedback model
+        // check course exists
+        // check trainer exists
+        // check trainee exists
         public Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback)
         {
             traineeFeedbackExists=false;
-            checkIdAndAddEntery(feedback.CourseId,nameof(feedback.CourseId));
-            checkIdAndAddEntery(feedback.TraineeId,nameof(feedback.TraineeId));
-            checkIdAndAddEntery(feedback.TrainerId,nameof(feedback.TrainerId));
-            validateAndAddEntery(nameof(feedback.Feedback),feedback.Feedback,feedbackValidation);
+            CheckIdAndAddEntery(feedback.CourseId,nameof(feedback.CourseId));
+            CheckIdAndAddEntery(feedback.TraineeId,nameof(feedback.TraineeId));
+            CheckIdAndAddEntery(feedback.TrainerId,nameof(feedback.TrainerId));
+            ValidateAndAddEntery(nameof(feedback.Feedback),feedback.Feedback,feedbackValidation);
             if(result.Count==0)
             {
                 courseExists = CourseExists(feedback.CourseId);
@@ -236,6 +276,10 @@ namespace TMS.API
             if(result.Count==0 || (result.ContainsKey("Exists") && !result.ContainsKey("IsValid"))) AddEntery("IsValid","true");
             return result;
         }
+        // validate user model
+        // check role exists for user.RoleId
+        // check department exists for user.DepartmentId if departmentId is not null
+        // regex validation for Full name, User name, email, password, base64 image
         public Dictionary<string, string> ValidateUser(User user)
         {
             departmentExists = true;
@@ -245,11 +289,11 @@ namespace TMS.API
             if(!departmentExists) AddEntery(nameof(user.DepartmentId),"can't find the department");
             if(result.Count==0 && roleExists)
             {
-                validateAndAddEntery(nameof(user.FullName),user.FullName,fullNameValidation);
-                validateAndAddEntery(nameof(user.UserName),user.UserName,userNameValidation);
-                validateAndAddEntery(nameof(user.Email),user.Email,emailValidation);
-                validateAndAddEntery(nameof(user.Password),user.Password,passwordValidation);
-                validateAndAddEntery(nameof(user.Base64),user.Base64,Image);
+                ValidateAndAddEntery(nameof(user.FullName),user.FullName,fullNameValidation);
+                ValidateAndAddEntery(nameof(user.UserName),user.UserName,userNameValidation);
+                ValidateAndAddEntery(nameof(user.Email),user.Email,emailValidation);
+                ValidateAndAddEntery(nameof(user.Password),user.Password,passwordValidation);
+                ValidateAndAddEntery(nameof(user.Base64),user.Base64,Image);
                 userExists = UserExists(user.Id);
                 if(userExists) AddEntery("Exists","true");
             }

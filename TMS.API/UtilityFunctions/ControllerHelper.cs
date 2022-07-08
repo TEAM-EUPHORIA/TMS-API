@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
 
 namespace TMS.API.UtilityFunctions
 {
@@ -10,7 +9,14 @@ namespace TMS.API.UtilityFunctions
             int userId = 0;
             if (context.User.Identity is ClaimsIdentity identity)
             {
-                userId = int.Parse(identity.FindFirst("UserId")!.Value);
+                try
+                {
+                    userId = int.Parse(identity.FindFirst("UserId")!.Value);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
             return userId;
         } 

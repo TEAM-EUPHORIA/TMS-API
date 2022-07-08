@@ -11,12 +11,12 @@ namespace TMS.API.Services
             int newId = 1;
             if(count > 0)
             {
-                newId = _stats.lastUserId() + 1;
+                newId = _stats.LastUserId() + 1;
             }
             if (user.DepartmentId != 0 && user.DepartmentId != null) user.EmployeeId = $"TMS{user.RoleId}{user.DepartmentId}{newId}";
             else user.EmployeeId = $"TMS{user.RoleId}0{newId}";
         }
-        private void SetUpImage(User user)
+        private static void SetUpImage(User user)
         {
             File Image = FileService.GetBase64HeaderAndByteArray(user.Base64);
             user.Base64 = Image.header;
@@ -30,7 +30,7 @@ namespace TMS.API.Services
             if (!string.IsNullOrEmpty(user.Base64) && user.Base64.Length > 1000) SetUpImage(user);
             user.CreatedOn = DateTime.Now;
         }
-        private void SetUpUserDetails(User user, User dbUser)
+        private static void SetUpUserDetails(User user, User dbUser)
         {
             dbUser.isDisabled = false;
             dbUser.Password = HashPassword.Sha256(user.Password);
@@ -44,7 +44,7 @@ namespace TMS.API.Services
             if(user.DepartmentId != 0) dbUser.DepartmentId = user.DepartmentId;
         }
         
-        private void disable(int currentUserId, User dbUser)
+        private static void Disable(int currentUserId, User dbUser)
         {
             dbUser.isDisabled = true;
             dbUser.UpdatedBy = currentUserId;

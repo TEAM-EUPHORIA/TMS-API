@@ -536,7 +536,7 @@ namespace TMS.API.Controllers
         /// <param name="data"></param>
         [HttpPut("assignUsers")]
         // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
+        // [Authorize(Roles = "Training Coordinator")] 
         public IActionResult AssignUsersToCourse(AddUsersToCourse data)
         {
             var courseExists = _service.Validation.CourseExists(data.CourseId);

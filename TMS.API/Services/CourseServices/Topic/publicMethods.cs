@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using TMS.BAL;
 
 
@@ -52,7 +51,7 @@ namespace TMS.API.Services
             if (topicExists)
             {
                 var dbTopic = _repo.Courses.GetTopicById(courseId, topicId);
-                disable(currentUserId, dbTopic);
+                Disable(currentUserId, dbTopic);
                 _repo.Complete();
             }
             return topicExists;

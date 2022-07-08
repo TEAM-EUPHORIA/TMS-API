@@ -7,4 +7,3 @@ namespace TMS.API.Repositories
         IEnumerable<Role> GetRoles();
     }
 }
-

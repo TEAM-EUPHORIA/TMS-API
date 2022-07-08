@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using TMS.API.Repositories;
 using TMS.BAL;
 
 namespace TMS.API.Services

@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TMS.API.Controllers;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;

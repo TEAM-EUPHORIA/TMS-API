@@ -22,7 +22,7 @@ namespace TMS.API.Repositories
 
         public IEnumerable<Department> GetDepartments()
         {
-            return dbContext.Departments.Where(u=>u.isDisabled != true).ToList();
+            return dbContext.Departments.Where(u => u.isDisabled != true).ToList();
         }
 
         public void UpdateDepartment(Department department)

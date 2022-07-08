@@ -12,6 +12,7 @@ using TMS.API.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// auth service
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -30,6 +31,7 @@ builder.Services.AddAuthentication(opt =>
         TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+// controller service
 builder.Services.AddControllers();
 
 // adding serilog
@@ -41,29 +43,33 @@ var logger = new LoggerConfiguration()
 // builder.Logging.ClearProviders(); //if its enabled console loggings won't work
 builder.Logging.AddSerilog(logger);
 
-// Making Db Context available for the App 
-builder.Services.AddTransient<IValidation,Validation>();
-builder.Services.AddTransient<IUnitOfWork,UnitOfWork>();
-builder.Services.AddTransient<IUnitOfService,UnitOfService>();
-builder.Services.AddTransient<IStatistics,Statistics>();
+// Making Db Context and service available for the App 
+builder.Services.AddTransient<IValidation, Validation>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IUnitOfService, UnitOfService>();
+builder.Services.AddTransient<IStatistics, Statistics>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+// swagger config
 builder.Services.AddSwaggerGen(c =>
 {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-    c.SwaggerDoc("v1", new OpenApiInfo {
-        Title = "JWTToken_Auth_API", Version = "v1"
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "JWTToken_Auth_API",
+        Version = "v1"
     });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme() {
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
         Name = "Authorization",
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer",
-            BearerFormat = "JWT",
-            In = ParameterLocation.Header,
-            Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
@@ -78,7 +84,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// allowing angular to request api
+// allowing incomming requests
 builder.Services.AddCors((setup) =>
 {
     setup.AddPolicy("default", (options) =>
@@ -87,11 +93,13 @@ builder.Services.AddCors((setup) =>
     });
 });
 
+// to prevent cycle path response in api response
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
+// building the web application
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -108,6 +116,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// using custom cors
 app.UseCors("default");
 
 app.UseHttpsRedirection();

@@ -4,11 +4,11 @@ namespace TMS.API.Services
 {
     public partial class ReviewService
     {
-        private void SetUpReviewDetails(Review review)
+        private static void SetUpReviewDetails(Review review)
         {
             review.CreatedOn = DateTime.Now;
         }
-        private void SetUpReviewDetails(Review review, Review dbReview)
+        private static void SetUpReviewDetails(Review review, Review dbReview)
         {
             dbReview.Mode = review.Mode;
             dbReview.DepartmentId = review.DepartmentId;

@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using TMS.API.Repositories;
 using TMS.BAL;
 
@@ -74,7 +73,7 @@ namespace TMS.API.Services
             if (userExists)
             {
                 var dbUser = _repo.Users.GetUserById(userId);
-                disable(currentUserId, dbUser);
+                Disable(currentUserId, dbUser);
                 _repo.Users.UpdateUser(dbUser);
                 _repo.Complete();
             }

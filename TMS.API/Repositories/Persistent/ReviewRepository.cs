@@ -26,33 +26,33 @@ namespace TMS.API.Repositories
         public IEnumerable<MOM> GetListOfMomByUserId(int userId)
         {
             return dbContext.MOMs
-                    .Where(m=>m.TraineeId == userId)
-                    .Include(m=>m.Trainee);
+                    .Where(m => m.TraineeId == userId)
+                    .Include(m => m.Trainee);
         }
 
         public MOM GetMomByReviewIdAndTraineeId(int reviewId, int traineeId)
         {
             return dbContext.MOMs
-                    .Where(m=>m.ReviewId == reviewId && m.TraineeId == traineeId)
-                    .Include(m=>m.Review).ThenInclude(r=>r!.Reviewer)
-                    .Include(m=>m.Trainee)
+                    .Where(m => m.ReviewId == reviewId && m.TraineeId == traineeId)
+                    .Include(m => m.Review).ThenInclude(r => r!.Reviewer)
+                    .Include(m => m.Trainee)
                     .FirstOrDefault()!;
         }
 
         public Review GetReviewById(int reviewId)
         {
             return dbContext.Reviews
-                    .Where(r=>r.Id == reviewId)
-                    .Include(r=>r.Reviewer)
-                    .Include(r=>r.Trainee)
+                    .Where(r => r.Id == reviewId)
+                    .Include(r => r.Reviewer)
+                    .Include(r => r.Trainee)
                     .FirstOrDefault()!;
         }
 
         public IEnumerable<Review> GetReviewByStatusId(int statusId)
         {
             return dbContext.Reviews
-                    .Where(r=>r.StatusId == statusId)
-                    .Include(r=>r.Status).Include(r=>r.Reviewer).Include(r=>r.Trainee);
+                    .Where(r => r.StatusId == statusId)
+                    .Include(r => r.Status).Include(r => r.Reviewer).Include(r => r.Trainee);
         }
 
         public void UpdateMom(MOM mom)

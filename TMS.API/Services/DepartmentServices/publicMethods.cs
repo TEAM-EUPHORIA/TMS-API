@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using TMS.API.Repositories;
 using TMS.BAL;
 
@@ -62,7 +61,7 @@ namespace TMS.API.Services
             if (departmentExists)
             {
                 var dbDeparment = _repo.Departments.GetDepartmentById(departmentId);
-                disable(currentUserId, dbDeparment);
+                Disable(currentUserId, dbDeparment);
                 _repo.Departments.UpdateDepartment(dbDeparment);
                 _repo.Complete();
             }
