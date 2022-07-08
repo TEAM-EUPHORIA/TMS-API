@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
@@ -5,6 +6,7 @@ using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -46,7 +48,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -80,10 +82,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
        
         /// <summary>
@@ -117,7 +119,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("not found");
@@ -147,15 +149,15 @@ namespace TMS.API.Controllers
                 {
                     var result = _service.UserService.GetUserById(userId);
                     if (result is not null) return Ok(result);
-                    return NotFound();
+                    return NotFound("Not Found");
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(GetUserById));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -185,8 +187,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="user"></param>
         [HttpPost("user")]
-        // [ValidateAntiForgeryToken]
-        //// [Authorize(Roles = "Training Head, Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult CreateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -208,7 +210,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(CreateUser));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
 
@@ -240,8 +242,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="user"></param>
         [HttpPut("user")]
-        // [ValidateAntiForgeryToken]
-        //// [Authorize(Roles = "Training Head, Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult UpdateUser(User user)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -266,7 +268,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(UpdateUser));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -287,8 +289,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="userId"></param>
         [HttpPut("disable/{userId:int}")]
-        // [ValidateAntiForgeryToken]
-        //// [Authorize(Roles = "Training Head, Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
         {
             var userExists = _service.Validation.UserExists(userId);
@@ -303,7 +305,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(UserController), nameof(DisableUser));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -322,7 +324,7 @@ namespace TMS.API.Controllers
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <response code="500">If there is problem in server.</response>
         [HttpGet("Dashboard/{currentUserId:int}")]
-        //// [Authorize (Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        [Authorize (Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult DashboardData(int currentUserId)
         {
             //int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);

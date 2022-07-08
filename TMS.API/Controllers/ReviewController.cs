@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
@@ -5,6 +6,7 @@ using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ReviewController : ControllerBase
@@ -45,10 +47,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -78,10 +80,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -110,8 +112,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPost("review")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -130,7 +132,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateReview));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
 
@@ -163,8 +165,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPut("review")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateReview(Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -185,10 +187,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
 
         }
 
@@ -220,10 +222,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -255,10 +257,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetMomByReviewIdAndTraineeId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -287,8 +289,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPost("mom")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Trainee")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainee")]
         public IActionResult CreateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -307,7 +309,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateMom));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
 
@@ -339,8 +341,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPut("mom")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Trainee")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainee")]
         public IActionResult UpdateMom(MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -361,10 +363,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateMom));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
     }
 }

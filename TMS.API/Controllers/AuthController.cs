@@ -52,9 +52,9 @@ namespace TMS.API
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(AuthController), nameof(Login));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
-            return Unauthorized("Unauthorized");
+            return Unauthorized("Unauthorized user");
         }
     }
 }

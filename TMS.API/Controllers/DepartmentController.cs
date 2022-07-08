@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
@@ -28,7 +29,7 @@ namespace TMS.API.Controllers
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="500">If there is problem in server. </response>
         [HttpGet("department")]
-        //// [Authorize(Roles = "Training Head, Training Coordinator")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetDepartments()
         {
             try
@@ -38,7 +39,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(GetDepartments));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
            
@@ -57,7 +58,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="departmentId"></param>
         [HttpGet("{departmentId:int}")]
-        //// [Authorize(Roles = "Training Head, Training Coordinator")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetDepartmentById(int departmentId)
         {
             var departmentExists = _service.Validation.DepartmentExists(departmentId);
@@ -67,15 +68,15 @@ namespace TMS.API.Controllers
                 {
                     var result = _service.DepartmentService.GetDepartmentById(departmentId);
                     if (result is not null) return Ok(result);
-                    return NotFound();
+                    return NotFound("Not Found");
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(GetDepartmentById));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -99,8 +100,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPost("department")]
-        //[ValidateAntiForgeryToken]
-        //// [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -119,7 +120,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(CreateDepartment));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
 
@@ -146,8 +147,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPut("department")]
-        // [ValidateAntiForgeryToken]
-        // // [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateDepartment(Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -168,10 +169,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(UpdateDepartment));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -189,8 +190,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
         [HttpPut("disable/{departmentId:int}")]
-        // [ValidateAntiForgeryToken]
-        //// [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableDepartment(int departmentId)
         {
             var departmentExists = _service.Validation.DepartmentExists(departmentId);
@@ -205,10 +206,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(DisableDepartment));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
     }
 }

@@ -1,11 +1,9 @@
-
 using Microsoft.AspNetCore.Mvc;
 using TMS.BAL;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace TMS.API.Controllers
 {
@@ -32,7 +30,7 @@ namespace TMS.API.Controllers
         /// <response code="200">Returns a list of courses. </response>
         /// <response code="500">If there is problem in server. </response>
         [HttpGet]
-        //// [Authorize(Roles = "Training Head, Training Coordinator")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCourses()
         {
             try
@@ -42,7 +40,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetCourses));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
 
@@ -61,11 +59,11 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="userId"></param>
         [HttpGet("users/{userId:int}")]
-        //// [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetCoursesByUserId(int userId)
         {
             var userExists = _service.Validation.UserExists(userId);
-            if(userExists)
+            if (userExists)
             {
                 try
                 {
@@ -74,10 +72,10 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -95,11 +93,11 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
         [HttpGet("departments/{departmentId:int}")]
-        //// [Authorize(Roles = "Training Head, Training Coordinator")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCoursesByDepartmentId(int departmentId)
         {
             var departmentExists = _service.Validation.DepartmentExists(departmentId);
-            if(departmentExists)
+            if (departmentExists)
             {
                 try
                 {
@@ -108,7 +106,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetCoursesByDepartmentId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -129,22 +127,22 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         [HttpGet("{courseId:int}")]
-        //// [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetCourseById(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            if(courseExists)
+            if (courseExists)
             {
                 try
                 {
                     var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var result = _service.CourseService.GetCourseById(courseId,userId);
+                    var result = _service.CourseService.GetCourseById(courseId, userId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetCourseById));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -175,8 +173,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
         [HttpPost("course")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateCourse(Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -191,14 +189,14 @@ namespace TMS.API.Controllers
                     if (res.ContainsKey("IsValid"))
                     {
                         return Ok(new { Response = "The Course was Created successfully" });
-                    } 
+                    }
                 }
                 return BadRequest(IsValid);
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(CreateCourse));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
 
@@ -228,13 +226,13 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
         [HttpPut("course")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateCourse(Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var courseExists = _service.Validation.CourseExists(course.Id);
-            if(courseExists)
+            if (courseExists)
             {
                 try
                 {
@@ -250,7 +248,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(UpdateCourse));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -271,23 +269,23 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         [HttpPut("disable/{courseId:int}")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]        
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableCourse(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            if(courseExists)
+            if (courseExists)
             {
                 try
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.CourseService.DisableCourse(courseId,currentUserId);
-                    if (res) return Ok(new {message = "The User was Disabled successfully"});
+                    var res = _service.CourseService.DisableCourse(courseId, currentUserId);
+                    if (res) return Ok(new { message = "The User was Disabled successfully" });
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(DisableCourse));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -311,7 +309,7 @@ namespace TMS.API.Controllers
         public IActionResult GetTopicsByCourseId(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            if(courseExists)
+            if (courseExists)
             {
                 try
                 {
@@ -320,7 +318,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetTopicsByCourseId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -344,8 +342,8 @@ namespace TMS.API.Controllers
         [HttpGet("{courseId:int}/topics/{topicId:int}")]
         public IActionResult GetTopicByIds(int courseId, int topicId)
         {
-            var topicExists = _service.Validation.TopicExists(topicId,courseId);
-            if(topicExists)
+            var topicExists = _service.Validation.TopicExists(topicId, courseId);
+            if (topicExists)
             {
                 try
                 {
@@ -357,7 +355,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetTopicByIds));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -388,8 +386,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
         [HttpPost("topic")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateTopic(Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -408,7 +406,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(CreateTopic));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
 
@@ -438,13 +436,13 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
         [HttpPut("topic")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateTopic(Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var topicExists = _service.Validation.TopicExists(topic.TopicId,topic.CourseId);
-            if(topicExists)
+            var topicExists = _service.Validation.TopicExists(topic.TopicId, topic.CourseId);
+            if (topicExists)
             {
                 try
                 {
@@ -460,7 +458,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(UpdateTopic));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -482,24 +480,24 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpPut("{courseId:int}/topics/disable/{topicId:int}")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
-        public IActionResult DisableTopic(int courseId,int topicId)
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
+        public IActionResult DisableTopic(int courseId, int topicId)
         {
-            var topicExists = _service.Validation.TopicExists(topicId,courseId);
-            if(topicExists)
+            var topicExists = _service.Validation.TopicExists(topicId, courseId);
+            if (topicExists)
             {
                 try
                 {
                     // int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     int currentUserId = 2041;
-                    var res = _service.CourseService.DisableTopic(courseId,topicId,currentUserId);
-                    if (res) return Ok(new {message = "The User was Disabled successfully"});
+                    var res = _service.CourseService.DisableTopic(courseId, topicId, currentUserId);
+                    if (res) return Ok(new { message = "The User was Disabled successfully" });
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(DisableTopic));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -535,25 +533,26 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>
         [HttpPut("assignUsers")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")] 
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult AssignUsersToCourse(AddUsersToCourse data)
         {
             var courseExists = _service.Validation.CourseExists(data.CourseId);
-            if(courseExists)
+            if (courseExists)
             {
-                try{
-                int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                var result = _service.CourseService.AddUsersToCourse(data,currentUserId);
-                return Ok(result);
+                try
+                {
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var result = _service.CourseService.AddUsersToCourse(data, currentUserId);
+                    return Ok(result);
                 }
-                catch(InvalidOperationException ex)
+                catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(AssignUsersToCourse));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -585,23 +584,23 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>
         [HttpPut("removeUsers")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Training Coordinator")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult RemoveUsersFromCourse(AddUsersToCourse data)
         {
             var courseExists = _service.Validation.CourseExists(data.CourseId);
-            if(courseExists)
-            { 
+            if (courseExists)
+            {
                 try
                 {
-                int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                var result = _service.CourseService.RemoveUsersFromCourse(data,currentUserId);
-                return Ok(result);
-            }
-            catch(InvalidOperationException ex)
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var result = _service.CourseService.RemoveUsersFromCourse(data, currentUserId);
+                    return Ok(result);
+                }
+                catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(RemoveUsersFromCourse));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("Not found");
@@ -610,12 +609,12 @@ namespace TMS.API.Controllers
         public IActionResult GetCourseUser(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            if(courseExists)
+            if (courseExists)
             {
                 var result = _service.CourseService.GetCourseUsers(courseId);
                 return Ok(result);
             }
-            return NotFound();
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -636,8 +635,8 @@ namespace TMS.API.Controllers
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments")]
         public IActionResult GetAssignmentsByTopicId(int courseId, int topicId)
         {
-            var topicExists = _service.Validation.TopicExists(topicId,courseId);
-            if(topicExists)
+            var topicExists = _service.Validation.TopicExists(topicId, courseId);
+            if (topicExists)
             {
                 try
                 {
@@ -646,13 +645,13 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentsByTopicId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("Not found");
         }
 
-        
+
 
         /// <summary>
         /// Gets a single assigments in a topic by courseId, topicId and ownerId
@@ -673,21 +672,21 @@ namespace TMS.API.Controllers
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments/{ownerId:int}")]
         public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
-            var assignmentExists = _service.Validation.AssignmentExists(courseId,topicId,ownerId);
-            if(assignmentExists)
+            var assignmentExists = _service.Validation.AssignmentExists(courseId, topicId, ownerId);
+            if (assignmentExists)
             {
                 try
                 {
-                    var result = _service.CourseService.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId,topicId,ownerId);
+                    var result = _service.CourseService.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound("Happy");
+            return NotFound("Not Found");
         }
 
         /// <summary>
@@ -714,8 +713,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPost("assignment")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Trainer,Trainee")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult CreateAssignment(Assignment assignment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -735,7 +734,7 @@ namespace TMS.API.Controllers
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(CreateAssignment));
             }
-            return Problem();
+            return Problem("sorry somthing went wrong");
         }
 
         /// <summary>
@@ -763,13 +762,13 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPut("assignment")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Trainer,Trainee")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult UpdateAssignment(Assignment assignment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var assignmentExists = _service.Validation.AssignmentExists(assignment.CourseId,assignment.TopicId,assignment.OwnerId);
-            if(assignmentExists)
+            var assignmentExists = _service.Validation.AssignmentExists(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
+            if (assignmentExists)
             {
                 try
                 {
@@ -786,14 +785,14 @@ namespace TMS.API.Controllers
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(UpdateAssignment));
                 }
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
             return NotFound("Not found");
         }
 
         [HttpPut("attendance")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles ="Trainer, Trainee")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainer, Trainee")]
         public IActionResult MarkAttendance(Attendance attendance)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -815,26 +814,26 @@ namespace TMS.API.Controllers
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(MarkAttendance));
             }
-            return Problem();
+            return Problem("sorry somthing went wrong");
         }
         [HttpGet("getAttendance")]
-        public IActionResult GetAttendanceList(int courseId,int topicId)
+        public IActionResult GetAttendanceList(int courseId, int topicId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            if(courseExists)
+            if (courseExists)
             {
                 try
                 {
-                    var result = _service.CourseService.GetAttendanceList(courseId,topicId);
+                    var result = _service.CourseService.GetAttendanceList(courseId, topicId);
                     if (result is not null) return Ok(result);
                 }
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound("Happy");   
+            return NotFound("Not Found");
         }
     }
 }

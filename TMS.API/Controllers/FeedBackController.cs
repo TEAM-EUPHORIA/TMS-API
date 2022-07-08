@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
@@ -5,6 +6,7 @@ using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class FeedBackController : ControllerBase
@@ -47,7 +49,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(GetCourseFeedbackByCourseIdAndTraineeId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -76,8 +78,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="feedback"></param>
         [HttpPost("course/feedback")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Trainee")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainee")]
         public IActionResult CreateCourseFeedback(CourseFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -96,7 +98,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(CreateCourseFeedback));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
         
@@ -124,8 +126,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("course/feedback")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Trainee")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainee")]
         public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
         {
             var feedbackExists = _service.Validation.CourseFeedbackExists(feedback.CourseId,feedback.TraineeId);
@@ -146,7 +148,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -183,7 +185,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
@@ -213,8 +215,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPost("trainee/feedback")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Trainer")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainer")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -233,7 +235,7 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(CreateTraineeFeedback));
-                return Problem();
+                return Problem("sorry somthing went wrong");
             }
         }
 
@@ -262,8 +264,8 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("trainee/feedback")]
-        // [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Trainer")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Trainer")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -284,7 +286,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
-                    return Problem();
+                    return Problem("sorry somthing went wrong");
                 }
             }
             return NotFound("NotFound");
