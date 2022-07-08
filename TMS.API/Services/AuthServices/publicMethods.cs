@@ -6,9 +6,12 @@ namespace TMS.API.Services
     public partial class AuthService : IAuthService
     {
         private readonly IUnitOfWork _repo;
-        public AuthService(IUnitOfWork repo)
+        private IConfiguration _configuration;
+
+        public AuthService(IUnitOfWork repo,IConfiguration configuration)
         {
             _repo = repo;
+            _configuration = configuration;
         }
         public Dictionary<string, string> Login(LoginModel user)
         {

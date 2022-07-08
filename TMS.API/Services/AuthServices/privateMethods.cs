@@ -8,19 +8,31 @@ namespace TMS.API.Services
 {
     public partial class AuthService
     {
-        private static string GenerateTokenString(User dbUser)
+        private string GenerateTokenString(User dbUser)
         {
             var claims = GenerateClaims(dbUser);
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            var tokeOptions = new JwtSecurityToken(
-                issuer: "https://localhost:5001",
-                audience: "https://localhost:5001",
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: signinCredentials
-            );
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+             var encryptingCredentials = new EncryptingCredentials(secretKey, JwtConstants.DirectKeyUseAlg, SecurityAlgorithms.Aes256CbcHmacSha512);
+
+                var tokenOptions = new JwtSecurityTokenHandler().CreateJwtSecurityToken(
+                  _configuration["Jwt:Issuer"],
+                  _configuration["Jwt:Audience"],
+                    new ClaimsIdentity(claims),
+                    DateTime.Now,
+                    DateTime.Now.AddHours(1),
+                    DateTime.Now,
+                    signinCredentials,
+                    encryptingCredentials);
+
+            // var tokeOptions = new JwtSecurityToken(
+            //     issuer: "https://localhost:5001",
+            //     audience: "https://localhost:5001",
+            //     claims: claims,
+            //     expires: DateTime.Now.AddDays(1),
+            //     signingCredentials: signinCredentials
+            // );
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             return tokenString;
         }
         private static List<Claim> GenerateClaims(User dbUser)
