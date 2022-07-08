@@ -543,7 +543,8 @@ namespace TMS.API.Controllers
             if(courseExists)
             {
                 try{
-                int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+               // int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+               int currentUserId = 2041;
                 var result = _service.CourseService.AddUsersToCourse(data,currentUserId);
                 return Ok(result);
                 }
