@@ -61,8 +61,8 @@ namespace TMS.API.Repositories
                             .Include(c => c.Topics)
                             .FirstOrDefault();
 
-            result.Feedbacks = new List<CourseFeedback>();
-            result.Feedbacks.Add(dbContext.CourseFeedbacks.Where(cf => cf.CourseId == courseId && cf.TraineeId == userId).FirstOrDefault());
+            result!.Feedbacks = new List<CourseFeedback>();
+            result.Feedbacks.Add(dbContext.CourseFeedbacks.Where(cf => cf.CourseId == courseId && cf.TraineeId == userId).FirstOrDefault()!);
 
             result!.Trainer = dbContext.CourseUsers
                                 .Where(cu => cu.CourseId == result.Id && cu.RoleId == 3)

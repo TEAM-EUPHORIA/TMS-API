@@ -39,7 +39,7 @@ namespace TMS.API.Services
             var validation = _repo.Validation.ValidateAssignment(assignment);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                prepareAssignment(assignment);
+                PrepareAssignment(assignment);
                 _repo.Courses.CreateAssignment(assignment);
                 _repo.Complete();
             }
@@ -52,7 +52,7 @@ namespace TMS.API.Services
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
                 var dbAssignment = _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(assignment.CourseId,assignment.TopicId,assignment.OwnerId);
-                prepareAssignment(assignment,dbAssignment);
+                PrepareAssignment(assignment,dbAssignment);
                 _repo.Courses.UpdateAssignment(dbAssignment);
                 _repo.Complete();
             }

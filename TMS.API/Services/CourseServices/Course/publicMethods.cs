@@ -70,7 +70,7 @@ namespace TMS.API.Services
             if(courseExists)
             {
                 var dbCourse = _repo.Courses.GetCourseById(courseId);
-                disable(currentUserId,dbCourse);
+                Disable(currentUserId,dbCourse);
                 _repo.Complete();
             }
             return courseExists;        
