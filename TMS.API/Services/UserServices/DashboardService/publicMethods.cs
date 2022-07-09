@@ -3,7 +3,7 @@ namespace TMS.API.Services
 
     public partial class UserService : IUserService
     {
-        readonly Dictionary<string, string> result = new();
+        readonly Dictionary<string, string> DashboardResult = new();
         /// <summary>
         /// used to get dashboard data for the user by using user id
         /// </summary>
@@ -37,7 +37,7 @@ namespace TMS.API.Services
                         PrepareReviewerDashboard(userId);
                         break;
                 }
-                return result!;
+                return DashboardResult!;
             }
             throw new ArgumentException("Invalid User");
         }

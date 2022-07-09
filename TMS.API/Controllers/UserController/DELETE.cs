@@ -7,7 +7,7 @@ namespace TMS.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("User")]
     public partial class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -32,7 +32,7 @@ namespace TMS.API.Controllers
         /// <response code="404">If User was not found. </response>
         /// <response code="500">If there is problem in server.</response>
         /// <param name="userId"></param>
-        [HttpDelete("{userId:int}")]
+        [HttpDelete("Disable/{userId:int}")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
@@ -44,9 +44,9 @@ namespace TMS.API.Controllers
                 try
                 {
                     // getting the logged in user id
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     // calling service to disable the user
-                    var res = _service.UserService.DisableUser(userId,currentUserId);
+                    var res = _service.UserService.DisableUser(userId,updatedBy);
                     // response
                     if (res) return Ok(new {message = "The User was Disabled successfully"});
                 }

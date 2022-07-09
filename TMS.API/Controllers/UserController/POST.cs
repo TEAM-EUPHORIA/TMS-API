@@ -6,7 +6,6 @@ using TMS.BAL;
 namespace TMS.API.Controllers
 {
     [Authorize]
-    [Route("[controller]")]
     public partial class UserController : ControllerBase
     {
         /// <summary>
@@ -52,8 +51,8 @@ namespace TMS.API.Controllers
                 if (modelValidation.ContainsKey("IsValid"))
                 {
                     // getting the logged in user id
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.UserService.CreateUser(user,currentUserId); 
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.UserService.CreateUser(user,createdBy); 
                     if (res.ContainsKey("IsValid")){
                        var response = _service.UserService.GetUsersByRole(user.RoleId);  
                        return Ok(new { response });

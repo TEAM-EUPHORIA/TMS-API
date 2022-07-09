@@ -5,7 +5,7 @@ namespace TMS.API.Services
     public partial class UserService
     {
         /// <summary>
-        /// used to add data to result Dictionary
+        /// used to add data to DashboardResult Dictionary
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -15,7 +15,7 @@ namespace TMS.API.Services
         {
             try
             {
-                result.Add(key, value);
+                DashboardResult.Add(key, value);
             }
             catch (ArgumentException ex)
             {
@@ -24,7 +24,7 @@ namespace TMS.API.Services
             }
         }
         /// <summary>
-        /// used to added user details to result Dictionary.
+        /// used to added user details to DashboardResult Dictionary.
         /// </summary>
         /// <param name="userId"></param>
         private void PrepareUserDetails(int userId)
@@ -36,7 +36,7 @@ namespace TMS.API.Services
             }
         }
         /// <summary>
-        /// used to add reviews count based on status to result Dictionary
+        /// used to add reviews count based on status to DashboardResult Dictionary
         /// </summary>
         /// <param name="userId"></param>
         private void ReviewStats(int userId)
@@ -47,7 +47,7 @@ namespace TMS.API.Services
             AddEntry("Completed Review", completed);
         }
         /// <summary>
-        /// used to add course related stats to result Dictionary
+        /// used to add course related stats to DashboardResult Dictionary
         /// </summary>
         /// <param name="userId"></param>
         private void AddCourseStats(int userId)
@@ -59,7 +59,7 @@ namespace TMS.API.Services
             }
         }
         /// <summary>
-        /// used to trainees count, trainers count, department count, reviewer count to result Dictionary
+        /// used to trainees count, trainers count, department count, reviewer count to DashboardResult Dictionary
         /// </summary>
         private void AddTraineeTrainerDepartmentCount()
         {
@@ -69,7 +69,7 @@ namespace TMS.API.Services
             AddEntry("reviewersCount", _stats.GetReviewersCount().ToString());
         }
         /// <summary>
-        /// used to PrepareHeadDashboard by populating result Dictionary
+        /// used to PrepareHeadDashboard by populating DashboardResult Dictionary
         /// </summary>
         /// <param name="userId"></param>
         private void PrepareHeadDashboard(int userId)
@@ -79,7 +79,7 @@ namespace TMS.API.Services
             AddTraineeTrainerDepartmentCount();
         }
         /// <summary>
-        /// used to PrepareCoordinatorDashboard by populating result Dictionary
+        /// used to PrepareCoordinatorDashboard by populating DashboardResult Dictionary
         /// </summary>
         /// <param name="userId"></param>
         private void PrepareCoordinatorDashboard(int userId)
@@ -89,7 +89,7 @@ namespace TMS.API.Services
             AddTraineeTrainerDepartmentCount();
         }
         /// <summary>
-        /// used to PrepareTraineeDashboard by populating result Dictionary
+        /// used to PrepareTraineeDashboard by populating DashboardResult Dictionary
         /// </summary>
         /// <param name="userId"></param>
         private void PrepareTraineeDashboard(int userId)
@@ -99,7 +99,7 @@ namespace TMS.API.Services
             ReviewStats(userId);
         }
         /// <summary>
-        /// used to PrepareTrainerDashboard by populating result Dictionary
+        /// used to PrepareTrainerDashboard by populating DashboardResult Dictionary
         /// </summary>
         /// <param name="userId"></param>
         private void PrepareTrainerDashboard(int userId)
@@ -108,7 +108,7 @@ namespace TMS.API.Services
             AddCourseStats(userId);
         }
         /// <summary>
-        /// used to PrepareReviewerDashboard by populating result Dictionary
+        /// used to PrepareReviewerDashboard by populating DashboardResult Dictionary
         /// </summary>
         /// <param name="userId"></param>
         private void PrepareReviewerDashboard(int userId)

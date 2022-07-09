@@ -28,7 +28,7 @@ namespace TMS.API.Services
                 var momExists = _repo.Validation.MOMExists(reviewId, traineeId);
                 if (momExists)
                 {
-                    return _repo.Reviews.GetMomByReviewIdAndTraineeId(reviewId, traineeId); ;
+                    return _repo.Reviews.GetMomByReviewIdAndTraineeId(reviewId, traineeId);
                 }
             }
             throw new ArgumentException("Inavlid Id's");

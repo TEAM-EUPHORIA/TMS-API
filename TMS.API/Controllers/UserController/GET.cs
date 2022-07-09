@@ -5,7 +5,6 @@ using TMS.API.UtilityFunctions;
 namespace TMS.API.Controllers
 {
     [Authorize]
-    [Route("[controller]")]
     public partial class UserController : ControllerBase
     {
         /// <summary>
@@ -133,7 +132,7 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    var result = _service.UserService.GetUserById(userId);
+                    var result = _service.UserService.GetUser(userId);
                     if (result is not null) return Ok(result);
                     return NotFound("Not Found");
                 }

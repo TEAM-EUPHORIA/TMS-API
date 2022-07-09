@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-namespace TMS.API.Controllers
+namespace TMS.API.Controllers.ReviewController
 {
+    [Authorize]
     public partial class ReviewController : ControllerBase
     {
         /// <summary>

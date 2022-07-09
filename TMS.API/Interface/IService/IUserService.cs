@@ -6,8 +6,8 @@ namespace TMS.API.Services
     {
         Dictionary<string, string> CreateUser(User user, int createdBy);
         Dictionary<string, string> Dashboard(int userId);
-        bool DisableUser(int userId, int currentUserId);
-        User GetUserById(int userId);
+        bool DisableUser(int userId, int updatedBy);
+        User GetUser(int userId);
         IEnumerable<User> GetUsersByDepartment(int departmentId);
         IEnumerable<User> GetUsersByDeptandRole(int departmentId, int roleId);
         IEnumerable<User> GetUsersByRole(int roleId);

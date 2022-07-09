@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -35,13 +36,13 @@ builder.Services.AddAuthentication(opt =>
 builder.Services.AddControllers();
 
 // adding serilog
-var logger = new LoggerConfiguration()
+var _logger = new LoggerConfiguration()
   .ReadFrom.Configuration(builder.Configuration)
   .Enrich.FromLogContext()
   .CreateLogger();
 
 // builder.Logging.ClearProviders(); //if its enabled console loggings won't work
-builder.Logging.AddSerilog(logger);
+builder.Logging.AddSerilog(_logger);
 
 // Making Db Context and service available for the App 
 builder.Services.AddTransient<IValidation, Validation>();

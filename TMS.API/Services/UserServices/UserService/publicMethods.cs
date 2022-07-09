@@ -107,27 +107,26 @@ namespace TMS.API.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>
-        /// user if user
+        /// user if user is found
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// </exception>
-        public User GetUserById(int userId)
+        public User GetUser(int userId)
         {
             try
             {    
                 var userExists = _repo.Validation.UserExists(userId);
                 if (userExists)
                 {
-                    var result = _repo.Users.GetUserById(userId);
-                    return result;
+                    return _repo.Users.GetUserById(userId);
                 }
                 throw new ArgumentException("Invalid Id");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(UserService),nameof(GetUserById));   
+                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(UserService),nameof(GetUser));   
                 throw;
             }
         }

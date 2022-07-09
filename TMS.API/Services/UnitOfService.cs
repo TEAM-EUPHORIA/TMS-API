@@ -14,7 +14,7 @@ namespace TMS.API.Services
         public ICourseService CourseService { get; set; }
         public IValidation Validation { get; set; }
 
-        public UnitOfService(IUnitOfWork repo,IConfiguration configuration,ILogger logger)
+        public UnitOfService(IUnitOfWork repo,IConfiguration configuration,ILogger<UnitOfService> logger)
         {
             _repo = repo;
             AuthService = new AuthService(repo,configuration);

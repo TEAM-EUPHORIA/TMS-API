@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
-namespace TMS.API.Controllers
+namespace TMS.API.Controllers.ReviewController
 {
     [Authorize]
     [ApiController]
