@@ -39,7 +39,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetCourses));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourses));
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -71,7 +71,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -105,7 +105,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetCoursesByDepartmentId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByDepartmentId));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -141,7 +141,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetCourseById));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourseById));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -195,7 +195,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(CreateCourse));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateCourse));
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -247,7 +247,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(UpdateCourse));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateCourse));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -284,7 +284,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(DisableCourse));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(DisableCourse));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -317,7 +317,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetTopicsByCourseId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetTopicsByCourseId));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -354,7 +354,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetTopicByIds));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetTopicByIds));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -405,7 +405,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(CreateTopic));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateTopic));
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -457,7 +457,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(UpdateTopic));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateTopic));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -496,7 +496,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(DisableTopic));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(DisableTopic));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -548,7 +548,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(AssignUsersToCourse));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(AssignUsersToCourse));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -599,7 +599,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(RemoveUsersFromCourse));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(RemoveUsersFromCourse));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -644,7 +644,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentsByTopicId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentsByTopicId));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -682,7 +682,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -732,7 +732,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(CreateAssignment));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateAssignment));
             }
             return Problem("sorry somthing went wrong");
         }
@@ -783,7 +783,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(UpdateAssignment));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateAssignment));
                 }
                 return Problem("sorry somthing went wrong");
             }
@@ -812,7 +812,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(MarkAttendance));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(MarkAttendance));
             }
             return Problem("sorry somthing went wrong");
         }
@@ -829,7 +829,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
                     return Problem("sorry somthing went wrong");
                 }
             }

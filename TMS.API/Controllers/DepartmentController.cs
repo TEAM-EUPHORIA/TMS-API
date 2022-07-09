@@ -38,7 +38,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(GetDepartments));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(GetDepartments));
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -72,7 +72,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(GetDepartmentById));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(GetDepartmentById));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -119,7 +119,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(CreateDepartment));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(CreateDepartment));
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -168,7 +168,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(UpdateDepartment));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(UpdateDepartment));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -205,7 +205,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(DepartmentController), nameof(DisableDepartment));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(DisableDepartment));
                     return Problem("sorry somthing went wrong");
                 }
             }

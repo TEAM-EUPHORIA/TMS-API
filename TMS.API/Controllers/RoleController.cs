@@ -42,7 +42,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(RoleService), nameof(GetRoles));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(RoleService), nameof(GetRoles));
                 return Problem("sorry somthing went wrong");
             }
         }

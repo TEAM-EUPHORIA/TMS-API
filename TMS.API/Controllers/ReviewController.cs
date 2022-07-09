@@ -46,7 +46,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -79,7 +79,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -131,7 +131,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateReview));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(CreateReview));
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -186,7 +186,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -221,7 +221,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -256,7 +256,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(GetMomByReviewIdAndTraineeId));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetMomByReviewIdAndTraineeId));
                     return Problem("sorry somthing went wrong");
                 }
             }
@@ -308,7 +308,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(CreateMom));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(CreateMom));
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -362,7 +362,7 @@ namespace TMS.API.Controllers
                 }
                 catch (InvalidOperationException ex)
                 {
-                    TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(ReviewController), nameof(UpdateMom));
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(UpdateMom));
                     return Problem("sorry somthing went wrong");
                 }
             }

@@ -51,7 +51,7 @@ namespace TMS.API
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailed(ex, _logger, nameof(AuthController), nameof(Login));
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(AuthController), nameof(Login));
                 return Problem("sorry somthing went wrong");
             }
             return Unauthorized("Unauthorized user");

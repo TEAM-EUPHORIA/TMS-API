@@ -50,7 +50,7 @@ namespace TMS.API.Repositories
                     .Include(u => u.Role);
         }
 
-        public IEnumerable<User> GetUsersByDeptandrole(int departmentId, int roleId)
+        public IEnumerable<User> GetUsersByDeptandRole(int departmentId, int roleId)
         {
             return dbContext.Users
                     .Where(u => u.DepartmentId == departmentId && u.RoleId == roleId)

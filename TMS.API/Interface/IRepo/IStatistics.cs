@@ -3,7 +3,6 @@ namespace TMS.API.Services
     public interface IStatistics
     {
         int GetAttendanceCount(int courseId, List<int>? topicIds, int userId);
-        int GetCanceledReviews();
         int GetCompletedReviews(int userId);
         int GetCoordinatorCount();
         int GetCourseCount(int userId);

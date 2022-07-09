@@ -1,68 +1,120 @@
+using TMS.API.UtilityFunctions;
+
 namespace TMS.API.Services
 {
     public partial class UserService
     {
-        private Dictionary<string,string> prepareHeadDashboard(int userId)
+        /// <summary>
+        /// used to add data to result Dictionary
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        private void AddEntry(string key, string value)
         {
-            var result = _stats.UserDetails(userId);
-            result.Add("coordinatorsCount", _stats.GetCoordinatorCount().ToString());
-            AddTraineeTrainerDepartmentCount(result);
-            return result;
+            try
+            {
+                result.Add(key, value);
+            }
+            catch (ArgumentException ex)
+            {
+                TMSLogger.ArgumentExceptionInDictionary(ex,_logger,nameof(UserService),nameof(AddEntry));
+                throw;
+            }
         }
-
-        private void AddTraineeTrainerDepartmentCount(Dictionary<string, string> result)
+        /// <summary>
+        /// used to added user details to result Dictionary.
+        /// </summary>
+        /// <param name="userId"></param>
+        private void PrepareUserDetails(int userId)
         {
-            result.Add("traineesCount", _stats.GetTraineesCount().ToString());
-            result.Add("trainersCount", _stats.GetTrainersCount().ToString());
-            result.Add("departmentCount", _stats.GetDepartmentsCount().ToString());
-            result.Add("reviewersCount", _stats.GetReviewersCount().ToString());
+            var userDashboardDetails = _stats.UserDetails(userId);
+            foreach (var item in userDashboardDetails)
+            {
+                AddEntry(item.Key, item.Value);
+            }
         }
-
-        private Dictionary<string,string>? prepareCoordinatorDashboard(int userId)
+        /// <summary>
+        /// used to add reviews count based on status to result Dictionary
+        /// </summary>
+        /// <param name="userId"></param>
+        private void ReviewStats(int userId)
         {
-            var result = _stats.UserDetails(userId);
-            result.Add("courseCount",_stats.GetCourseCount().ToString());
-            AddTraineeTrainerDepartmentCount(result);
-            return result;
+            var upComping = _stats.GetUpComingReviews(userId).ToString();
+            var completed = _stats.GetCompletedReviews(userId).ToString();
+            AddEntry("Upcomming Review", upComping);
+            AddEntry("Completed Review", completed);
         }
-        private Dictionary<string,string> prepareTraineeDashboard(int userId)
-        {
-            var result = _stats.UserDetails(userId);
-            AddCourseStats(userId, result);
-            ReviewStats(userId, result);
-            return result;
-        }
-
-        private void ReviewStats(int userId, Dictionary<string, string> result)
-        {
-             var upComping = _stats.GetUpComingReviews(userId).ToString();
-            var completed = _stats.GetUpComingReviews(userId).ToString();
-            var canceled = _stats.GetUpComingReviews(userId).ToString();
-            result.Add("Upcomming Review",upComping);
-            result.Add("Canceled Review",canceled);
-            result.Add("Completed Review",completed);
-        }
-
-        private void AddCourseStats(int userId, Dictionary<string, string> result)
+        /// <summary>
+        /// used to add course related stats to result Dictionary
+        /// </summary>
+        /// <param name="userId"></param>
+        private void AddCourseStats(int userId)
         {
             var courseStats = _stats.GetCourseStats(userId);
             foreach (var item in courseStats)
             {
-                result.Add(item.Key, item.Value);
+                AddEntry(item.Key, item.Value);
             }
         }
-
-        private Dictionary<string,string> prepareTrainerDashboard(int userId)
+        /// <summary>
+        /// used to trainees count, trainers count, department count, reviewer count to result Dictionary
+        /// </summary>
+        private void AddTraineeTrainerDepartmentCount()
         {
-            var result = _stats.UserDetails(userId);
-            AddCourseStats(userId,result);
-            return result;
+            AddEntry("traineesCount", _stats.GetTraineesCount().ToString());
+            AddEntry("trainersCount", _stats.GetTrainersCount().ToString());
+            AddEntry("departmentCount", _stats.GetDepartmentsCount().ToString());
+            AddEntry("reviewersCount", _stats.GetReviewersCount().ToString());
         }
-        private Dictionary<string,string> prepareReviewerDashboard(int userId)
+        /// <summary>
+        /// used to PrepareHeadDashboard by populating result Dictionary
+        /// </summary>
+        /// <param name="userId"></param>
+        private void PrepareHeadDashboard(int userId)
         {
-            var result = _stats.UserDetails(userId);
-            ReviewStats(userId, result);
-            return result;
+            PrepareUserDetails(userId);
+            AddEntry("coordinatorsCount", _stats.GetCoordinatorCount().ToString());
+            AddTraineeTrainerDepartmentCount();
+        }
+        /// <summary>
+        /// used to PrepareCoordinatorDashboard by populating result Dictionary
+        /// </summary>
+        /// <param name="userId"></param>
+        private void PrepareCoordinatorDashboard(int userId)
+        {
+            PrepareUserDetails(userId);
+            AddEntry("courseCount", _stats.GetCourseCount().ToString());
+            AddTraineeTrainerDepartmentCount();
+        }
+        /// <summary>
+        /// used to PrepareTraineeDashboard by populating result Dictionary
+        /// </summary>
+        /// <param name="userId"></param>
+        private void PrepareTraineeDashboard(int userId)
+        {
+            PrepareUserDetails(userId);
+            AddCourseStats(userId);
+            ReviewStats(userId);
+        }
+        /// <summary>
+        /// used to PrepareTrainerDashboard by populating result Dictionary
+        /// </summary>
+        /// <param name="userId"></param>
+        private void PrepareTrainerDashboard(int userId)
+        {
+            PrepareUserDetails(userId);
+            AddCourseStats(userId);
+        }
+        /// <summary>
+        /// used to PrepareReviewerDashboard by populating result Dictionary
+        /// </summary>
+        /// <param name="userId"></param>
+        private void PrepareReviewerDashboard(int userId)
+        {
+            PrepareUserDetails(userId);
+            ReviewStats(userId);
         }
     }
 }

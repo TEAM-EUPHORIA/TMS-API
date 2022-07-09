@@ -3,29 +3,38 @@ namespace TMS.API.Services
 
     public partial class UserService : IUserService
     {
+        readonly Dictionary<string, string> result = new();
+        /// <summary>
+        /// used to get dashboard data for the user by using user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// result Dictionary if user is found 
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> Dashboard(int userId)
         {
             var userExists = _repo.Validation.UserExists(userId);
             var user = _repo.Users.GetUserById(userId);
-            var result = new Dictionary<string, string>();
             if (userExists)
             {
                 switch (user.RoleId)
                 {
                     case 1:
-                        result = prepareHeadDashboard(userId);
+                        PrepareHeadDashboard(userId);
                         break;
                     case 2:
-                        result = prepareCoordinatorDashboard(userId);
+                        PrepareCoordinatorDashboard(userId);
                         break;
                     case 3:
-                        result = prepareTrainerDashboard(userId);
+                        PrepareTrainerDashboard(userId);
                         break;
                     case 4:
-                        result = prepareTraineeDashboard(userId);
+                        PrepareTraineeDashboard(userId);
                         break;
                     case 5:
-                        result = prepareReviewerDashboard(userId);
+                        PrepareReviewerDashboard(userId);
                         break;
                 }
                 return result!;
