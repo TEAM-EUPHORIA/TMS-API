@@ -11,7 +11,11 @@ namespace TMS.API
     {
         private readonly ILogger<AuthController> _logger;
         private readonly IUnitOfService _service;
-
+        /// <summary>
+        /// Constructor for AuthController
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="logger"></param>
         public AuthController(IUnitOfService service, ILogger<AuthController> logger)
         {
             _logger = logger;
@@ -19,7 +23,7 @@ namespace TMS.API
         }
         
         /// <summary>
-        /// Login to the system
+        /// Used for loging into the system
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -45,7 +49,7 @@ namespace TMS.API
                 if(validation.ContainsKey("IsValid"))
                 {
                     var result = _service.AuthService.Login(user);
-                    if(result is not null) return (Ok(result));
+                    if(result is not null) return Ok(result);
                 }
                 
             }

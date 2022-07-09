@@ -24,7 +24,7 @@ namespace TMS.API.Controllers
         /// <remarks>
         /// Sample request:
         /// 
-        ///     url : https://localhost:5001/User/(userId:int)
+        ///     url : https://localhost:5001/User/disable/(userId:int)
         ///
         /// </remarks>
         /// <response code="200">If the user was disabled</response>
@@ -32,7 +32,7 @@ namespace TMS.API.Controllers
         /// <response code="404">If User was not found. </response>
         /// <response code="500">If there is problem in server.</response>
         /// <param name="userId"></param>
-        [HttpDelete("Disable/{userId:int}")]
+        [HttpDelete("disable/{userId:int}")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
