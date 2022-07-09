@@ -5,7 +5,6 @@ namespace TMS.API.Services
     public class UnitOfService : IUnitOfService
     {
         private readonly IUnitOfWork _repo;
-
         public IAuthService AuthService { get; set; }
         public IUserService UserService { get; set; }
         public IRoleService RoleService { get; set; }
@@ -15,12 +14,12 @@ namespace TMS.API.Services
         public ICourseService CourseService { get; set; }
         public IValidation Validation { get; set; }
 
-        public UnitOfService(IUnitOfWork repo,IConfiguration configuration)
+        public UnitOfService(IUnitOfWork repo,IConfiguration configuration,ILogger logger)
         {
             _repo = repo;
             AuthService = new AuthService(repo,configuration);
-            UserService = new UserService(repo);
-            RoleService = new RoleService(repo);
+            UserService = new UserService(repo, logger);
+            RoleService = new RoleService(repo, logger);
             ReviewService = new ReviewService(repo);
             FeedbackService = new FeedbackService(repo);
             DepartmentService = new DepartmentService(repo);

@@ -15,7 +15,7 @@ namespace TMS.API.Services
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="logger"></param>
-        public UserService(IUnitOfWork repo, ILogger<UserService> logger)
+        public UserService(IUnitOfWork repo, ILogger logger)
         {
             _repo = repo;
             _stats = _repo.Stats;

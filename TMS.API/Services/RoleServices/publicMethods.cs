@@ -7,13 +7,13 @@ namespace TMS.API.Services
     public class RoleService : IRoleService
     {
         private readonly IUnitOfWork _repo;
-        private readonly ILogger<RoleService> _logger;
+        private readonly ILogger _logger;
         /// <summary>
         /// Constructor of RoleService
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="logger"></param>
-        public RoleService(IUnitOfWork repo,ILogger<RoleService> logger)
+        public RoleService(IUnitOfWork repo,ILogger logger)
         {
             _repo = repo;
             _logger = logger;
