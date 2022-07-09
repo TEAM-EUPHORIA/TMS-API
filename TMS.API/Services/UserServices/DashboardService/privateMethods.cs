@@ -29,7 +29,7 @@ namespace TMS.API.Services
         /// <param name="userId"></param>
         private void PrepareUserDetails(int userId)
         {
-            var userDashboardDetails = _stats.UserDetails(userId);
+            var userDashboardDetails = _stats.UserDashboardDetails(userId);
             foreach (var item in userDashboardDetails)
             {
                 AddEntry(item.Key, item.Value);

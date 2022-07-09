@@ -1,13 +1,9 @@
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-
 namespace TMS.API.Services
 {
-
     public class Statistics : IStatistics
     {
         private readonly AppDbContext dbContext;
-
         public Statistics(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -87,10 +83,12 @@ namespace TMS.API.Services
                     completedCourseCount++;
             }
             int inProgressCourseCount = courseCount - completedCourseCount;
-            var result = new Dictionary<string, string>();
-            result.Add(nameof(courseCount), courseCount.ToString());
-            result.Add(nameof(completedCourseCount), completedCourseCount.ToString());
-            result.Add(nameof(inProgressCourseCount), inProgressCourseCount.ToString());
+            var result = new Dictionary<string, string>
+            {
+                { nameof(courseCount), courseCount.ToString() },
+                { nameof(completedCourseCount), completedCourseCount.ToString() },
+                { nameof(inProgressCourseCount), inProgressCourseCount.ToString() }
+            };
             return result;
         }
         public bool IsCourseCompleted(int userId, int courseId)
@@ -100,7 +98,7 @@ namespace TMS.API.Services
             int attendanceCount = GetAttendanceCount(courseId, topicIds, userId);
             return topicsCount == attendanceCount;
         }
-        public Dictionary<string, string> UserDetails(int userId)
+        public Dictionary<string, string> UserDashboardDetails(int userId)
         {
             var user = dbContext.Users.Where(u => u.Id == userId).Include(u => u.Role).FirstOrDefault();
             var result = new Dictionary<string, string>();

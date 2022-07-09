@@ -16,6 +16,6 @@ namespace TMS.API.Services
         int GetUserCount();
         bool IsCourseCompleted(int userId, int courseId);
         int LastUserId();
-        Dictionary<string, string> UserDetails(int userId);
+        Dictionary<string, string> UserDashboardDetails(int userId);
     }
 }

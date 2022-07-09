@@ -16,7 +16,7 @@ namespace TMS.API.Repositories
         IEnumerable<Course> GetCourses();
         IEnumerable<Course> GetCoursesByDepartmentId(int departmentId);
         IEnumerable<Course> GetCoursesByUserId(int userId);
-        object GetCourseUsers(int courseId);
+        IEnumerable<User> GetCourseUsers(int courseId);
         Course GetCourseById(int courseId, int userId);
         Course GetCourseById(int courseId);
         void CreateCourse(Course course);

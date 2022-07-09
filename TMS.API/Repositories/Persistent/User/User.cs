@@ -2,18 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
 using TMS.BAL;
-
 namespace TMS.API.Repositories
 {
-    class UserRepository : IUserRepository
+    public partial class UserRepository : IUserRepository
     {
-        private readonly AppDbContext dbContext;
-
-        public UserRepository(AppDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
-
         public void CreateUser(User user)
         {
             dbContext.Users.Add(user);
@@ -25,7 +17,6 @@ namespace TMS.API.Repositories
                            u.Password == HashPassword.Sha256(user.Password))
                     .Include(u => u.Role).FirstOrDefault()!;
         }
-
         public User GetUserById(int id)
         {
             return dbContext.Users
@@ -33,7 +24,6 @@ namespace TMS.API.Repositories
                     .Include(u => u.Role)
                     .Include(u => u.Department)
                     .FirstOrDefault()!;
-
         }
         public IEnumerable<User> GetUsersByRole(int roleId)
         {
@@ -49,7 +39,6 @@ namespace TMS.API.Repositories
                     .Include(u => u.Department)
                     .Include(u => u.Role);
         }
-
         public IEnumerable<User> GetUsersByDeptandRole(int departmentId, int roleId)
         {
             return dbContext.Users
@@ -57,7 +46,6 @@ namespace TMS.API.Repositories
                     .Include(u => u.Department)
                     .Include(u => u.Role);
         }
-
         public void UpdateUser(User user)
         {
             dbContext.Users.Update(user);
