@@ -33,7 +33,7 @@ namespace TMS.API.Controllers
         /// <response code="404">If role was not found.</response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         [HttpGet("roles")]
-        // [Authorize(Roles = "Training Coordinator")]
+        [Authorize(Roles = "Training Coordinator")]
         public IActionResult GetRoles()
         {
             try
