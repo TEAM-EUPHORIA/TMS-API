@@ -31,7 +31,7 @@ namespace TMS.API.Controllers
         /// <response code="404">If Department was not found.</response>
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
-        [HttpPut("disable/{departmentId:int}")]
+        [HttpDelete("disable/{departmentId:int}")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableDepartment(int departmentId)
