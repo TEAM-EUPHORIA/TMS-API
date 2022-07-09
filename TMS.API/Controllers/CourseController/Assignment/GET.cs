@@ -6,6 +6,7 @@ using TMS.API.Services;
 namespace TMS.API.Controllers
 {
     [Authorize]
+    [Route("[controller]")]
     public partial class CourseController : ControllerBase
     {
         private readonly ILogger<CourseController> _logger;
