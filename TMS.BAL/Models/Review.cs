@@ -19,7 +19,7 @@ namespace TMS.BAL
         [Required]
         public DateTime ReviewTime { get; set; }
         [Required]
-        public string Mode { get; set; }
+        public string ?Mode { get; set; }
         //virtual navigation properties
         public virtual User? Reviewer { get; set; }
         public virtual User? Trainee { get; set; }

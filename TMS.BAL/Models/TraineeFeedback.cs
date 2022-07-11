@@ -14,7 +14,7 @@ namespace TMS.BAL
         [Required]
         [MinLength(5)]
         [MaxLength(100)] 
-        public string Feedback { get; set; }
+        public string ?Feedback { get; set; }
         // virtual navigation properties
         public virtual Course? Course { get; set; }
         public virtual User? Trainee { get; set; }

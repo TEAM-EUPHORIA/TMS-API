@@ -13,7 +13,7 @@ namespace TMS.BAL
         [Key,Column(Order=2)]
         public int OwnerId { get; set; }
         [Required]
-        public string Base64 { get; set; }
+        public string ?Base64 { get; set; }
         public byte[]? Document { get; set; }
         // virtual navigation properties
         public virtual Course? Course { get; set; }

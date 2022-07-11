@@ -145,7 +145,7 @@ namespace TMS.API
         // check review exists
         // check trainee exists
         // regex validation for meeting notes, purpose if meeting, agenda
-        public Dictionary<string, string> ValidateMOM(MOM mom)
+        public Dictionary<string, string> ValidateMOM(Mom mom)
         {
             CheckIdAndAddEntery(mom.ReviewId,nameof(mom.ReviewId));
             CheckIdAndAddEntery(mom.TraineeId,nameof(mom.TraineeId));

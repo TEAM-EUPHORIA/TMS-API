@@ -22,7 +22,7 @@ namespace TMS.API
         public DbSet<TraineeFeedback> TraineeFeedbacks { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
-        public DbSet<MOM> MOMs { get; set; }
+        public DbSet<Mom> MOMs { get; set; }
         public DbSet<ReviewStatus> ReviewStatuses { get; set; }
         // mapping entity
         public DbSet<CourseUsers> CourseUsers { get; set; }
@@ -37,7 +37,7 @@ namespace TMS.API
             modelBuilder.Entity<CourseFeedback>().HasKey(e => new { e.CourseId, e.TraineeId });
             modelBuilder.Entity<TraineeFeedback>().HasKey(e => new { e.CourseId, e.TraineeId, e.TrainerId });
             modelBuilder.Entity<Review>().HasKey(e => new { e.Id });
-            modelBuilder.Entity<MOM>().HasKey(e => new { e.ReviewId, e.TraineeId });
+            modelBuilder.Entity<Mom>().HasKey(e => new { e.ReviewId, e.TraineeId });
 
             // data seeding
             // Roles table

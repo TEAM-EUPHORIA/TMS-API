@@ -289,7 +289,7 @@ namespace TMS.API.Controllers
         [HttpPost("mom")]
         // [ValidateAntiForgeryToken]
         // [Authorize(Roles = "Trainee")]
-        public IActionResult CreateMom(MOM mom)
+        public IActionResult CreateMom(Mom mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
@@ -341,7 +341,7 @@ namespace TMS.API.Controllers
         [HttpPut("mom")]
         // [ValidateAntiForgeryToken]
         // [Authorize(Roles = "Trainee")]
-        public IActionResult UpdateMom(MOM mom)
+        public IActionResult UpdateMom(Mom mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var momExists = _service.Validation.MOMExists(mom.ReviewId,mom.TraineeId);

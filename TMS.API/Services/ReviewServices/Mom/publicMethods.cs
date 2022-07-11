@@ -13,13 +13,13 @@ namespace TMS.API.Services
             _repo = repo;
 
         }
-        public IEnumerable<MOM> GetListOfMomByUserId(int userId)
+        public IEnumerable<Mom> GetListOfMomByUserId(int userId)
         {
             var userExists = _repo.Validation.UserExists(userId);
             if (userExists) return _repo.Reviews.GetListOfMomByUserId(userId);
             else throw new ArgumentException("Invalid Id");
         }
-        public MOM GetMomByReviewIdAndTraineeId(int reviewId, int traineeId)
+        public Mom GetMomByReviewIdAndTraineeId(int reviewId, int traineeId)
         {
             var reviewExists = _repo.Validation.ReviewExists(reviewId);
             var traineeExists = _repo.Validation.UserExists(traineeId);
@@ -33,7 +33,7 @@ namespace TMS.API.Services
             }
             throw new ArgumentException("Inavlid Id's");
         }
-        public Dictionary<string, string> CreateMom(MOM mom)
+        public Dictionary<string, string> CreateMom(Mom mom)
         {
             if (mom is null) throw new ArgumentNullException(nameof(mom));
             var validation = _repo.Validation.ValidateMOM(mom);
@@ -45,7 +45,7 @@ namespace TMS.API.Services
             }
             return validation;
         }
-        public Dictionary<string, string> UpdateMom(MOM mom)
+        public Dictionary<string, string> UpdateMom(Mom mom)
         {
             if (mom is null) throw new ArgumentNullException(nameof(mom));
             var validation = _repo.Validation.ValidateMOM(mom);
