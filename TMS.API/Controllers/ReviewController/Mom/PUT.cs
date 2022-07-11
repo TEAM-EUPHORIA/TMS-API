@@ -35,7 +35,7 @@ namespace TMS.API.Controllers.ReviewController
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPut("mom")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Trainee")]
         public IActionResult UpdateMom(MOM mom)
         {
@@ -48,8 +48,8 @@ namespace TMS.API.Controllers.ReviewController
                     var IsValid = _service.Validation.ValidateMOM(mom);
                     if (IsValid.ContainsKey("IsValid"))
                     {
-                        mom.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.ReviewService.UpdateMom(mom);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        var res = _service.ReviewService.UpdateMom(mom, updatedBy);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Updated successfully" });
                     }
                     return BadRequest(IsValid);

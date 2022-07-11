@@ -32,7 +32,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPost("trainee/feedback")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Trainer")]
         public IActionResult CreateTraineeFeedback(TraineeFeedback feedback)
         {
@@ -43,8 +43,8 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create feedback. the feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    feedback.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.FeedbackService.CreateTraineeFeedback(feedback);
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.FeedbackService.CreateTraineeFeedback(feedback,createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                 }
                 return BadRequest(IsValid);

@@ -7,9 +7,9 @@ namespace TMS.API.Services
     public interface ICourseService
     {
         Dictionary<string, List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data, int currentUserId);
-        Dictionary<string, string> CreateAssignment(Assignment assignment);
-        Dictionary<string, string> CreateCourse(Course course);
-        Dictionary<string, string> CreateTopic(Topic topic);
+        Dictionary<string, string> CreateAssignment(Assignment assignment, int createdBy);
+        Dictionary<string, string> CreateCourse(Course course, int createdBy);
+        Dictionary<string, string> CreateTopic(Topic topic, int createdBy);
         bool DisableCourse(int courseId, int currentUserId);
         bool DisableTopic(int courseId, int topicId, int currentUserId);
         Assignment GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId);
@@ -25,8 +25,8 @@ namespace TMS.API.Services
         Dictionary<string, string> MarkAttendance(Attendance attendance);
         IEnumerable<Attendance> GetAttendanceList(int courseId,int topicId);
         Dictionary<string, List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int currentUserId);
-        Dictionary<string, string> UpdateAssignment(Assignment assignment);
-        Dictionary<string, string> UpdateCourse(Course course);
-        Dictionary<string, string> UpdateTopic(Topic topic);
+        Dictionary<string, string> UpdateAssignment(Assignment assignment, int updatedBy);
+        Dictionary<string, string> UpdateCourse(Course course, int updatedBy);
+        Dictionary<string, string> UpdateTopic(Topic topic, int updatedBy);
     }
 }

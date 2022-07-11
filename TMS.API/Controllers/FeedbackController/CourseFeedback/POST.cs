@@ -31,7 +31,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="feedback"></param>
         [HttpPost("course/feedback")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Trainee")]
         public IActionResult CreateCourseFeedback(CourseFeedback feedback)
         {
@@ -42,8 +42,8 @@ namespace TMS.API.Controllers
                 if(IsValid.ContainsKey("Exists")) return BadRequest("Can't submit the feedback. The feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    feedback.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.FeedbackService.CreateCourseFeedback(feedback);
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.FeedbackService.CreateCourseFeedback(feedback,createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                 }
                 return BadRequest(IsValid);

@@ -34,7 +34,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
         [HttpPut("course")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateCourse(Course course)
         {
@@ -47,8 +47,8 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateCourse(course);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        course.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.CourseService.UpdateCourse(course);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        var res = _service.CourseService.UpdateCourse(course,updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Course was Updated successfully" });
                     }
                     return BadRequest(IsValid);
@@ -90,7 +90,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>
         [HttpPut("assignUsers")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult AssignUsersToCourse(AddUsersToCourse data)
         {
@@ -140,7 +140,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>
         [HttpPut("removeUsers")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult RemoveUsersFromCourse(AddUsersToCourse data)
         {

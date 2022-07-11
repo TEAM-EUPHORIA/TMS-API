@@ -1,3 +1,4 @@
+using TMS.API.UtilityFunctions;
 using TMS.BAL;
 
 namespace TMS.API.Services
@@ -6,44 +7,76 @@ namespace TMS.API.Services
     {
         public IEnumerable<Review> GetReviewByStatusId(int statusId)
         {
-            var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
-            if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId);
-            else throw new ArgumentException("Invalid Id");
+            try
+            {
+                var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
+                if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId);
+                else throw new ArgumentException("Invalid Id");
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
+                throw;
+            }
         }
         public Review GetReviewById(int reviewId)
         {
-            var reviewExists = _repo.Validation.ReviewExists(reviewId);
-            if (reviewExists)
+            try
             {
-                var result = _repo.Reviews.GetReviewById(reviewId);
-                return result;
+                var reviewExists = _repo.Validation.ReviewExists(reviewId);
+                if (reviewExists)
+                {
+                    var result = _repo.Reviews.GetReviewById(reviewId);
+                    return result;
+                }
+                throw new ArgumentException("Invalid Id");
             }
-            throw new ArgumentException("Invalid Id");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewById));
+                throw;
+            }
         }
-        public Dictionary<string, string> CreateReview(Review review)
+        public Dictionary<string, string> CreateReview(Review review, int createdBy)
         {
-            if (review is null) throw new ArgumentNullException(nameof(review));
-            var validation = _repo.Validation.ValidateReview(review);
-            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
+            try
             {
-                SetUpReviewDetails(review);
-                _repo.Reviews.CreateReview(review);
-                _repo.Complete();
+                if (review is null) throw new ArgumentNullException(nameof(review));
+                var validation = _repo.Validation.ValidateReview(review);
+                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
+                {
+                    SetUpReviewDetails(review, createdBy);
+                    _repo.Reviews.CreateReview(review);
+                    _repo.Complete();
+                }
+                return validation;
             }
-            return validation;
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(CreateReview));
+                throw;
+            }
         }
-        public Dictionary<string, string> UpdateReview(Review review)
+        public Dictionary<string, string> UpdateReview(Review review, int updatedBy)
         {
-            if (review is null) throw new ArgumentNullException(nameof(review));
-            var validation = _repo.Validation.ValidateReview(review);
-            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
+            try
             {
-                var dbReview = _repo.Reviews.GetReviewById(review.Id);
-                SetUpReviewDetails(review, dbReview);
-                _repo.Reviews.UpdateReview(dbReview);
-                _repo.Complete();
+                if (review is null) throw new ArgumentNullException(nameof(review));
+                var validation = _repo.Validation.ValidateReview(review);
+                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
+                {
+                    var dbReview = _repo.Reviews.GetReviewById(review.Id);
+                    SetUpReviewDetails(review, dbReview, updatedBy);
+                    _repo.Reviews.UpdateReview(dbReview);
+                    _repo.Complete();
+                }
+                return validation;
             }
-            return validation;
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(UpdateReview));
+                throw;
+            }
         }
     }
 }

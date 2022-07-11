@@ -6,12 +6,12 @@ namespace TMS.API.Services
     public partial class FeedbackService : IFeedbackService
     {
         private readonly IUnitOfWork _repo;
+        private readonly ILogger _logger;
 
-
-        public FeedbackService(IUnitOfWork repo)
+        public FeedbackService(IUnitOfWork repo, ILogger logger)
         {
             _repo = repo;
-
+            _logger = logger;
         }
         public CourseFeedback GetCourseFeedbackByCourseIdAndTraineeId(int courseId, int traineeId)
         {
@@ -23,7 +23,7 @@ namespace TMS.API.Services
             }
             throw new ArgumentException("Invalid Id's");
         }
-        public Dictionary<string, string> CreateCourseFeedback(CourseFeedback courseFeedback)
+        public Dictionary<string, string> CreateCourseFeedback(CourseFeedback courseFeedback, int createdBy)
         {
             if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
             var validation = _repo.Validation.ValidateCourseFeedback(courseFeedback);
@@ -35,7 +35,7 @@ namespace TMS.API.Services
             }
             return validation;
         }
-        public Dictionary<string, string> UpdateCourseFeedback(CourseFeedback courseFeedback)
+        public Dictionary<string, string> UpdateCourseFeedback(CourseFeedback courseFeedback, int updatedBy)
         {
             if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
             var validation = _repo.Validation.ValidateCourseFeedback(courseFeedback);

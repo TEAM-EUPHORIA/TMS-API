@@ -29,8 +29,6 @@ namespace TMS.API
         bool UserExists(LoginModel user);
         Dictionary<string, string> ValidateAssignment(Assignment assignment);
         Dictionary<string, string> ValidateAttendance(Attendance attendance);
-
-        
         Dictionary<string, string> ValidateCourse(Course course);
         Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback);
         Dictionary<string, string> ValidateCourseUser(CourseUsers user);

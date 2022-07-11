@@ -6,11 +6,12 @@ namespace TMS.API.Services
     public partial class DepartmentService : IDepartmentService
     {
         private readonly IUnitOfWork _repo;
+        private readonly ILogger _logger;
 
-
-        public DepartmentService(IUnitOfWork repo)
+        public DepartmentService(IUnitOfWork repo,ILogger logger)
         {
             _repo = repo;
+            _logger = logger;
 
         }
         public IEnumerable<Department> GetDepartments()
@@ -28,7 +29,7 @@ namespace TMS.API.Services
             throw new ArgumentException("Invalid Id");
         }
 
-        public Dictionary<string, string> CreateDepartment(Department department)
+        public Dictionary<string, string> CreateDepartment(Department department, int createdBy)
         {
             if (department is null) throw new ArgumentNullException(nameof(department));
             var validation = _repo.Validation.ValidateDepartment(department);
@@ -41,7 +42,7 @@ namespace TMS.API.Services
             return validation;
         }
 
-        public Dictionary<string, string> UpdateDepartment(Department department)
+        public Dictionary<string, string> UpdateDepartment(Department department, int updatedBy)
         {
             if (department is null) throw new ArgumentNullException(nameof(department));
             var validation = _repo.Validation.ValidateDepartment(department);
@@ -55,13 +56,13 @@ namespace TMS.API.Services
             return validation;
         }
 
-        public bool DisableDepartment(int departmentId, int currentUserId)
+        public bool DisableDepartment(int departmentId, int updatedby)
         {
             var departmentExists = _repo.Validation.DepartmentExists(departmentId);
             if (departmentExists)
             {
                 var dbDeparment = _repo.Departments.GetDepartmentById(departmentId);
-                Disable(currentUserId, dbDeparment);
+                Disable(updatedby, dbDeparment);
                 _repo.Departments.UpdateDepartment(dbDeparment);
                 _repo.Complete();
             }

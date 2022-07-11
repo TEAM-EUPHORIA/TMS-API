@@ -5,7 +5,6 @@ using TMS.BAL;
 
 namespace TMS.API.Controllers
 {
-    [Authorize]
     public partial class UserController : ControllerBase
     {
         /// <summary>
@@ -34,8 +33,8 @@ namespace TMS.API.Controllers
         /// <response code="404">If user was not found.</response>
         /// <response code="500">If there is problem in server.</response>
         /// <param name="user"></param>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("user")]
+          
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult CreateUser(User user)
         {

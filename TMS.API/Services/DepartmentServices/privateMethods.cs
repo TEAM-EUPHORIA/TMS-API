@@ -14,10 +14,10 @@ namespace TMS.API.Services
             dbDepartment.Name = department.Name;
             department.UpdatedOn = DateTime.Now;
         }
-        private static void Disable(int currentUserId,Department dbDepartment)
+        private static void Disable(int updatedBy,Department dbDepartment)
         {
             dbDepartment.isDisabled = true;
-            dbDepartment.UpdatedBy = currentUserId;
+            dbDepartment.UpdatedBy = updatedBy;
             dbDepartment.UpdatedOn = DateTime.Now;
         }        
     }

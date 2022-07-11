@@ -22,7 +22,7 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpDelete("{courseId:int}/topics/disable/{topicId:int}")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableTopic(int courseId, int topicId)
         {
@@ -31,9 +31,8 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    // int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    int currentUserId = 2041;
-                    var res = _service.CourseService.DisableTopic(courseId, topicId, currentUserId);
+                    int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.CourseService.DisableTopic(courseId, topicId, updatedBy);
                     if (res) return Ok(new { message = "The User was Disabled successfully" });
                 }
                 catch (InvalidOperationException ex)

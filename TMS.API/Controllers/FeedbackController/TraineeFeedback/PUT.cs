@@ -34,7 +34,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("trainee/feedback")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Trainer")]
         public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
         {
@@ -47,8 +47,8 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateTraineeFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid"))
                     {
-                        feedback.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.FeedbackService.UpdateTraineeFeedback(feedback);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        var res = _service.FeedbackService.UpdateTraineeFeedback(feedback,updatedBy);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }
                     return BadRequest(IsValid);

@@ -32,7 +32,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
         [HttpPost("course")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateCourse(Course course)
         {
@@ -43,8 +43,8 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create course. The course already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    course.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.CourseService.CreateCourse(course);
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.CourseService.CreateCourse(course,createdBy);
                     if (res.ContainsKey("IsValid"))
                     {
                         return Ok(new { Response = "The Course was Created successfully" });

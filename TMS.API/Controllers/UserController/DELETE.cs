@@ -5,9 +5,8 @@ using TMS.API.UtilityFunctions;
 
 namespace TMS.API.Controllers
 {
-    [Authorize]
     [ApiController]
-    [Route("User")]
+    [Route("[controller]")]
     public partial class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -33,7 +32,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="userId"></param>
         [HttpDelete("disable/{userId:int}")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
         {

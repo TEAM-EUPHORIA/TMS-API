@@ -2,7 +2,7 @@ namespace TMS.API
 {
     public class File
     {
-        public string? header { get; set; }
-        public byte[]? bytes { get; set; }
+        public string? Header { get; set; }
+        public byte[]? Bytes { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         [HttpDelete("disable/{courseId:int}")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableCourse(int courseId)
         {

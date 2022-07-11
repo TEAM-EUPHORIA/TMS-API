@@ -33,7 +33,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
         [HttpPut("topic")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateTopic(Topic topic)
         {
@@ -46,8 +46,8 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateTopic(topic);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        topic.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.CourseService.UpdateTopic(topic);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        var res = _service.CourseService.UpdateTopic(topic,updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Topic was Updated successfully" });
                     }
                     return BadRequest(IsValid);

@@ -32,7 +32,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPut("assignment")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult UpdateAssignment(Assignment assignment)
         {
@@ -45,8 +45,8 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateAssignment(assignment);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        assignment.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.CourseService.UpdateAssignment(assignment);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        var res = _service.CourseService.UpdateAssignment(assignment,updatedBy);
                         if (res.ContainsKey("IsValid") && IsValid.ContainsKey("Exists")) return Ok(new { Response = "The Assignment was Updated successfully" });
                     }
                     return BadRequest(IsValid);

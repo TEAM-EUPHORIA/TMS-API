@@ -20,10 +20,10 @@ namespace TMS.API.Services
             AuthService = new AuthService(repo,configuration);
             UserService = new UserService(repo, logger);
             RoleService = new RoleService(repo, logger);
-            ReviewService = new ReviewService(repo);
-            FeedbackService = new FeedbackService(repo);
-            DepartmentService = new DepartmentService(repo);
-            CourseService = new CourseService(repo);
+            ReviewService = new ReviewService(repo, logger);
+            FeedbackService = new FeedbackService(repo, logger);
+            DepartmentService = new DepartmentService(repo, logger);
+            CourseService = new CourseService(repo, logger);
             Validation = repo.Validation;
         }
 

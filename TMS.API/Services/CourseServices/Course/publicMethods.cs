@@ -33,44 +33,44 @@ namespace TMS.API.Services
         {
             var courseExists = _repo.Validation.CourseExists(courseId);
             var userExists = _repo.Validation.UserExists(userId);
-            if(courseExists)
+            if(courseExists && userExists)
             {
                 return _repo.Courses.GetCourseById(courseId,userId);
             }
             throw new ArgumentException(nameof(courseId));
         }
-        public Dictionary<string,string> CreateCourse(Course course)
+        public Dictionary<string,string> CreateCourse(Course course, int createdBy)
         {
             if (course is null) throw new ArgumentNullException(nameof(course));
             var validation = _repo.Validation.ValidateCourse(course);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                SetUpCourseDetails(course);
+                SetUpCourseDetails(course,createdBy);
                 _repo.Courses.CreateCourse(course);
                 _repo.Complete();
             }
             return validation;
         }
-        public Dictionary<string,string> UpdateCourse(Course course)
+        public Dictionary<string,string> UpdateCourse(Course course, int updatedBy)
         {
             if (course is null) throw new ArgumentNullException(nameof(course));
             var validation = _repo.Validation.ValidateCourse(course);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
                 var dbCourse = _repo.Courses.GetCourseById(course.Id);
-                SetUpCourseDetails(course, dbCourse);
+                SetUpCourseDetails(course, dbCourse,updatedBy);
                 _repo.Courses.UpdateCourse(dbCourse);
                 _repo.Complete();    
             }
             return validation;
         }
-        public bool DisableCourse(int courseId, int currentUserId)
+        public bool DisableCourse(int courseId, int updatedBy)
         {
             var courseExists = _repo.Validation.CourseExists(courseId);
             if(courseExists)
             {
                 var dbCourse = _repo.Courses.GetCourseById(courseId);
-                Disable(currentUserId,dbCourse);
+                Disable(updatedBy,dbCourse);
                 _repo.Complete();
             }
             return courseExists;        
@@ -84,13 +84,13 @@ namespace TMS.API.Services
             }
             else throw new ArgumentException(nameof(courseId));
         }
-        public Dictionary<string,List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data, int currentUserId)
+        public Dictionary<string,List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data, int createdBy)
         {
             var courseExists = _repo.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
                 var result =  new Dictionary<string,List<CourseUsers>>();
-                var validList = GetListOfValidUsers(data,currentUserId);
+                var validList = GetListOfValidUsers(data,createdBy);
                 _repo.Courses.AddUsersToCourse(validList);
                 result.Add("the following records are created", validList);
                 _repo.Complete();
@@ -99,13 +99,13 @@ namespace TMS.API.Services
             else throw new ArgumentException(nameof(data));
         }
 
-        public Dictionary<string,List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int currentUserId)
+        public Dictionary<string,List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int updatedBy)
         {
             var courseExists = _repo.Validation.CourseExists(data.CourseId);
             if(courseExists)
             {
                 var result =  new Dictionary<string,List<CourseUsers>>();
-                var validList = GetCourseUsers(data,currentUserId);
+                var validList = GetCourseUsers(data,updatedBy);
                 _repo.Courses.RemoveUsersFromCourse(validList);
                 result.Add("the following records are removed",validList); 
                 _repo.Complete();

@@ -33,7 +33,7 @@ namespace TMS.API.Controllers.ReviewController
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPost("review")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateReview(Review review)
         {
@@ -44,8 +44,8 @@ namespace TMS.API.Controllers.ReviewController
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create the review. the review already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    //review.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.ReviewService.CreateReview(review);
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.ReviewService.CreateReview(review,createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Created successfully" });
                 }
                 return BadRequest(IsValid);

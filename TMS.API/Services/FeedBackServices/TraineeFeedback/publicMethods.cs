@@ -19,7 +19,7 @@ namespace TMS.API.Services
             }
             throw new ArgumentException("Invalid Id");
         }
-        public Dictionary<string, string> CreateTraineeFeedback(TraineeFeedback traineeFeedback)
+        public Dictionary<string, string> CreateTraineeFeedback(TraineeFeedback traineeFeedback, int createdBy)
         {
             if (traineeFeedback is null) throw new ArgumentNullException(nameof(traineeFeedback));
             var validation = _repo.Validation.ValidateTraineeFeedback(traineeFeedback);
@@ -31,7 +31,7 @@ namespace TMS.API.Services
             }
             return validation;
         }
-        public Dictionary<string, string> UpdateTraineeFeedback(TraineeFeedback traineeFeedback)
+        public Dictionary<string, string> UpdateTraineeFeedback(TraineeFeedback traineeFeedback, int updatedBy)
         {
             if (traineeFeedback is null) throw new ArgumentNullException(nameof(traineeFeedback));
             var validation = _repo.Validation.ValidateTraineeFeedback(traineeFeedback);

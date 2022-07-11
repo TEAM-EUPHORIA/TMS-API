@@ -20,38 +20,38 @@ namespace TMS.API.Services
             }
             throw new ArgumentException("Invalid Id");
         }
-        public Dictionary<string, string> CreateTopic(Topic topic)
+        public Dictionary<string, string> CreateTopic(Topic topic, int createdBy)
         {
             if (topic is null) throw new ArgumentNullException(nameof(topic));
             var validation = _repo.Validation.ValidateTopic(topic);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                SetUpTopicDetails(topic);
+                SetUpTopicDetails(topic,createdBy);
                 _repo.Courses.CreateTopic(topic);
                 _repo.Complete();
             }
             return validation;
         }
-        public Dictionary<string, string> UpdateTopic(Topic topic)
+        public Dictionary<string, string> UpdateTopic(Topic topic, int updatedBy)
         {
             if (topic is null) throw new ArgumentNullException(nameof(topic));
             var validation = _repo.Validation.ValidateTopic(topic);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
                 var dbTopic = _repo.Courses.GetTopicById(topic.CourseId, topic.TopicId);
-                SetUpTopicDetails(topic, dbTopic);
+                SetUpTopicDetails(topic, dbTopic,updatedBy);
                 _repo.Courses.UpdateTopic(dbTopic);
                 _repo.Complete();
             }
             return validation;
         }
-        public bool DisableTopic(int courseId, int topicId, int currentUserId)
+        public bool DisableTopic(int courseId, int topicId, int updatedBy)
         {
             var topicExists = _repo.Validation.TopicExists(topicId, courseId);
             if (topicExists)
             {
                 var dbTopic = _repo.Courses.GetTopicById(courseId, topicId);
-                Disable(currentUserId, dbTopic);
+                Disable(updatedBy, dbTopic);
                 _repo.Complete();
             }
             return topicExists;

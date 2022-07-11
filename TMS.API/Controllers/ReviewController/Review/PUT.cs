@@ -36,7 +36,7 @@ namespace TMS.API.Controllers.ReviewController
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPut("review")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateReview(Review review)
         {
@@ -49,8 +49,8 @@ namespace TMS.API.Controllers.ReviewController
                     var IsValid = _service.Validation.ValidateReview(review);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        //review.UpdatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.ReviewService.UpdateReview(review);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        var res = _service.ReviewService.UpdateReview(review, updatedBy);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Updated successfully" });
                     }
                     return BadRequest(IsValid);

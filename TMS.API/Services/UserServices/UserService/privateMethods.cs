@@ -39,8 +39,8 @@ namespace TMS.API.Services
         private static void SetUpImage(User user)
         {
             File Image = FileService.GetBase64HeaderAndByteArray(user.Base64);
-            user.Base64 = Image.header!;
-            user.Image = Image.bytes;
+            user.Base64 = Image.Header!;
+            user.Image = Image.Bytes;
         }
         /// <summary>
         /// used to setup the user model for creating.

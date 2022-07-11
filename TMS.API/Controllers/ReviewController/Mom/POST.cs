@@ -33,7 +33,7 @@ namespace TMS.API.Controllers.ReviewController
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPost("mom")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Trainee")]
         public IActionResult CreateMom(MOM mom)
         {
@@ -44,8 +44,8 @@ namespace TMS.API.Controllers.ReviewController
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create the mom. The Mom Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    mom.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.ReviewService.CreateMom(mom);
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.ReviewService.CreateMom(mom,createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Created successfully" });
                 }
                 return BadRequest(IsValid);

@@ -18,7 +18,7 @@ namespace TMS.API.Controllers
         /// <param name="attendance"></param>
         /// <returns></returns>
         [HttpPut("attendance")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Trainer, Trainee")]
         public IActionResult MarkAttendance(Attendance attendance)
         {

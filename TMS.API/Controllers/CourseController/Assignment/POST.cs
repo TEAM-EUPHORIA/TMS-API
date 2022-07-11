@@ -31,7 +31,7 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPost("assignment")]
-        [ValidateAntiForgeryToken]
+        
         [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult CreateAssignment(Assignment assignment)
         {
@@ -42,8 +42,8 @@ namespace TMS.API.Controllers
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create assignment. The assignment already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    assignment.CreatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.CourseService.CreateAssignment(assignment);
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    var res = _service.CourseService.CreateAssignment(assignment,createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Assignment was submitted successfully" });
                 }
                 return BadRequest(IsValid);
