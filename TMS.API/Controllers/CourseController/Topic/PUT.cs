@@ -35,7 +35,7 @@ namespace TMS.API.Controllers
         [HttpPut("topic")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult UpdateTopic(Topic topic)
+        public IActionResult UpdateTopic([FromBody]Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var topicExists = _service.Validation.TopicExists(topic.TopicId, topic.CourseId);

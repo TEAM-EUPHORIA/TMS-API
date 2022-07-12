@@ -36,7 +36,7 @@ namespace TMS.API.Controllers
         [HttpPut("course")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult UpdateCourse(Course course)
+        public IActionResult UpdateCourse([FromBody]Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var courseExists = _service.Validation.CourseExists(course.Id);
@@ -88,11 +88,10 @@ namespace TMS.API.Controllers
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.  </response>
         /// <response code="404">If course was not found. </response>
         /// <response code="500">If there is problem in server. </response>
-        /// <param name="data"></param>
         [HttpPut("assignUsers")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult AssignUsersToCourse(AddUsersToCourse data)
+        public IActionResult AssignUsersToCourse([FromBody]AddUsersToCourse data)
         {
             var courseExists = _service.Validation.CourseExists(data.CourseId);
             if (courseExists)
@@ -142,7 +141,7 @@ namespace TMS.API.Controllers
         [HttpPut("removeUsers")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult RemoveUsersFromCourse(AddUsersToCourse data)
+        public IActionResult RemoveUsersFromCourse([FromBody]AddUsersToCourse data)
         {
             var courseExists = _service.Validation.CourseExists(data.CourseId);
             if (courseExists)

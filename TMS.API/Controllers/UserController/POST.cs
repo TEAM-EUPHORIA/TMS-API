@@ -36,7 +36,7 @@ namespace TMS.API.Controllers
         [HttpPost("user")]
           
         [Authorize(Roles = "Training Head, Training Coordinator")]
-        public IActionResult CreateUser(User user)
+        public IActionResult CreateUser([FromBody]User user)
         {
             // checks if the model is valid or not
             if (!ModelState.IsValid) return BadRequest(ModelState);

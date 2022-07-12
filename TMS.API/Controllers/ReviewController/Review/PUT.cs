@@ -38,7 +38,7 @@ namespace TMS.API.Controllers.ReviewController
         [HttpPut("review")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult UpdateReview(Review review)
+        public IActionResult UpdateReview([FromBody]Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var reviewExists = _service.Validation.ReviewExists(review.Id);

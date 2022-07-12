@@ -35,7 +35,7 @@ namespace TMS.API.Controllers.ReviewController
         [HttpPost("mom")]
         
         [Authorize(Roles = "Trainee")]
-        public IActionResult CreateMom(MOM mom)
+        public IActionResult CreateMom([FromBody]MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try

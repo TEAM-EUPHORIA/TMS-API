@@ -37,7 +37,7 @@ namespace TMS.API.Controllers.ReviewController
         [HttpPut("mom")]
         
         [Authorize(Roles = "Trainee")]
-        public IActionResult UpdateMom(MOM mom)
+        public IActionResult UpdateMom([FromBody]MOM mom)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var momExists = _service.Validation.MOMExists(mom.ReviewId, mom.TraineeId);

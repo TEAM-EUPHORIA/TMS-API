@@ -38,7 +38,7 @@ namespace TMS.API.Controllers
         [HttpPut("user")]
         
         [Authorize(Roles = "Training Head, Training Coordinator")]
-        public IActionResult UpdateUser(User user)
+        public IActionResult UpdateUser([FromBody]User user)
         {
             // checks if the model is valid or not
             if (!ModelState.IsValid) return BadRequest(ModelState);

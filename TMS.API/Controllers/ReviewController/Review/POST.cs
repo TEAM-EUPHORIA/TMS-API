@@ -35,7 +35,7 @@ namespace TMS.API.Controllers.ReviewController
         [HttpPost("review")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult CreateReview(Review review)
+        public IActionResult CreateReview([FromBody]Review review)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try

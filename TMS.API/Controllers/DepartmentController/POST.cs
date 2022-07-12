@@ -31,7 +31,7 @@ namespace TMS.API.Controllers
         [HttpPost("department")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult CreateDepartment(Department department)
+        public IActionResult CreateDepartment([FromBody]Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try

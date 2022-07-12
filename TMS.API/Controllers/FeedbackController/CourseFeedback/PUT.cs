@@ -33,7 +33,7 @@ namespace TMS.API.Controllers
         [HttpPut("course/feedback")]
         
         [Authorize(Roles = "Trainee")]
-        public IActionResult UpdateCourseFeedback(CourseFeedback feedback)
+        public IActionResult UpdateCourseFeedback([FromBody]CourseFeedback feedback)
         {
             var feedbackExists = _service.Validation.CourseFeedbackExists(feedback.CourseId,feedback.TraineeId);
             if(feedbackExists)

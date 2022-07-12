@@ -33,7 +33,7 @@ namespace TMS.API.Controllers
         [HttpPost("assignment")]
         
         [Authorize(Roles = "Trainer,Trainee")]
-        public IActionResult CreateAssignment(Assignment assignment)
+        public IActionResult CreateAssignment([FromBody]Assignment assignment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
