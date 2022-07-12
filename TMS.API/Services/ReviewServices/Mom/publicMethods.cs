@@ -14,7 +14,7 @@ namespace TMS.API.Services
             _repo = repo;
             _logger = logger;
         }
-        public IEnumerable<MOM> GetListOfMomByUserId(int userId)
+        public IEnumerable<Mom> GetListOfMomByUserId(int userId)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace TMS.API.Services
                 throw;
             }
         }
-        public MOM GetMomByReviewIdAndTraineeId(int reviewId, int traineeId)
+        public Mom GetMomByReviewIdAndTraineeId(int reviewId, int traineeId)
         {
             try
             {
@@ -50,6 +50,7 @@ namespace TMS.API.Services
                 throw;
             }
         }
+<<<<<<< HEAD
         public Dictionary<string, string> CreateMom(MOM mom, int createdBy)
         {
             try
@@ -93,9 +94,13 @@ namespace TMS.API.Services
         }
 
         public Dictionary<string, string> CreateMom(MOM mom)
+=======
+        public Dictionary<string, string> CreateMom(Mom mom)
+>>>>>>> 985156ff0e154d4657b256b533b831ed906b2839
         {
             throw new NotImplementedException();
         }
+<<<<<<< HEAD
 
         public Dictionary<string, string> CreateReview(Review review)
         {
@@ -103,6 +108,9 @@ namespace TMS.API.Services
         }
 
         public Dictionary<string, string> UpdateMom(MOM mom)
+=======
+        public Dictionary<string, string> UpdateMom(Mom mom)
+>>>>>>> 985156ff0e154d4657b256b533b831ed906b2839
         {
             throw new NotImplementedException();
         }

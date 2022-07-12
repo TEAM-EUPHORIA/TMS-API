@@ -30,6 +30,7 @@ namespace TMS.API.Services
         }
         private static List<Claim> GenerateClaims(User dbUser)
         {
+            
             return new List<Claim>
             {
                 new Claim("Email",dbUser.Email),

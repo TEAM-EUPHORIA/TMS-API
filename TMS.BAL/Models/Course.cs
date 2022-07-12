@@ -12,11 +12,11 @@ namespace TMS.BAL
         [Required]
         public int DepartmentId { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string ?Name { get; set; }
         [Required]
-        public string Duration { get; set; }
+        public string ?Duration { get; set; }
         [Required]
-        public string Description { get; set; }
+        public string ?Description { get; set; }
         public bool? isDisabled { get; set; }
         // virtual navigation properties
         [NotMapped]

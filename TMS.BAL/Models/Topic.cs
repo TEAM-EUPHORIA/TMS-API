@@ -10,11 +10,11 @@ namespace TMS.BAL
         [Required]
         public int CourseId { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string ?Name { get; set; }
         [Required]
-        public string Duration { get; set; }
+        public string ?Duration { get; set; }
         [Required]
-        public string Content { get; set; }
+        public string ?Content { get; set; }
         public bool? isDisabled { get; set; }
         // virtual navigation properties
         public virtual Course? Course { get; set; }

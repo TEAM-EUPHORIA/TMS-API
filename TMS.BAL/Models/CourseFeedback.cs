@@ -12,7 +12,7 @@ namespace TMS.BAL
         [Required]
         [MinLength(5)]
         [MaxLength(1000)] 
-        public string Feedback { get; set; }
+        public string ?Feedback { get; set; }
         [Required]
         [Range(1.0, 5)]
         public float Rating { get; set; }

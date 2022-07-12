@@ -2,22 +2,22 @@
 
 namespace TMS.BAL
 {
-    public class User:AuditFields
+    public class User : AuditFields
     {
         public int Id { get; set; }
         [Required]
         public int RoleId { get; set; }
         public int? DepartmentId { get; set; }
         [Required]
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
         [Required]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
         [Required]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         [Required]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Required]
-        public string Base64 { get; set; }
+        public string? Base64 { get; set; }
         public byte[]? Image { get; set; }
         public string? EmployeeId { get; set; }
         public bool? isDisabled { get; set; }
