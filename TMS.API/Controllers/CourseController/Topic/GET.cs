@@ -61,8 +61,7 @@ namespace TMS.API.Controllers
             {
                 try
                 {
-                    //int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    int userId = 2041;
+                    int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
