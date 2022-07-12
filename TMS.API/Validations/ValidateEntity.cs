@@ -144,7 +144,6 @@ namespace TMS.API
             CheckIsValid();
             return result;
         }
-<<<<<<< HEAD
         /// <summary>
         /// used to validate the MOM entity 
         /// </summary>
@@ -153,13 +152,6 @@ namespace TMS.API
         /// returns a Dictionary
         /// </returns>
         public Dictionary<string, string> ValidateMOM(MOM mom)
-=======
-        // validate Mom
-        // check review exists
-        // check trainee exists
-        // regex validation for meeting notes, purpose if meeting, agenda
-        public Dictionary<string, string> ValidateMOM(Mom mom)
->>>>>>> 985156ff0e154d4657b256b533b831ed906b2839
         {
             CheckIdAndAddEntery(mom.ReviewId, nameof(mom.ReviewId));
             CheckIdAndAddEntery(mom.TraineeId, nameof(mom.TraineeId));
