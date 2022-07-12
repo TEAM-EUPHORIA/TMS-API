@@ -8,9 +8,9 @@ namespace TMS.API.Repositories
         Review GetReviewById(int reviewId);
         void CreateReview(Review review);
         void UpdateReview(Review review);
-        void CreateMom(Mom mom);
-        void UpdateMom(Mom mom);
-        IEnumerable<Mom> GetListOfMomByUserId(int userId);
-        Mom GetMomByReviewIdAndTraineeId(int reviewId, int traineeId);
+        void CreateMom(MOM mom);
+        void UpdateMom(MOM mom);
+        IEnumerable<MOM> GetListOfMomByUserId(int userId);
+        MOM GetMomByReviewIdAndTraineeId(int reviewId, int traineeId);
     }
 }
