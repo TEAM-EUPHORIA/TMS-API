@@ -1,4 +1,5 @@
 using TMS.API.Repositories;
+using TMS.API.UtilityFunctions;
 using TMS.BAL;
 
 namespace TMS.API.Services
@@ -8,18 +9,40 @@ namespace TMS.API.Services
         private readonly IUnitOfWork _repo;
         private readonly ILogger _logger;
 
-        public DepartmentService(IUnitOfWork repo,ILogger logger)
+        /// <summary>
+        /// Constructor of DepartmentService
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <param name="logger"></param>
+        public DepartmentService(IUnitOfWork repo, ILogger logger)
         {
             _repo = repo;
             _logger = logger;
 
         }
+
         public IEnumerable<Department> GetDepartments()
         {
             return _repo.Departments.GetDepartments();
         }
+
+        /// <summary>
+        /// used to get department by departmentid
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <returns>
+        /// department if  is depatment found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
+
         public Department GetDepartmentById(int departmentId)
         {
+            try
+            {
+
             var departmentExists = _repo.Validation.DepartmentExists(departmentId);
             if (departmentExists)
             {
@@ -27,23 +50,68 @@ namespace TMS.API.Services
                 return result;
             }
             throw new ArgumentException("Invalid Id");
+            }
+
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentService), nameof(GetDepartmentById));
+                throw;
+            }
         }
+
+        /// <summary>
+        /// used to create a user.
+        /// </summary>
+        /// <param name="department"></param>
+        /// <param name="createdBy"></param>
+        /// <returns>
+        /// result Dictionary 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
 
         public Dictionary<string, string> CreateDepartment(Department department, int createdBy)
         {
-            if (department is null) throw new ArgumentNullException(nameof(department));
-            var validation = _repo.Validation.ValidateDepartment(department);
-            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
+            try
             {
-                SetUpDepartmentDetails(department);
-                _repo.Departments.CreateDepartment(department);
-                _repo.Complete();
+                if (department is null) throw new ArgumentNullException(nameof(department));
+                var validation = _repo.Validation.ValidateDepartment(department);
+                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
+                {
+                    SetUpDepartmentDetails(department);
+                    _repo.Departments.CreateDepartment(department);
+                    _repo.Complete();
+                }
+                return validation;
             }
-            return validation;
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentService), nameof(CreateDepartment));
+                throw;
+            }
+
         }
+
+        /// <summary>
+        /// used to update Department
+        /// </summary>
+        /// <param name="department"></param>
+        /// <param name="updatedBy"></param>
+        /// <returns>
+        /// result Dictionary 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
+
 
         public Dictionary<string, string> UpdateDepartment(Department department, int updatedBy)
         {
+            try
+            {
             if (department is null) throw new ArgumentNullException(nameof(department));
             var validation = _repo.Validation.ValidateDepartment(department);
             if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
@@ -54,19 +122,48 @@ namespace TMS.API.Services
                 _repo.Complete();
             }
             return validation;
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentService), nameof(UpdateDepartment));
+                throw;
+            }
         }
 
-        public bool DisableDepartment(int departmentId, int updatedby)
-        {
+        /// <summary>
+        /// used to disable department 
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="updatedBy"></param>
+        /// <returns>
+        /// true if user is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
+
+        public bool DisableDepartment(int departmentId, int updatedBy)
+        { 
+            try
+            {
             var departmentExists = _repo.Validation.DepartmentExists(departmentId);
             if (departmentExists)
             {
                 var dbDeparment = _repo.Departments.GetDepartmentById(departmentId);
-                Disable(updatedby, dbDeparment);
+                Disable(updatedBy, dbDeparment);
                 _repo.Departments.UpdateDepartment(dbDeparment);
                 _repo.Complete();
             }
             return departmentExists;
+            throw new ArgumentException("Invalid Id");
+            }
+
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentService), nameof(DisableDepartment));
+                throw;
+            }
         }
     }
 }

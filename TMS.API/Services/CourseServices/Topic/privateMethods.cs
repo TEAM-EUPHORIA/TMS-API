@@ -5,6 +5,11 @@ namespace TMS.API.Services
 {
     public partial class CourseService
     {
+        /// <summary>
+        /// used to setup topic Details.
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <param name="createdBy"></param>
         private static void SetUpTopicDetails(Topic topic,int createdBy)
         {
             topic.isDisabled = false;
@@ -12,6 +17,12 @@ namespace TMS.API.Services
             topic.CreatedBy = createdBy;
         }
 
+        /// <summary>
+        /// used to setup topic Details.
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <param name="dbTopic"></param>
+        /// <param name="updatedBy"></param>
         private static void SetUpTopicDetails(Topic topic, Topic dbTopic,int updatedBy)
         {
             dbTopic.Name = topic.Name;
@@ -20,6 +31,12 @@ namespace TMS.API.Services
             dbTopic.UpdatedOn = DateTime.Now;
             dbTopic.UpdatedBy = updatedBy;
         }
+
+        /// <summary>
+        /// used to disable the topic.
+        /// </summary>
+        /// <param name="dbTopic"></param>
+        /// <param name="updatedBy"></param>
         private static void Disable(int updatedBy,Topic dbTopic)
         {
             dbTopic.isDisabled = true;

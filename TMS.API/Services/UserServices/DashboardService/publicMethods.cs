@@ -15,6 +15,7 @@ namespace TMS.API.Services
         /// </exception>
         public Dictionary<string, string> Dashboard(int userId)
         {
+            
             var userExists = _repo.Validation.UserExists(userId);
             var user = _repo.Users.GetUserById(userId);
             if (userExists)
