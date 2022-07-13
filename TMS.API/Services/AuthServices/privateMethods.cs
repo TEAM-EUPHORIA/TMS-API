@@ -8,6 +8,15 @@ namespace TMS.API.Services
 {
     public partial class AuthService
     {
+        /// <summary>
+        /// generate encoded token for authorisation and identity purpose.
+        /// </summary>
+        /// <param name="dbuser"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="EncoderFallbackException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="SecurityTokenEncryptionFailedException"></exception>
         private string GenerateTokenString(User dbUser)
         {
             var claims = GenerateClaims(dbUser);
@@ -27,9 +36,15 @@ namespace TMS.API.Services
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             return tokenString;
         }
+        /// <summary>
+        /// generate user details list of claims for token.
+        /// </summary>
+        /// <param name="dbuser"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         private static List<Claim> GenerateClaims(User dbUser)
         {
-            
+
             return new List<Claim>
             {
                 new Claim("Email",dbUser.Email),
