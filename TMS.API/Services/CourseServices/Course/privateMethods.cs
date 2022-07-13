@@ -6,10 +6,16 @@ namespace TMS.API.Services
     public partial class CourseService
     {
         /// <summary>
-        /// used to get list of valid users list.
+        /// used to get list of valid users.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="createdBy"></param>
+        /// <returns>
+        /// returns list of valid user
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+
 
         private List<CourseUsers> GetListOfValidUsers(AddUsersToCourse data, int createdBy)
         {
@@ -48,6 +54,9 @@ namespace TMS.API.Services
         /// </summary>
         /// <param name="data"></param>
         /// <param name="createdBy"></param>
+        /// <returns>
+        /// returns list of Course user
+        /// </returns>
         private List<CourseUsers> GetCourseUsers(AddUsersToCourse data, int createdBy)
         {
             try
@@ -80,7 +89,7 @@ namespace TMS.API.Services
             
         }
         /// <summary>
-        /// used to set up Course details.
+        /// used to set up Course details with course and createdBy.
         /// </summary>
         /// <param name="course"></param>
         /// <param name="createdBy"></param>
@@ -104,7 +113,7 @@ namespace TMS.API.Services
         }
 
         /// <summary>
-        /// used to set up Course details.
+        /// used to set up Course details with course,dbcourse and updatedBy.
         /// </summary>
         /// <param name="course"></param>
         /// <param name="dbCourse"></param>

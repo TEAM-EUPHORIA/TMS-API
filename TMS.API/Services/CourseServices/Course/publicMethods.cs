@@ -73,6 +73,9 @@ namespace TMS.API.Services
         /// <summary>
         /// used to get course
         /// </summary>
+        /// <returns>
+        /// IEnumerable course 
+        /// </returns>
 
         public IEnumerable<Course> GetCourses()
         {
@@ -116,7 +119,7 @@ namespace TMS.API.Services
         /// <param name="course"></param>
         /// <param name="createdBy"></param>
         /// <returns>
-        /// result Dictionary 
+        /// validation Dictionary 
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
@@ -149,7 +152,7 @@ namespace TMS.API.Services
         /// <param name="course"></param>
         /// <param name="updatedBy"></param>
         /// <returns>
-        /// result Dictionary 
+        /// validation Dictionary 
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
@@ -250,6 +253,8 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         /// </exception>
 
@@ -285,6 +290,8 @@ namespace TMS.API.Services
         /// result Dictionary 
         /// </returns>
         /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="ArgumentException">
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// </exception>

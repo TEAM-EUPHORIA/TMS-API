@@ -93,7 +93,7 @@ namespace TMS.API.Services
         /// <param name="assignment"></param>
         /// <param name="createdBy"></param>
         /// <returns>
-        /// result Dictionary 
+        /// validation Dictionary 
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
@@ -129,7 +129,7 @@ namespace TMS.API.Services
         /// <param name="assignment"></param>
         /// <param name="updatedBy"></param>
         /// <returns>
-        /// result Dictionary 
+        /// validation Dictionary 
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
