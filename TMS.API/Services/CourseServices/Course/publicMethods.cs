@@ -1,36 +1,97 @@
 using Microsoft.EntityFrameworkCore;
+using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
 using TMS.BAL;
 
 
 namespace TMS.API.Services
 {
+    
     public partial class CourseService
     {
+        /// <summary>
+        /// used to get course based on user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// IEnumerable course if course is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public IEnumerable<Course> GetCoursesByUserId(int userId)
         {
+            try
+            {
             var userExists = _repo.Validation.UserExists(userId);
             if(userExists)
             {
                 return _repo.Courses.GetCoursesByUserId(userId); 
             }
             else throw new ArgumentException(nameof(userId));
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetCoursesByUserId));
+                throw;
+            }
         }
+
+        /// <summary>
+        /// used to get course based on department id
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <returns>
+        /// IEnumerable course if department is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public IEnumerable<Course> GetCoursesByDepartmentId(int departmentId)
         {
+            try
+            {
+
             var departmentExists = _repo.Validation.DepartmentExists(departmentId);
             if(departmentExists)
             {
                 return _repo.Courses.GetCoursesByDepartmentId(departmentId);
             }
             else throw new ArgumentException(nameof(departmentId));
+            }
+            
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetCoursesByDepartmentId));
+                throw;
+            }
+
+
         }
+
         public IEnumerable<Course> GetCourses()
         {
             return _repo.Courses.GetCourses();   
         }
+
+        /// <summary>
+        /// used to get course by user id,courseId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="courseId"></param>
+        /// <returns>
+        /// course if course and user is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public Course GetCourseById(int courseId,int userId)
         {
+            try
+            {
             var courseExists = _repo.Validation.CourseExists(courseId);
             var userExists = _repo.Validation.UserExists(userId);
             if(courseExists && userExists)
@@ -38,6 +99,12 @@ namespace TMS.API.Services
                 return _repo.Courses.GetCourseById(courseId,userId);
             }
             throw new ArgumentException(nameof(courseId));
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetCourseById));
+                throw;
+            }
         }
         public Dictionary<string,string> CreateCourse(Course course, int createdBy)
         {
