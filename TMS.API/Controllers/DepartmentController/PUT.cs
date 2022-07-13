@@ -33,7 +33,7 @@ namespace TMS.API.Controllers
         [HttpPut("department")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult UpdateDepartment(Department department)
+        public IActionResult UpdateDepartment([FromBody]Department department)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var departmentExists = _service.Validation.DepartmentExists(department.Id);

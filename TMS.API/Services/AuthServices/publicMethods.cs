@@ -38,7 +38,7 @@ namespace TMS.API.Services
                 var dbUser = _repo.Users.GetUserByEmailAndPassword(user);
                 string tokenString = GenerateTokenString(dbUser);
                 result.Add("token", tokenString);
-                result.Add("Role", dbUser.Role!.Name);
+                // result.Add("Role", dbUser.Role!.Name);
                 return result;
             }
             return validation;

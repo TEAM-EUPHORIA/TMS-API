@@ -34,7 +34,7 @@ namespace TMS.API.Controllers
         [HttpPost("course")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult CreateCourse(Course course)
+        public IActionResult CreateCourse([FromBody]Course course)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try

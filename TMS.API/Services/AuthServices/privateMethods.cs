@@ -13,7 +13,7 @@ namespace TMS.API.Services
             var claims = GenerateClaims(dbUser);
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            var encryptingCredentials = new EncryptingCredentials(secretKey, JwtConstants.DirectKeyUseAlg, SecurityAlgorithms.Aes256CbcHmacSha512);
+            // var encryptingCredentials = new EncryptingCredentials(secretKey, JwtConstants.DirectKeyUseAlg, SecurityAlgorithms.Aes256CbcHmacSha512);
 
             var tokenOptions = new JwtSecurityTokenHandler().CreateJwtSecurityToken(
               _configuration["Jwt:Issuer"],
@@ -22,8 +22,7 @@ namespace TMS.API.Services
                 DateTime.Now,
                 DateTime.Now.AddHours(1),
                 DateTime.Now,
-                signinCredentials,
-                encryptingCredentials);
+                signinCredentials);
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             return tokenString;

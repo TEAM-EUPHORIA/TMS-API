@@ -34,7 +34,7 @@ namespace TMS.API.Controllers
         [HttpPut("assignment")]
         
         [Authorize(Roles = "Trainer,Trainee")]
-        public IActionResult UpdateAssignment(Assignment assignment)
+        public IActionResult UpdateAssignment([FromBody]Assignment assignment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var assignmentExists = _service.Validation.AssignmentExists(assignment.CourseId, assignment.TopicId, assignment.OwnerId);

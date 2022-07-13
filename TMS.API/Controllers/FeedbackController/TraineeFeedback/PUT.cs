@@ -36,7 +36,7 @@ namespace TMS.API.Controllers
         [HttpPut("trainee/feedback")]
         
         [Authorize(Roles = "Trainer")]
-        public IActionResult UpdateTraineeFeedback(TraineeFeedback feedback)
+        public IActionResult UpdateTraineeFeedback([FromBody]TraineeFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var feedbackExists = _service.Validation.TraineeFeedbackExists(feedback.CourseId, feedback.TraineeId, feedback.TrainerId);

@@ -33,7 +33,7 @@ namespace TMS.API.Controllers
         [HttpPost("course/feedback")]
         
         [Authorize(Roles = "Trainee")]
-        public IActionResult CreateCourseFeedback(CourseFeedback feedback)
+        public IActionResult CreateCourseFeedback([FromBody]CourseFeedback feedback)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try

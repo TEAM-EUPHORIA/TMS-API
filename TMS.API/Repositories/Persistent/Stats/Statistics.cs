@@ -104,9 +104,9 @@ namespace TMS.API.Services
             var result = new Dictionary<string, string>();
             if (user != null)
             {
-                result.Add("Name", user.FullName);
-                result.Add("Role", user.Role!.Name);
-                result.Add("Base64", user.Base64);
+                result.Add("Name", user.FullName!);
+                result.Add("Role", user.Role!.Name!);
+                result.Add("Base64", user.Base64!);
                 result.Add("Image", Convert.ToBase64String(user.Image!));
             }
             return result;

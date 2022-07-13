@@ -34,7 +34,7 @@ namespace TMS.API.Controllers
         [HttpPost("topic")]
         
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult CreateTopic(Topic topic)
+        public IActionResult CreateTopic([FromBody]Topic topic)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
