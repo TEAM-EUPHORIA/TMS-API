@@ -8,6 +8,7 @@ namespace TMS.API.Services
 {
     public partial class AuthService
     {
+       
         private string GenerateTokenString(User dbUser)
         {
             var claims = GenerateClaims(dbUser);
