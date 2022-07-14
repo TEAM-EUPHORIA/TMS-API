@@ -20,7 +20,7 @@ namespace TMS.API.Services
               _configuration["Jwt:Audience"],
                 new ClaimsIdentity(claims),
                 DateTime.Now,
-                DateTime.Now.AddHours(1),
+                DateTime.Now.AddHours(24),
                 DateTime.Now,
                 signinCredentials);
 
