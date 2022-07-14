@@ -25,5 +25,6 @@ namespace TMS.BAL
         public virtual User? Trainee { get; set; }
         public virtual ReviewStatus? Status { get; set; }
         public virtual Department? Department { get; set; }
+        public virtual MOM? Mom { get; set; }
     }
 }

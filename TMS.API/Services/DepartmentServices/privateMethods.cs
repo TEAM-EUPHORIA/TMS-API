@@ -27,7 +27,7 @@ namespace TMS.API.Services
         }
 
         /// <summary>
-        /// used to SetUpDepartmentDetails .
+        /// disable the department
         /// </summary>
         /// <param name="updatedBy"></param>
         /// <param name="dbDepartment"></param>

@@ -40,6 +40,39 @@ namespace TMS.API.Controllers.ReviewController
             return NotFound("Not Found");
         }
         /// <summary>
+        /// Get all Review by Status 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     url : https://localhost:5001/Review/review/status/(statusId:int)
+        ///
+        /// </remarks>
+        /// <response code="200">Returns a Review.</response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="500">If there is problem in server.</response>
+        /// <param name="statusId"></param>
+        /// <param name="userId"></param>
+        [HttpGet("review/status/{statusId:int},{userId:int}")]
+        public IActionResult GetReviewByStatusId(int statusId,int userId)
+        {
+            var statusExists = _service.Validation.ReviewStatusExists(statusId);
+            if (statusExists)
+            {
+                try
+                {
+                    var result = _service.ReviewService.GetReviewByStatusId(statusId,userId);
+                    if (result is not null) return Ok(result);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
+                    return Problem("sorry somthing went wrong");
+                }
+            }
+            return NotFound("Not Found");
+        }
+        /// <summary>
         /// Get a Review
         /// </summary>
         /// <remarks>

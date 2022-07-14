@@ -119,7 +119,7 @@ namespace TMS.API.Controllers
         ///     url : https://localhost:5001/User(userId:int)
         ///
         /// </remarks>
-        /// <response code="200">Returns a list of Users. </response>
+        /// <response code="200">Returns a single User. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
         /// <response code="404">If user was not found.</response>
         /// <response code="500">If there is problem in server.</response>
@@ -127,6 +127,40 @@ namespace TMS.API.Controllers
         [HttpGet("{userId:int}")]
         public IActionResult GetUserById(int userId)
         {
+            var userExists = _service.Validation.UserExists(userId);
+            if(userExists)
+            {
+                try
+                {
+                    var result = _service.UserService.GetUser(userId);
+                    if (result is not null) return Ok(result);
+                    return NotFound("Not Found");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetUserById));
+                    return Problem("sorry somthing went wrong");
+                }
+            }
+            return NotFound("Not Found");
+        }
+        /// <summary>
+        /// Gets Logged in user data
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     url : https://localhost:5001/User
+        ///
+        /// </remarks>
+        /// <response code="200">Returns a single user. </response>
+        /// <response code="400">The server will not process the request due to something that is perceived to be a client error.</response>
+        /// <response code="404">If user was not found.</response>
+        /// <response code="500">If there is problem in server.</response>
+        [HttpGet]
+        public IActionResult GetUserProfile()
+        {
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
             var userExists = _service.Validation.UserExists(userId);
             if(userExists)
             {

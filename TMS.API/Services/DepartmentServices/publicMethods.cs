@@ -20,18 +20,22 @@ namespace TMS.API.Services
             _logger = logger;
 
         }
-
+        /// <summary>
+        /// get the all departments
+        /// </summary>
+        /// <returns>
+        /// enumerable department
+        /// </returns>
         public IEnumerable<Department> GetDepartments()
         {
             return _repo.Departments.GetDepartments();
         }
-
         /// <summary>
         /// used to get department by departmentid
         /// </summary>
         /// <param name="departmentId"></param>
         /// <returns>
-        /// department if  is depatment found
+        /// department if department is found
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
@@ -60,7 +64,7 @@ namespace TMS.API.Services
         }
 
         /// <summary>
-        /// used to create a user.
+        /// used to create a department.
         /// </summary>
         /// <param name="department"></param>
         /// <param name="createdBy"></param>
