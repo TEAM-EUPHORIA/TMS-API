@@ -1,11 +1,26 @@
+using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
 using TMS.BAL;
 namespace TMS.API.Services
 {
     public partial class CourseService
     {
+        /// <summary>
+        /// used to get list of valid users.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="createdBy"></param>
+        /// <returns>
+        /// returns list of valid user
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+
+
         private List<CourseUsers> GetListOfValidUsers(AddUsersToCourse data, int createdBy)
         {
+            try
+            {
             var validList = new List<CourseUsers>();
             bool courseUsertExists;
             foreach (var user in data.Users!)
@@ -25,9 +40,27 @@ namespace TMS.API.Services
                 }
             }
             return validList.Distinct().ToList();
+            }
+            
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(CourseService),nameof(GetListOfValidUsers));
+                throw;
+            }
+
         }
+        /// <summary>
+        /// used to get course users.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="createdBy"></param>
+        /// <returns>
+        /// returns list of Course user
+        /// </returns>
         private List<CourseUsers> GetCourseUsers(AddUsersToCourse data, int createdBy)
         {
+            try
+            {
             var validList = new List<CourseUsers>();
             bool courseUsertExists;
             foreach (var user in data.Users!)
@@ -47,7 +80,19 @@ namespace TMS.API.Services
                 }
             }
             return validList.Distinct().ToList();
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(CourseService),nameof(GetCourseUsers));
+                throw;
+            }
+            
         }
+        /// <summary>
+        /// used to set up Course details with course and createdBy.
+        /// </summary>
+        /// <param name="course"></param>
+        /// <param name="createdBy"></param>
         private static void SetUpCourseDetails(Course course, int createdBy)
         {
             course.isDisabled = false;
@@ -66,6 +111,13 @@ namespace TMS.API.Services
             course.CreatedOn = DateTime.Now;
             course.CreatedBy = createdBy;
         }
+
+        /// <summary>
+        /// used to set up Course details with course,dbcourse and updatedBy.
+        /// </summary>
+        /// <param name="course"></param>
+        /// <param name="dbCourse"></param>
+        /// <param name="updatedBy"></param>
         private static void SetUpCourseDetails(Course course, Course dbCourse, int updatedBy)
         {
             dbCourse.DepartmentId = course.DepartmentId;
@@ -76,6 +128,12 @@ namespace TMS.API.Services
             dbCourse.UpdatedOn = DateTime.Now;
             dbCourse.UpdatedBy = updatedBy;
         }
+
+        /// <summary>
+        /// used to disable the course.
+        /// </summary>
+        /// <param name="dbCourse"></param>
+        /// <param name="updatedBy"></param>
         private static void Disable(int updatedBy, Course dbCourse)
         {
             dbCourse.isDisabled = true;

@@ -38,7 +38,7 @@ namespace TMS.API.Services
         /// <param name="user"></param>
         private static void SetUpImage(User user)
         {
-            File Image = FileService.GetBase64HeaderAndByteArray(user.Base64);
+            File Image = FileService.GetBase64HeaderAndByteArray(user.Base64!);
             user.Base64 = Image.Header!;
             user.Image = Image.Bytes;
         }
@@ -50,7 +50,7 @@ namespace TMS.API.Services
         private void SetUpUserDetailsForCreate(User user, int createdBy)
         {
             user.isDisabled = false;
-            user.Password = HashPassword.Sha256(user.Password);
+            user.Password = HashPassword.Sha256(user.Password!);
             if (string.IsNullOrEmpty(user.EmployeeId)) GenerateEmployeeId(user);
             if (!string.IsNullOrEmpty(user.Base64) && user.Base64.Length > 1000) SetUpImage(user);
             user.CreatedOn = DateTime.Now;
@@ -64,7 +64,7 @@ namespace TMS.API.Services
         /// <param name="updateBy"></param>
         private static void SetUpUserDetailsForUpdate(User user, User dbUser, int updateBy)
         {
-            dbUser.Password = HashPassword.Sha256(user.Password);
+            dbUser.Password = HashPassword.Sha256(user.Password!);
 
             if (dbUser.FullName != user.FullName)
                 dbUser.FullName = user.FullName;

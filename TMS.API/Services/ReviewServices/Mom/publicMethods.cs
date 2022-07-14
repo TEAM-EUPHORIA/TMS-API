@@ -9,11 +9,29 @@ namespace TMS.API.Services
         private readonly IUnitOfWork _repo;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Constructor of ReviewService
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <param name="logger"></param>
+
         public ReviewService(IUnitOfWork repo, ILogger logger)
         {
             _repo = repo;
             _logger = logger;
         }
+
+        /// <summary>
+        /// used to get list of Mom by user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// IEnumerable MOM if user is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public IEnumerable<MOM> GetListOfMomByUserId(int userId)
         {
             try
@@ -28,6 +46,20 @@ namespace TMS.API.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// used to get mom review by reviewId and TraineeId.
+        /// </summary>
+        /// <param name="reviewId"></param>
+        /// <param name="traineeId"></param>
+        /// <returns>
+        /// result getMom
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
+
         public MOM GetMomByReviewIdAndTraineeId(int reviewId, int traineeId)
         {
             try
@@ -50,6 +82,20 @@ namespace TMS.API.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// used to create mom.
+        /// </summary>
+        /// <param name="mom"></param>
+        /// <param name="createdBy"></param>
+        /// <returns>
+        /// validation Dictionary 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
+
         public Dictionary<string, string> CreateMom(MOM mom, int createdBy)
         {
             try
@@ -70,6 +116,19 @@ namespace TMS.API.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// used to Update mom.
+        /// </summary>
+        /// <param name="mom"></param>
+        /// <param name="updatedBy"></param>
+        /// <returns>
+        /// validation Dictionary 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public Dictionary<string, string> UpdateMom(MOM mom, int updatedBy)
         {
             try
@@ -92,10 +151,24 @@ namespace TMS.API.Services
             }
         }
 
+        /// <summary>
+        /// used to Create Mom.
+        /// </summary>
+        /// <param name="mom"></param>
+        /// <returns>
+        /// result Dictionary 
+
         public Dictionary<string, string> CreateMom(MOM mom)
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// used to UpdateReview.
+        /// </summary>
+        /// <param name="review"></param>
+        /// <returns>
+        /// result Dictionary 
 
         public Dictionary<string, string> UpdateReview(Review review)
         {

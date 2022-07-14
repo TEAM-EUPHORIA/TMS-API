@@ -38,7 +38,7 @@ namespace TMS.API.Controllers
         [HttpPut("user")]
         
         [Authorize(Roles = "Training Head, Training Coordinator")]
-        public IActionResult UpdateUser(User user)
+        public IActionResult UpdateUser([FromBody]User user)
         {
             // checks if the model is valid or not
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -53,8 +53,9 @@ namespace TMS.API.Controllers
                     if (modelValidation.ContainsKey("IsValid") && modelValidation.ContainsKey("Exists"))
                     {
                         // getting the logged in user id
-                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        //int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         // calling service to update the user
+                        int updatedBy = 1;
                         var res = _service.UserService.UpdateUser(user,updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists"))
                         {

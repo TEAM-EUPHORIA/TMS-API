@@ -5,6 +5,18 @@ namespace TMS.API.Services
 {
     public partial class ReviewService
     {
+
+        /// <summary>
+        /// used to get review  based on status id
+        /// </summary>
+        /// <param name="statusId"></param>
+        /// <returns>
+        /// IEnumerable Review if status is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public IEnumerable<Review> GetReviewByStatusId(int statusId)
         {
             try
@@ -19,6 +31,44 @@ namespace TMS.API.Services
                 throw;
             }
         }
+        /// <summary>
+        /// used to get review  based on status id
+        /// </summary>
+        /// <param name="statusId"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// IEnumerable Review if status is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
+        public IEnumerable<Review> GetReviewByStatusId(int statusId,int userId)
+        {
+            try
+            {
+                var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
+                if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId,userId);
+                else throw new ArgumentException("Invalid Id");
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// used to get review  based on review id
+        /// </summary>
+        /// <param name="reviewId"></param>
+        /// <returns>
+        /// review if review is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception> 
         public Review GetReviewById(int reviewId)
         {
             try
@@ -37,6 +87,20 @@ namespace TMS.API.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// used to create Review.
+        /// </summary>
+        /// <param name="review"></param>
+        /// <param name="createdBy"></param>
+        /// <returns>
+        /// validation Dictionary 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
+
         public Dictionary<string, string> CreateReview(Review review, int createdBy)
         {
             try
@@ -57,6 +121,19 @@ namespace TMS.API.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// used to Update Review.
+        /// </summary>
+        /// <param name="review"></param>
+        /// <param name="updatedBy"></param>
+        /// <returns>
+        /// validation Dictionary 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
         public Dictionary<string, string> UpdateReview(Review review, int updatedBy)
         {
             try

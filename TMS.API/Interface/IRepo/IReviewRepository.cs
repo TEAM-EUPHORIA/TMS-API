@@ -5,6 +5,7 @@ namespace TMS.API.Repositories
     public interface IReviewRepository
     {
         IEnumerable<Review> GetReviewByStatusId(int statusId);
+        IEnumerable<Review> GetReviewByStatusId(int statusId,int userId);
         Review GetReviewById(int reviewId);
         void CreateReview(Review review);
         void UpdateReview(Review review);

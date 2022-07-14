@@ -10,6 +10,7 @@ namespace TMS.API.Services
         MOM GetMomByReviewIdAndTraineeId(int reviewId, int traineeId);
         Review GetReviewById(int reviewId);
         IEnumerable<Review> GetReviewByStatusId(int statusId);
+        IEnumerable<Review> GetReviewByStatusId(int statusId,int userId);
         Dictionary<string, string> UpdateMom(MOM mom, int updatedBy);
         Dictionary<string, string> UpdateReview(Review review, int updatedBy);
     }

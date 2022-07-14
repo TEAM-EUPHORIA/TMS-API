@@ -88,6 +88,27 @@ namespace TMS.API
                     c.DepartmentId == departmentId &&
                     c.Name == name);
         }
+         public bool IsUserMailAvailable(int id, string mailid)
+        {
+            return dbContext.Users.Any(c =>
+                    c.Id != id &&
+                    c.Email == mailid);
+        }
+         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="courseId"></param>
+        /// <param name="departmentId"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        public bool IsDepartmentNameAvailable(int Id, string name)
+        {
+            return dbContext.Departments.Any(c =>
+                    c.Id != Id &&
+                    c.Name == name);
+        }
         /// <summary>
         /// 
         /// </summary>
