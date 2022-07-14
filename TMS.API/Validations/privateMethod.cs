@@ -156,9 +156,16 @@ namespace TMS.API
                     course.DepartmentId,
                     course.Name);
         }
+         private void CheckForUserMailAvailablity(User user)
+        {
+            if (departmentExists)
+                isUserMailAvailable = IsUserMailAvailable(
+                    user.Id,
+                    user.Email);
+        }
          private void CheckForDepartmentNameAvailablity(Department department)
         {
-            if (userExists && departmentExists)
+          // if (userExists)
                 isDepartMentNameAvailable = IsDepartmentNameAvailable(
                     department.Id,
                     department.Name);
@@ -283,7 +290,7 @@ namespace TMS.API
         /// <param name="topic"></param>
         private void CheckForTopicNameAvailablelity(Topic topic)
         {
-            if (courseExists && topicExists)
+            // if (courseExists && topicExists)
                 isTopicNameAvailabe = IsTopicNameAvailabe(
                     topic.TopicId,
                     topic.CourseId,

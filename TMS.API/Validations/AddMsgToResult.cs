@@ -19,6 +19,11 @@ namespace TMS.API
             if(!result.ContainsKey("name"))
             AddEntery("name", "Course with that name already exists");
         }
+         private void UserMailIsNotAvailable()
+        {
+            if(!result.ContainsKey("name"))
+            AddEntery("name", "User with that mail already exists");
+        }
         private void DepartmentNameIsNotAvailable()
         {
             if(!result.ContainsKey("name"))
@@ -151,6 +156,11 @@ namespace TMS.API
                 DepartmentNotFound();
             if (isCourseNameAvailable)
                 CourseNameIsNotAvailable();
+        }
+        private void AddEnteryValidateUser(bool isUserMailAvailable)
+        {
+            if (isUserMailAvailable)
+                UserMailIsNotAvailable();
         }
          private void AddEnteryValidateDepartment(bool isDepartmentNameAvailable)
         {

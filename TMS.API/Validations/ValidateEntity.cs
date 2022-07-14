@@ -138,7 +138,7 @@ namespace TMS.API
         public Dictionary<string, string> ValidateDepartment(Department department)
         {
             ValidateAndAddEntery(nameof(department.Name), department.Name, userNameValidation);
-
+            
             CheckDepartmentExistsIfIdIsNotZero(department.Id);
             CheckForDepartmentNameAvailablity(department);
                 AddEnteryValidateDepartment(isDepartMentNameAvailable);
@@ -278,6 +278,9 @@ namespace TMS.API
                 ValidateAndAddEntery(nameof(user.Password), user.Password, passwordValidation);
                 ValidateAndAddEntery(nameof(user.Base64), user.Base64, Image);
                 CheckUserExists(user.Id);
+                CheckDepartmentExists((int)user.DepartmentId);
+                 CheckForUserMailAvailablity(user);
+                 AddEnteryValidateUser(isUserMailAvailable);
                 if (userExists)
                     AddEntryExists();
             }
