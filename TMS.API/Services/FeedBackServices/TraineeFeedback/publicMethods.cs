@@ -6,7 +6,7 @@ namespace TMS.API.Services
     public partial class FeedbackService 
     {
         /// <summary>
-        /// used to get single user by user id
+        /// used to get trainee feedback by user id
         /// </summary>
         /// <param name="courseId"></param>
         /// <param name="traineeId"></param>
@@ -47,7 +47,7 @@ namespace TMS.API.Services
         /// <param name="traineeFeedback"></param>
         /// <param name="createdBy"></param>
         /// <returns>
-        /// result Dictionary 
+        /// validation Dictionary 
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
@@ -82,7 +82,7 @@ namespace TMS.API.Services
         /// <param name="traineeFeedback"></param>
         /// <param name="updatedBy"></param>
         /// <returns>
-        /// result Dictionary 
+        /// validation Dictionary 
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
