@@ -28,5 +28,13 @@ namespace TMS.API.Repositories
                     .Include(r => r.Reviewer)
                     .Include(r => r.Trainee);
         }
+        public IEnumerable<Review> GetReviewByStatusId(int statusId, int userId)
+        {
+            return dbContext.Reviews
+                    .Where(r => r.StatusId == statusId && (r.ReviewerId == userId || r.TraineeId == userId))
+                    .Include(r => r.Status)
+                    .Include(r => r.Reviewer)
+                    .Include(r => r.Trainee);
+        }
     }
 }

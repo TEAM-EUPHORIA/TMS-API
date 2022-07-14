@@ -156,6 +156,13 @@ namespace TMS.API
                     course.DepartmentId,
                     course.Name);
         }
+         private void CheckForDepartmentNameAvailablity(Department department)
+        {
+            if (userExists && departmentExists)
+                isDepartMentNameAvailable = IsDepartmentNameAvailable(
+                    department.Id,
+                    department.Name);
+        }
         /// <summary>
         /// sets departmentExists to true if the department actually exists 
         /// </summary>

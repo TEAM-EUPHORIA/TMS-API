@@ -20,7 +20,7 @@ namespace TMS.API.Controllers
         [HttpPut("attendance")]
         
         [Authorize(Roles = "Trainer, Trainee")]
-        public IActionResult MarkAttendance(Attendance attendance)
+        public IActionResult MarkAttendance([FromBody]Attendance attendance)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try

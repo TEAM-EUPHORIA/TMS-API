@@ -25,6 +25,7 @@ namespace TMS.API
         courseUsertExists = false,
         courseExists = false,
         isCourseNameAvailable = false,
+        isDepartMentNameAvailable =false,
         isTopicNameAvailabe = false,
         departmentExists = false,
         momExists = false,

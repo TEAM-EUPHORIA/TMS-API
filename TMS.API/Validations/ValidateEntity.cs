@@ -138,7 +138,10 @@ namespace TMS.API
         public Dictionary<string, string> ValidateDepartment(Department department)
         {
             ValidateAndAddEntery(nameof(department.Name), department.Name, userNameValidation);
+
             CheckDepartmentExistsIfIdIsNotZero(department.Id);
+            CheckForDepartmentNameAvailablity(department);
+                AddEnteryValidateDepartment(isDepartMentNameAvailable);
             if (departmentExists)
                 AddEntryExists();
             CheckIsValid();

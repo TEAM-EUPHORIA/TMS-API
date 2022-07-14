@@ -31,6 +31,32 @@ namespace TMS.API.Services
                 throw;
             }
         }
+        /// <summary>
+        /// used to get review  based on status id
+        /// </summary>
+        /// <param name="statusId"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// IEnumerable Review if status is found
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// </exception>
+        public IEnumerable<Review> GetReviewByStatusId(int statusId,int userId)
+        {
+            try
+            {
+                var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
+                if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId,userId);
+                else throw new ArgumentException("Invalid Id");
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
+                throw;
+            }
+        }
 
         /// <summary>
         /// used to get review  based on review id
