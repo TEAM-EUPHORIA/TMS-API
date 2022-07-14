@@ -26,7 +26,8 @@ namespace TMS.API.Repositories
                     .Where(r => r.StatusId == statusId)
                     .Include(r => r.Status)
                     .Include(r => r.Reviewer)
-                    .Include(r => r.Trainee);
+                    .Include(r => r.Trainee)
+                    .Include(r=>r.Mom);
         }
         public IEnumerable<Review> GetReviewByStatusId(int statusId, int userId)
         {
@@ -34,7 +35,8 @@ namespace TMS.API.Repositories
                     .Where(r => r.StatusId == statusId && (r.ReviewerId == userId || r.TraineeId == userId))
                     .Include(r => r.Status)
                     .Include(r => r.Reviewer)
-                    .Include(r => r.Trainee);
+                    .Include(r => r.Trainee)
+                    .Include(r=>r.Mom);
         }
     }
 }
