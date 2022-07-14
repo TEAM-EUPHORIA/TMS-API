@@ -278,7 +278,7 @@ namespace TMS.API
                 ValidateAndAddEntery(nameof(user.Password), user.Password, passwordValidation);
                 ValidateAndAddEntery(nameof(user.Base64), user.Base64, Image);
                 CheckUserExists(user.Id);
-                CheckDepartmentExists((int)user.DepartmentId);
+                // CheckDepartmentExists((int)user.DepartmentId);
                  CheckForUserMailAvailablity(user);
                  AddEnteryValidateUser(isUserMailAvailable);
                 if (userExists)
