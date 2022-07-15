@@ -104,7 +104,7 @@ namespace TMS.API.Services
             {
                 return _repo.Courses.GetCourseById(courseId,userId);
             }
-            throw new ArgumentException(nameof(courseId));
+            else throw new ArgumentException(nameof(courseId));
             }
             catch (InvalidOperationException ex)
             {

@@ -43,7 +43,7 @@ namespace TMS.API.Services
             {
                 return _repo.Courses.GetAssignmentsByTopicId(topicId);
             }
-            throw new ArgumentException("Invalid Id");
+            else throw new ArgumentException("Invalid Id");
             }
             
             catch (InvalidOperationException ex)
@@ -76,7 +76,7 @@ namespace TMS.API.Services
             {
                 return _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId);
             }
-            throw new ArgumentException("Invalid Id's");
+            else throw new ArgumentException("Invalid Id's");
             }
             
             catch (InvalidOperationException ex)

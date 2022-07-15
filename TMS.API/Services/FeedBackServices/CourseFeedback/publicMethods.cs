@@ -44,7 +44,7 @@ namespace TMS.API.Services
             {
                 return _repo.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseId, traineeId);
             }
-            throw new ArgumentException("Invalid Id's");
+            else throw new ArgumentException("Invalid Id's");
             }
 
             catch (InvalidOperationException ex)

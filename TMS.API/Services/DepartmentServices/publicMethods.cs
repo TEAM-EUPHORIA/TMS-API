@@ -53,7 +53,7 @@ namespace TMS.API.Services
                 var result = _repo.Departments.GetDepartmentById(departmentId);
                 return result;
             }
-            throw new ArgumentException("Invalid Id");
+            else throw new ArgumentException("Invalid Id");
             }
 
             catch (InvalidOperationException ex)

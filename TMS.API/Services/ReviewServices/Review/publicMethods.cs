@@ -79,7 +79,7 @@ namespace TMS.API.Services
                     var result = _repo.Reviews.GetReviewById(reviewId);
                     return result;
                 }
-                throw new ArgumentException("Invalid Id");
+                else throw new ArgumentException("Invalid Id");
             }
             catch (InvalidOperationException ex)
             {

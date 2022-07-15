@@ -122,7 +122,7 @@ namespace TMS.API.Services
                 {
                     return _repo.Users.GetUserById(userId);
                 }
-                throw new ArgumentException("Invalid Id");
+                else throw new ArgumentException("Invalid Id");
             }
             catch (InvalidOperationException ex)
             {

@@ -40,7 +40,7 @@ namespace TMS.API.Services
                 }
                 return DashboardResult!;
             }
-            throw new ArgumentException("Invalid User");
+            else throw new ArgumentException("Invalid User");
         }
     }
 }

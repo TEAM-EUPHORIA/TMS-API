@@ -46,7 +46,7 @@ namespace TMS.API.Services
             {
                 return _repo.Courses.GetTopicById(courseId, topicId, userId);
             }
-            throw new ArgumentException("Invalid Id");
+            else throw new ArgumentException("Invalid Id");
         }
         /// <summary>
         /// Create the topic
