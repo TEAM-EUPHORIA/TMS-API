@@ -82,7 +82,7 @@ namespace TMS.API.Services
             dbUser.UpdatedOn = DateTime.Now;
             dbUser.UpdatedBy = updateBy;
             
-            if (user.DepartmentId != 0 && user.Department != null) dbUser.DepartmentId = user.DepartmentId;
+            if (user.DepartmentId != 0 && user.DepartmentId != null) dbUser.DepartmentId = user.DepartmentId;
         }
         /// <summary>
         /// used to disable the user.
