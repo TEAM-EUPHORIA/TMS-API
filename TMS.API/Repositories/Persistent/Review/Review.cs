@@ -23,7 +23,7 @@ namespace TMS.API.Repositories
         public IEnumerable<Review> GetReviewByStatusId(int statusId)
         {
             return dbContext.Reviews
-                    .WhereIf(statusId == 1, r => r.StatusId == statusId && r.ReviewDate.Date > DateTime.Now.Date)
+                    .WhereIf(statusId == 1, r => r.StatusId == statusId && (r.ReviewDate.Date > DateTime.Now.Date || r.ReviewDate.Date > DateTime.Now.AddDays(-3)))
                     .WhereIf(statusId != 1, r => r.StatusId == statusId)
                     .Include(r => r.Status)
                     .Include(r => r.Reviewer)
