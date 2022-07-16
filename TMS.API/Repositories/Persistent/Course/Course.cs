@@ -55,7 +55,7 @@ namespace TMS.API.Repositories
         }
         public IEnumerable<Course> GetCourses()
         {
-            return dbContext.Courses.Where(c => c.isDisabled == false).ToList();
+            return dbContext.Courses.Where(c => c.isDisabled == false).Include(c => c.Department).ToList();
         }
         public IEnumerable<Course> GetCoursesByDepartmentId(int departmentId)
         {
