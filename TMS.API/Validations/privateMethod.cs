@@ -271,7 +271,7 @@ namespace TMS.API
         /// <param name="reviewDate"></param>
         private void CheckReviewDate(DateTime reviewDate)
         {
-            if (reviewDate < DateTime.Now)
+            if (reviewDate.Date < DateTime.Now.Date)
                 AddEntery(nameof(reviewDate), "Invalid Date");
         }
         /// <summary>
