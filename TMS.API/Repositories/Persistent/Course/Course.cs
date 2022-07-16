@@ -34,7 +34,7 @@ namespace TMS.API.Repositories
                                 .Include(u => u.User)
                                 .Select(cu => cu.User)
                                 .FirstOrDefault();
-            result.TrainerId = result!.Trainer!.Id;
+            // result.TrainerId = result!.Trainer!.Id;
             return result;
         }
         public Course GetCourseById(int courseId)

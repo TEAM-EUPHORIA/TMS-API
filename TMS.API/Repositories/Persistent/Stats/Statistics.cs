@@ -46,11 +46,11 @@ namespace TMS.API.Services
         }
         public int GetCompletedReviews(int userId)
         {
-            return dbContext.Reviews.Where(r => r.StatusId == 2 && r.ReviewerId == userId && r.Reviewer!.isDisabled == false).Count();
+            return dbContext.Reviews.Where(r => r.StatusId == 2 && (r.TraineeId == userId || r.ReviewerId == userId) && (r.Reviewer!.isDisabled == false) && (r.Trainee!.isDisabled == false)).Count();
         }
         public int GetUpComingReviews(int userId)
         {
-            return dbContext.Reviews.Where(r => (r.TraineeId == userId) && (r.StatusId == 1) && (r.ReviewDate.Day >= DateTime.Now.Day) && (r.Reviewer!.isDisabled == false) && (r.Trainee!.isDisabled == false)).Count();
+            return dbContext.Reviews.Where(r => (r.TraineeId == userId || r.ReviewerId == userId) && (r.StatusId == 1) && ((r.ReviewDate.Date >= DateTime.Now.Date) || (r.ReviewDate.Date > DateTime.Now.AddDays(-3))) && (r.Reviewer!.isDisabled == false) && (r.Trainee!.isDisabled == false)).Count();
         }
         public int GetCanceledReviews()
         {
