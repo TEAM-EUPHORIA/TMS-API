@@ -272,7 +272,16 @@ namespace TMS.API
         private void CheckReviewDate(DateTime reviewDate)
         {
             if (reviewDate.Date < DateTime.Now.Date)
-                AddEntery(nameof(reviewDate), "Invalid Date");
+                AddEntery(nameof(reviewDate), "Invalid Review Date");
+        }
+        /// <summary>
+        /// validates review date
+        /// </summary>
+        /// <param name="reviewTime"></param>
+        private void CheckReviewTime(DateTime reviewTime)
+        {
+            if (reviewTime.TimeOfDay < DateTime.Now.TimeOfDay)
+                AddEntery(nameof(reviewTime), "Invalid Review Time");
         }
         /// <summary>
         /// validate review status

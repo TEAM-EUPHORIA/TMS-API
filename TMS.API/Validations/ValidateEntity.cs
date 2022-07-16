@@ -194,6 +194,7 @@ namespace TMS.API
                 CheckTraineeExists(review.TraineeId);
                 CheckStatus(review.StatusId);
                 CheckReviewDate(review.ReviewDate);
+                CheckReviewTime(review.ReviewTime);
                 CheckReviewerAvailablity(review);
                 CheckTraineeAvailablity(review);
                 CheckReviewExists(review);
