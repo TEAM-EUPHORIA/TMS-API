@@ -16,7 +16,7 @@ namespace TMS.API
         Image = @"^data:image\/[a-zA-Z]+;base64,",
         dateValidation = @"^\d{1,2}-\d{1,2}-\d{4}$",
         timeValidation = @"^(1[0-2]|0?[1-9]):([0-5]?[0-9])\s(●?[AP]M)?$",
-        modeValidation = @"^((online)|(offline)|(Online)|(Offilne)){1}$",
+        modeValidation = @"^((online)|(offline)|(Online)|(Offline)){1}$",
         durationValidation = @"^(\d+ ((hr)|(hrs)|(mins)){1}$)|(\d+ ((hr)|(hrs)){1})\s([0-5][0-9] ((min)|(mins)){1})$",
         contentValidation = @"([A-Za-z0-9!?@#$%^&*()\-+\\\/.,:;'{}\[\]<>~]{20,1000})*$",
         feedbackValidation = @"^(?!([ ])\1)(?!.*([A-Za-z])\2{2})\w[a-zA-Z.,#\s]{5,100}$";

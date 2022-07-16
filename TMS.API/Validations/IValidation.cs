@@ -32,7 +32,7 @@ namespace TMS.API
         Dictionary<string, string> ValidateCourse(Course course);
         Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback);
         Dictionary<string, string> ValidateCourseUser(CourseUsers user);
-        Dictionary<string, string> ValidateDepartment(Department dpet);
+        Dictionary<string, string> ValidateDepartment(Department departemnt);
         Dictionary<string, string> ValidateLoginDetails(LoginModel user);
         Dictionary<string, string> ValidateMOM(MOM mom);
         Dictionary<string, string> ValidateReview(Review review);

@@ -87,9 +87,9 @@ namespace TMS.API
         {
             CheckIdAndAddEntery(course.TrainerId, nameof(course.TrainerId));
             CheckIdAndAddEntery(course.DepartmentId, nameof(course.DepartmentId));
-            ValidateAndAddEntery(nameof(course.Name), course.Name, nameValidation);
-            ValidateAndAddEntery(nameof(course.Duration), course.Duration, durationValidation);
-            ValidateAndAddEntery(nameof(course.Description), course.Description, contentValidation);
+            ValidateAndAddEntery(nameof(course.Name), course.Name!, nameValidation);
+            ValidateAndAddEntery(nameof(course.Duration), course.Duration!, durationValidation);
+            ValidateAndAddEntery(nameof(course.Description), course.Description!, contentValidation);
             if (result.Count == 0)
             {
                 CheckUserExists(course.TrainerId, 3);
@@ -114,7 +114,7 @@ namespace TMS.API
         {
             CheckIdAndAddEntery(feedback.CourseId, nameof(feedback.CourseId));
             CheckIdAndAddEntery(feedback.TraineeId, nameof(feedback.TraineeId));
-            ValidateAndAddEntery(nameof(feedback.Feedback), feedback.Feedback, feedbackValidation);
+            ValidateAndAddEntery(nameof(feedback.Feedback), feedback.Feedback!, feedbackValidation);
             CheckIfRatingIsValid(feedback.Rating);
             if (result.Count == 0)
             {
@@ -137,11 +137,11 @@ namespace TMS.API
         /// </returns>
         public Dictionary<string, string> ValidateDepartment(Department department)
         {
-            ValidateAndAddEntery(nameof(department.Name), department.Name, userNameValidation);
-            
+            ValidateAndAddEntery(nameof(department.Name), department.Name!, userNameValidation);
+
             CheckDepartmentExistsIfIdIsNotZero(department.Id);
             CheckForDepartmentNameAvailablity(department);
-                AddEnteryValidateDepartment(isDepartMentNameAvailable);
+            AddEnteryValidateDepartment(isDepartMentNameAvailable);
             if (departmentExists)
                 AddEntryExists();
             CheckIsValid();
@@ -158,9 +158,9 @@ namespace TMS.API
         {
             CheckIdAndAddEntery(mom.ReviewId, nameof(mom.ReviewId));
             CheckIdAndAddEntery(mom.TraineeId, nameof(mom.TraineeId));
-            ValidateAndAddEntery(nameof(mom.Agenda), mom.Agenda, contentValidation);
-            ValidateAndAddEntery(nameof(mom.MeetingNotes), mom.MeetingNotes, contentValidation);
-            ValidateAndAddEntery(nameof(mom.PurposeOfMeeting), mom.PurposeOfMeeting, contentValidation);
+            ValidateAndAddEntery(nameof(mom.Agenda), mom.Agenda!, contentValidation);
+            ValidateAndAddEntery(nameof(mom.MeetingNotes), mom.MeetingNotes!, contentValidation);
+            ValidateAndAddEntery(nameof(mom.PurposeOfMeeting), mom.PurposeOfMeeting!, contentValidation);
             if (result.Count == 0)
             {
                 CheckUserExists(mom.TraineeId, 4);
@@ -187,7 +187,7 @@ namespace TMS.API
             CheckIdAndAddEntery(review.StatusId, nameof(review.StatusId));
             ValidateAndAddEntery(nameof(review.ReviewDate), review.ReviewDate.ToShortDateString(), dateValidation);
             ValidateAndAddEntery(nameof(review.ReviewTime), review.ReviewTime.ToString("hh:mm tt"), timeValidation);
-            ValidateAndAddEntery(nameof(review.Mode), review.Mode, modeValidation);
+            ValidateAndAddEntery(nameof(review.Mode), review.Mode!, modeValidation);
             if (result.Count == 0)
             {
                 CheckUserExists(review.ReviewerId, 5);
@@ -213,8 +213,8 @@ namespace TMS.API
         public Dictionary<string, string> ValidateTopic(Topic topic)
         {
             CheckIdAndAddEntery(topic.CourseId, nameof(topic.CourseId));
-            ValidateAndAddEntery(nameof(topic.Name), topic.Name, nameValidation);
-            ValidateAndAddEntery(nameof(topic.Duration), topic.Duration, durationValidation);
+            ValidateAndAddEntery(nameof(topic.Name), topic.Name!, nameValidation);
+            ValidateAndAddEntery(nameof(topic.Duration), topic.Duration!, durationValidation);
             if (result.Count == 0)
             {
                 CheckCourseExists(topic.CourseId);
@@ -243,7 +243,7 @@ namespace TMS.API
             CheckIdAndAddEntery(feedback.CourseId, nameof(feedback.CourseId));
             CheckIdAndAddEntery(feedback.TraineeId, nameof(feedback.TraineeId));
             CheckIdAndAddEntery(feedback.TrainerId, nameof(feedback.TrainerId));
-            ValidateAndAddEntery(nameof(feedback.Feedback), feedback.Feedback, feedbackValidation);
+            ValidateAndAddEntery(nameof(feedback.Feedback), feedback.Feedback!, feedbackValidation);
             if (result.Count == 0)
             {
                 CheckCourseExists(feedback.CourseId);
@@ -272,15 +272,14 @@ namespace TMS.API
             AddEntryForRoleAndDepartment();
             if (result.Count == 0 && roleExists)
             {
-                ValidateAndAddEntery(nameof(user.FullName), user.FullName, fullNameValidation);
-                ValidateAndAddEntery(nameof(user.UserName), user.UserName, userNameValidation);
-                ValidateAndAddEntery(nameof(user.Email), user.Email, emailValidation);
-                ValidateAndAddEntery(nameof(user.Password), user.Password, passwordValidation);
-                ValidateAndAddEntery(nameof(user.Base64), user.Base64, Image);
+                ValidateAndAddEntery(nameof(user.FullName), user.FullName!, fullNameValidation);
+                ValidateAndAddEntery(nameof(user.UserName), user.UserName!, userNameValidation);
+                ValidateAndAddEntery(nameof(user.Email), user.Email!, emailValidation);
+                ValidateAndAddEntery(nameof(user.Password), user.Password!, passwordValidation);
+                ValidateAndAddEntery(nameof(user.Base64), user.Base64!, Image);
                 CheckUserExists(user.Id);
-                // CheckDepartmentExists((int)user.DepartmentId);
-                 CheckForUserMailAvailablity(user);
-                 AddEnteryValidateUser(isUserMailAvailable);
+                CheckForUserMailAvailablity(user);
+                AddEnteryValidateUser(isUserMailAvailable);
                 if (userExists)
                     AddEntryExists();
             }

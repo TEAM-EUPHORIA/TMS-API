@@ -55,7 +55,6 @@ namespace TMS.API.Controllers
                         // getting the logged in user id
                         int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         // calling service to update the user
-                        // int updatedBy = 1;
                         var res = _service.UserService.UpdateUser(user,updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists"))
                         {

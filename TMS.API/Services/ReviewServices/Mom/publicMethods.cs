@@ -150,29 +150,5 @@ namespace TMS.API.Services
                 throw;
             }
         }
-
-        /// <summary>
-        /// used to Create Mom.
-        /// </summary>
-        /// <param name="mom"></param>
-        /// <returns>
-        /// result Dictionary 
-
-        public Dictionary<string, string> CreateMom(MOM mom)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// used to UpdateReview.
-        /// </summary>
-        /// <param name="review"></param>
-        /// <returns>
-        /// result Dictionary 
-
-        public Dictionary<string, string> UpdateReview(Review review)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

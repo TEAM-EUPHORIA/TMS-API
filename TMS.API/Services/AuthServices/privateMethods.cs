@@ -47,10 +47,10 @@ namespace TMS.API.Services
 
             return new List<Claim>
             {
-                new Claim("Email",dbUser.Email),
-                new Claim("Name", dbUser.FullName),
-                new Claim("Role", dbUser.Role!.Name),
-                new Claim(ClaimTypes.Role, dbUser.Role.Name),
+                new Claim("Email",dbUser.Email!),
+                new Claim("Name", dbUser.FullName!),
+                new Claim("Role", dbUser.Role!.Name!),
+                new Claim(ClaimTypes.Role, dbUser.Role!.Name!),
                 new Claim("RoleId", dbUser.RoleId.ToString()),
                 new Claim("UserId", dbUser.Id.ToString())
             };

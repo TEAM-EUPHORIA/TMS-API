@@ -8,7 +8,7 @@ namespace TMS.API
         /// </summary>
         private void AddEntryExists()
         {
-            if(!result.ContainsKey("Exists"))
+            if(result.Count == 0 && !result.ContainsKey("Exists"))
             AddEntery("Exists", "true");
         }
         /// <summary>
@@ -21,8 +21,8 @@ namespace TMS.API
         }
          private void UserMailIsNotAvailable()
         {
-            if(!result.ContainsKey("name"))
-            AddEntery("name", "User with that mail already exists");
+            if(!result.ContainsKey("email"))
+            AddEntery("email", "User with that mail already exists");
         }
         private void DepartmentNameIsNotAvailable()
         {

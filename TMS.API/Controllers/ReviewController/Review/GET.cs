@@ -45,7 +45,7 @@ namespace TMS.API.Controllers.ReviewController
         /// <remarks>
         /// Sample request:
         ///
-        ///     url : https://localhost:5001/Review/review/status/(statusId:int)
+        ///     url : https://localhost:5001/Review/review/status/(statusId:int),(userId:int)
         ///
         /// </remarks>
         /// <response code="200">Returns a Review.</response>

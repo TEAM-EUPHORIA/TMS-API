@@ -31,7 +31,7 @@ namespace TMS.API.Services
         /// <param name="updatedBy"></param>
         private static void PrepareAssignment(Assignment assignment, Assignment dbAssignment, int updatedBy)
         {
-            File PDF = FileService.GetBase64HeaderAndByteArray(assignment.Base64);
+            File PDF = FileService.GetBase64HeaderAndByteArray(assignment.Base64!);
             dbAssignment.Base64 = PDF.Header!;
             dbAssignment.Document = PDF.Bytes;
             dbAssignment.UpdatedOn = DateTime.Now;

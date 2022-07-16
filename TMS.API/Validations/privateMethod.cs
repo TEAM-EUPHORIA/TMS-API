@@ -33,6 +33,17 @@ namespace TMS.API
         /// <summary>
         /// sets usertExists to true if the user actually exists
         /// </summary>
+        /// <param name="user"></param>
+        private void CheckUserExists(LoginModel user)
+        {
+            if (result.Count == 0)
+            {
+                userExists = UserExists(user);
+            }
+        }
+        /// <summary>
+        /// sets usertExists to true if the user actually exists
+        /// </summary>
         /// <param name="userId"></param>
         /// <param name="roleId"></param>
         private void CheckUserExists(int userId, int roleId)
@@ -106,17 +117,6 @@ namespace TMS.API
             }
         }
         /// <summary>
-        /// sets usertExists to true if the user actually exists
-        /// </summary>
-        /// <param name="user"></param>
-        private void CheckUserExists(LoginModel user)
-        {
-            if (result.Count == 0)
-            {
-                userExists = UserExists(user);
-            }
-        }
-        /// <summary>
         /// checks course exists if course id is not zero
         /// and adds course not found if courseExists is false
         /// </summary>
@@ -154,21 +154,21 @@ namespace TMS.API
                 isCourseNameAvailable = IsCourseNameAvailable(
                     course.Id,
                     course.DepartmentId,
-                    course.Name);
+                    course.Name!);
         }
-         private void CheckForUserMailAvailablity(User user)
+        private void CheckForUserMailAvailablity(User user)
         {
-            if (departmentExists)
+            if (departmentExists && roleExists)
                 isUserMailAvailable = IsUserMailAvailable(
                     user.Id,
-                    user.Email);
+                    user.Email!);
         }
-         private void CheckForDepartmentNameAvailablity(Department department)
+        private void CheckForDepartmentNameAvailablity(Department department)
         {
-          // if (userExists)
-                isDepartMentNameAvailable = IsDepartmentNameAvailable(
-                    department.Id,
-                    department.Name);
+            // if (userExists)
+            isDepartMentNameAvailable = IsDepartmentNameAvailable(
+                department.Id,
+                department.Name!);
         }
         /// <summary>
         /// sets departmentExists to true if the department actually exists 
@@ -291,10 +291,10 @@ namespace TMS.API
         private void CheckForTopicNameAvailablelity(Topic topic)
         {
             // if (courseExists && topicExists)
-                isTopicNameAvailabe = IsTopicNameAvailabe(
-                    topic.TopicId,
-                    topic.CourseId,
-                    topic.Name);
+            isTopicNameAvailabe = IsTopicNameAvailabe(
+                topic.TopicId,
+                topic.CourseId,
+                topic.Name!);
         }
         /// <summary>
         /// sets traineeFeedbackExists to true if the condition holds true
