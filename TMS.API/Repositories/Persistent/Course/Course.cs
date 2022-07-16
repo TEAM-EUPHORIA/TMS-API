@@ -66,7 +66,7 @@ namespace TMS.API.Repositories
         public IEnumerable<Course> GetCoursesByUserId(int userId)
         {
             return dbContext.CourseUsers
-                     .Where(cu => cu.UserId == userId)
+                     .Where(cu => cu.UserId == userId && cu.Course.isDisabled == false)
                      .Select(cu => cu.Course)!;
         }
         public void UpdateCourse(Course course)
