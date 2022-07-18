@@ -35,14 +35,14 @@ namespace TMS.API.Repositories
         public IEnumerable<User> GetUsersByDepartment(int departmentId)
         {
             return dbContext.Users
-                    .Where(u => u.DepartmentId == departmentId)
+                    .Where(u => u.DepartmentId == departmentId && u.isDisabled == false)
                     .Include(u => u.Department)
                     .Include(u => u.Role);
         }
         public IEnumerable<User> GetUsersByDeptandRole(int departmentId, int roleId)
         {
             return dbContext.Users
-                    .Where(u => u.DepartmentId == departmentId && u.RoleId == roleId)
+                    .Where(u => u.DepartmentId == departmentId && u.RoleId == roleId && u.isDisabled == false)
                     .Include(u => u.Department)
                     .Include(u => u.Role);
         }
