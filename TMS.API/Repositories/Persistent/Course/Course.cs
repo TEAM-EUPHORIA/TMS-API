@@ -77,7 +77,7 @@ namespace TMS.API.Repositories
         public IEnumerable<User> GetCourseUsers(int courseId)
         {
             var data = dbContext.CourseUsers
-                            .Where(cu => cu.CourseId == courseId && cu.User.RoleId == 4)
+                            .Where(cu => cu.CourseId == courseId && cu.User.isDisabled == false && cu.User!.RoleId != 3)
                             .Include(cu => cu.User).Select(cu => cu.User).ToList();
             return data!;
         }
