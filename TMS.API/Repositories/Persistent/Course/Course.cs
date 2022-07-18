@@ -50,6 +50,7 @@ namespace TMS.API.Repositories
                                 .Include(u => u.User)
                                 .Select(cu => cu.User)
                                 .FirstOrDefault();
+            result!.TraineeFeedbacks = dbContext.TraineeFeedbacks.Where(c => c.CourseId == courseId).ToList();
             result.TrainerId = result!.Trainer!.Id;
             return result;
         }
@@ -76,7 +77,7 @@ namespace TMS.API.Repositories
         public IEnumerable<User> GetCourseUsers(int courseId)
         {
             var data = dbContext.CourseUsers
-                            .Where(cu => cu.CourseId == courseId)
+                            .Where(cu => cu.CourseId == courseId && cu.User.RoleId == 4)
                             .Include(cu => cu.User).Select(cu => cu.User).ToList();
             return data!;
         }
