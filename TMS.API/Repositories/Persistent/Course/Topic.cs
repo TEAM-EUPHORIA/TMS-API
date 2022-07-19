@@ -48,7 +48,7 @@ namespace TMS.API.Repositories
         {
             return dbContext.Topics
                     .Where(t => t.CourseId == courseId &&
-                                t.isDisabled == false);
+                                t.isDisabled == false).Include(t => t.Assignments).Include(t=>t.Attendances);
         }
         public void UpdateTopic(Topic topic)
         {
