@@ -47,6 +47,7 @@ namespace TMS.API.Repositories
                                 .Include(u => u.User)
                                 .Select(cu => cu.User)
                                 .FirstOrDefault();
+            result!.TraineeFeedbacks = dbContext.TraineeFeedbacks.Where(c => c.CourseId == courseId).ToList();
             result.TrainerId = result!.Trainer!.Id;
             return result;
         }
@@ -63,7 +64,7 @@ namespace TMS.API.Repositories
         public IEnumerable<Course> GetCoursesByUserId(int userId)
         {
             return dbContext.CourseUsers
-                     .Where(cu => cu.UserId == userId)
+                     .Where(cu => cu.UserId == userId && cu.Course.isDisabled == false)
                      .Select(cu => cu.Course)!;
         }
         public void UpdateCourse(Course course)
@@ -73,7 +74,7 @@ namespace TMS.API.Repositories
         public IEnumerable<User> GetCourseUsers(int courseId)
         {
             var data = dbContext.CourseUsers
-                            .Where(cu => cu.CourseId == courseId && cu.User!.isDisabled == false)
+                            .Where(cu => cu.CourseId == courseId && cu.User.isDisabled == false && cu.User!.RoleId != 3)
                             .Include(cu => cu.User).Select(cu => cu.User).ToList();
             return data!;
         }

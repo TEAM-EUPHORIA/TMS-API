@@ -20,7 +20,7 @@ namespace TMS.API.Repositories
         {
             return dbContext.Assignments
                     .Where(a => a.TopicId == topicId && a.Owner.RoleId == 4)
-                    .Include(a => a.Owner);
+                    .Include(a => a.Owner).ToList();
         }
         public void UpdateAssignment(Assignment assignment)
         {
