@@ -1,6 +1,5 @@
 namespace TMS.API
 {
-
     public partial class Validation : IValidation
     {
         public Validation(AppDbContext dbContext)

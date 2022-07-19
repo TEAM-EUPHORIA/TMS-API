@@ -55,8 +55,8 @@ namespace TMS.API
         public bool CourseUserExists(int courseId, int userId, int roleId)
         {
             return dbContext.CourseUsers.Any(cu =>
-                    cu.CourseId == courseId &&
-                    cu.UserId == userId &&
+                    cu.CourseId == courseId && cu.Course.isDisabled == false &&
+                    cu.UserId == userId && cu.User.isDisabled == false &&
                     cu.RoleId == roleId);
         }
         /// <summary>
@@ -69,7 +69,7 @@ namespace TMS.API
         public bool CourseExists(int courseId)
         {
             return dbContext.Courses.Any(c =>
-                    c.Id == courseId);
+                    c.Id == courseId && c.isDisabled == false);
 
         }
         /// <summary>
@@ -127,7 +127,7 @@ namespace TMS.API
         public bool DepartmentExists(int departmentId)
         {
             return dbContext.Departments.Any(d =>
-                    d.Id == departmentId);
+                    d.Id == departmentId && d.isDisabled == false);
 
         }
         /// <summary>
@@ -259,7 +259,7 @@ namespace TMS.API
         {
             return dbContext.Topics.Any(t =>
                     t.TopicId == topicId &&
-                    t.CourseId == courseId);
+                    t.CourseId == courseId && t.isDisabled == false);
         }
         /// <summary>
         /// 
@@ -271,7 +271,7 @@ namespace TMS.API
         public bool TopicExists(int topicId)
         {
             return dbContext.Topics.Any(t =>
-                    t.TopicId == topicId);
+                    t.TopicId == topicId && t.isDisabled == false);
 
         }
         /// <summary>

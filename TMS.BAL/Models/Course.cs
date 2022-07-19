@@ -25,5 +25,6 @@ namespace TMS.BAL
         public virtual List<Topic>? Topics { get; set; }
         public virtual List<CourseUsers>? UserMapping { get; set; }
         public virtual List<CourseFeedback>? Feedbacks { get; set; }
+        public virtual List<TraineeFeedback>? TraineeFeedbacks { get; set; }
     }
 }
