@@ -139,6 +139,7 @@ namespace TMS.API.Services
             var validation = _repo.Validation.ValidateAttendance(attendance);
             if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
+                attendance.Status = true;
                 _repo.Courses.MarkAttendance(attendance);
                 _repo.Complete();
             }
