@@ -19,7 +19,7 @@ namespace TMS.API.Repositories
         public IEnumerable<Assignment> GetAssignmentsByTopicId(int topicId)
         {
             return dbContext.Assignments
-                    .Where(a => a.TopicId == topicId)
+                    .Where(a => a.TopicId == topicId && a.Owner.RoleId == 4)
                     .Include(a => a.Owner);
         }
         public void UpdateAssignment(Assignment assignment)
