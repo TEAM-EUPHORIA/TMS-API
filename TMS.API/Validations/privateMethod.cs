@@ -280,7 +280,7 @@ namespace TMS.API
         /// <param name="reviewTime"></param>
         private void CheckReviewTime(DateTime reviewTime)
         {
-            if (reviewTime.TimeOfDay < DateTime.Now.TimeOfDay)
+            if (reviewTime < DateTime.Now)
                 AddEntery(nameof(reviewTime), "Invalid Review Time");
         }
         /// <summary>

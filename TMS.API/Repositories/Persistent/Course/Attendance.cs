@@ -27,7 +27,7 @@ namespace TMS.API.Repositories
 
             var userIds = result.Select(a=>a.OwnerId);
             var courseUsers = dbContext.CourseUsers
-                                .Where(cu => cu.CourseId == courseId)
+                                .Where(cu => cu.CourseId == courseId && cu.User.RoleId == 4)
                                 .Include(cu => cu.User)
                                 .Select(cu => cu.User).ToList();
 
