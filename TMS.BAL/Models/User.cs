@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TMS.BAL
 {
@@ -25,5 +26,9 @@ namespace TMS.BAL
         public virtual Role? Role { get; set; }
         public virtual Department? Department { get; set; }
         public virtual List<CourseUsers>? CourseMapping { get; set; }
+        [NotMapped]
+        public virtual bool FeedBackExists { get; set; }
+        [NotMapped]
+        public virtual int CourseId { get; set; }
     }
 }

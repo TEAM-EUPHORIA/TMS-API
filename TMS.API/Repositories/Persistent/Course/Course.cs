@@ -75,8 +75,16 @@ namespace TMS.API.Repositories
         {
             var data = dbContext.CourseUsers
                             .Where(cu => cu.CourseId == courseId && cu.User.isDisabled == false && cu.User!.RoleId != 3)
-                            .Include(cu => cu.User).Select(cu => cu.User).ToList();
-            return data!;
+                            .Include(cu => cu.User).ToList();
+            var result = new List<User>();
+            bool feedbackExist = false;
+            foreach (var item in data)
+            {
+               feedbackExist = dbContext.TraineeFeedbacks.Any(tf => tf.CourseId == item.CourseId && tf.TraineeId == item.UserId);
+                item.User.FeedBackExists = feedbackExist;
+                result.Add(item.User);
+            }
+            return result!;
         }
     }
 }
