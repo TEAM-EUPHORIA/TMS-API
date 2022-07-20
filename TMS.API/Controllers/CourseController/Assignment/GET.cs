@@ -11,15 +11,19 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<CourseController> _logger;
         private readonly IUnitOfService _service;
+        private readonly AppDbContext _context;
+
         /// <summary>
         /// Constructor for CourseController
         /// </summary>
         /// <param name="service"></param>
         /// <param name="logger"></param>
-        public CourseController(IUnitOfService service, ILogger<CourseController> logger)
+        /// <param name="context"></param>
+        public CourseController(IUnitOfService service, ILogger<CourseController> logger, AppDbContext context)
         {
             _logger = logger;
             _service = service;
+            _context = context;
         }
         /// <summary>
         /// Gets a list of assigments in a topic by courseId and topicId

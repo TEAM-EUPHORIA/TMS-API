@@ -101,6 +101,17 @@ namespace TMS.API.Services
             }
             return validation;
         }
+        public Dictionary<string, string> UpdateTopic(Topic topic)
+        {
+            if (topic is null) throw new ArgumentNullException(nameof(topic));
+            var validation = _repo.Validation.ValidateTopic(topic);
+            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
+            {
+                _repo.Courses.UpdateTopic(topic);
+                _repo.Complete();
+            }
+            return validation;
+        }
         /// <summary>
         /// disable the topic by topicId
         /// </summary>

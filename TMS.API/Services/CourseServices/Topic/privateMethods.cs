@@ -30,6 +30,7 @@ namespace TMS.API.Services
             dbTopic.Content = topic.Content;
             dbTopic.UpdatedOn = DateTime.Now;
             dbTopic.UpdatedBy = updatedBy;
+            dbTopic.Status = topic.Status;
         }
 
         /// <summary>

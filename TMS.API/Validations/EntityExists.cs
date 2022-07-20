@@ -355,9 +355,10 @@ namespace TMS.API
         /// </exception>
         public bool UserExists(LoginModel user)
         {
+            var pass = HashPassword.Sha256(user.Password);
             return dbContext.Users.Any(u =>
                     u.Email == user.Email
-                    && u.Password == HashPassword.Sha256(user.Password)
+                    && u.Password == pass
                     && u.isDisabled == false);
         }
     }
