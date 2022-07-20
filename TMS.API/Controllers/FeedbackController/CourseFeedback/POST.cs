@@ -37,7 +37,8 @@ namespace TMS.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
             bool access = _service.Validation.ValidateCourseAccess(feedback.CourseId, userId);
-            if (access)
+            bool courseComplete = _stats.IsCourseCompleted(feedback.CourseId);
+            if (access && courseComplete)
             {
                 try
                 {
@@ -57,7 +58,14 @@ namespace TMS.API.Controllers
                     return Problem("sorry somthing went wrong");
                 }
             }
-            return Unauthorized("UnAuthorized, contect your admin");
+            else if (!access)
+            {
+                return Unauthorized("UnAuthorized, contect your admin");
+            }
+            else
+            {
+                return BadRequest("The course is not yet completed");
+            }
         }
     }
 }

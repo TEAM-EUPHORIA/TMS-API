@@ -11,10 +11,13 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<FeedBackController> _logger;
         private readonly IUnitOfService _service;
-        public FeedBackController(IUnitOfService service, ILogger<FeedBackController> logger)
+        private readonly IStatistics _stats;
+
+        public FeedBackController(IUnitOfService service, ILogger<FeedBackController> logger, IStatistics stats)
         {
             _logger = logger;
             _service = service;
+            _stats = stats;
         }
         /// <summary>
         /// Gets a Feedback
