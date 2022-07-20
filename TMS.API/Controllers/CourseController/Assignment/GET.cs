@@ -11,15 +11,19 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<CourseController> _logger;
         private readonly IUnitOfService _service;
+        private readonly AppDbContext _context;
+
         /// <summary>
         /// Constructor for CourseController
         /// </summary>
         /// <param name="service"></param>
         /// <param name="logger"></param>
-        public CourseController(IUnitOfService service, ILogger<CourseController> logger)
+        /// <param name="context"></param>
+        public CourseController(IUnitOfService service, ILogger<CourseController> logger, AppDbContext context)
         {
             _logger = logger;
             _service = service;
+            _context = context;
         }
         /// <summary>
         /// Gets a list of assigments in a topic by courseId and topicId
@@ -37,10 +41,22 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments")]
+        [Authorize(Roles= "Trainer,Trainee,Training Coordinator")]
         public IActionResult GetAssignmentsByTopicId(int courseId, int topicId)
         {
             var topicExists = _service.Validation.TopicExists(topicId, courseId);
-            if (topicExists)
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
+            if (topicExists && access)
             {
                 try
                 {
@@ -71,10 +87,22 @@ namespace TMS.API.Controllers
         /// <param name="topicId"></param>
         /// <param name="ownerId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments/{ownerId:int}")]
+        [Authorize(Roles= "Trainer,Trainee,Training Coordinator")]
         public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
             var assignmentExists = _service.Validation.AssignmentExists(courseId, topicId, ownerId);
-            if (assignmentExists)
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
+            if (assignmentExists && access)
             {
                 try
                 {

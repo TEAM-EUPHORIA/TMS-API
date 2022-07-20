@@ -11,10 +11,13 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<FeedBackController> _logger;
         private readonly IUnitOfService _service;
-        public FeedBackController(IUnitOfService service, ILogger<FeedBackController> logger)
+        private readonly IStatistics _stats;
+
+        public FeedBackController(IUnitOfService service, ILogger<FeedBackController> logger, IStatistics stats)
         {
             _logger = logger;
             _service = service;
+            _stats = stats;
         }
         /// <summary>
         /// Gets a Feedback
@@ -32,9 +35,11 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="traineeId"></param>
         [HttpGet("course/{courseId:int},{traineeId:int}")]
+        [Authorize(Roles="Training Head, Training Coordinator, Trainee")]
         public IActionResult GetCourseFeedbackByCourseIdAndTraineeId(int courseId,int traineeId)
         {
             var feedbackExists = _service.Validation.CourseFeedbackExists(courseId,traineeId);
+
             if(feedbackExists)
             {
                 try

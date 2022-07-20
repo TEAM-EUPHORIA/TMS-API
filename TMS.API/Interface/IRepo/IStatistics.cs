@@ -15,6 +15,7 @@ namespace TMS.API.Services
         int GetUpComingReviews(int userId);
         int GetUserCount();
         bool IsCourseCompleted(int userId, int courseId);
+        bool IsCourseCompleted(int courseId);
         int LastUserId();
         Dictionary<string, string> UserDashboardDetails(int userId);
     }

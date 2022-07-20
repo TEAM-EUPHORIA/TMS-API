@@ -12,7 +12,6 @@ namespace TMS.API.Repositories
         Assignment GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId);
         void CreateAssignment(Assignment assignment);
         void UpdateAssignment(Assignment assignment);
-
         IEnumerable<Course> GetCourses();
         IEnumerable<Course> GetCoursesByDepartmentId(int departmentId);
         IEnumerable<Course> GetCoursesByUserId(int userId);

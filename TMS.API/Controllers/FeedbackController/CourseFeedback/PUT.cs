@@ -31,32 +31,38 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("course/feedback")]
-        
+
         [Authorize(Roles = "Trainee")]
-        public IActionResult UpdateCourseFeedback([FromBody]CourseFeedback feedback)
+        public IActionResult UpdateCourseFeedback([FromBody] CourseFeedback feedback)
         {
-            var feedbackExists = _service.Validation.CourseFeedbackExists(feedback.CourseId,feedback.TraineeId);
-            if(feedbackExists)
-            {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-                try
+            var feedbackExists = _service.Validation.CourseFeedbackExists(feedback.CourseId, feedback.TraineeId);
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = userId == feedback.TraineeId;
+            if(access)
+            {
+                if (feedbackExists)
                 {
-                    var IsValid = _service.Validation.ValidateCourseFeedback(feedback);
-                    if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
+                    try
                     {
-                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.FeedbackService.UpdateCourseFeedback(feedback,updatedBy);
-                        if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
+                        var IsValid = _service.Validation.ValidateCourseFeedback(feedback);
+                        if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
+                        {
+                            int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                            var res = _service.FeedbackService.UpdateCourseFeedback(feedback, updatedBy);
+                            if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
+                        }
+                        return BadRequest(IsValid);
                     }
-                    return BadRequest(IsValid);
+                    catch (InvalidOperationException ex)
+                    {
+                        TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
+                        return Problem("sorry somthing went wrong");
+                    }
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("NotFound");
+            return Unauthorized("UnAuthorized, contect your admin");
         }
     }
 }

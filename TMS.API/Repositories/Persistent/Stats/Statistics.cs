@@ -98,6 +98,20 @@ namespace TMS.API.Services
             int attendanceCount = GetAttendanceCount(courseId, topicIds, userId);
             return topicsCount == attendanceCount;
         }
+        public bool IsCourseCompleted(int courseId)
+        {
+            var topics = dbContext.Topics.Where(t => t.CourseId == courseId).ToList();
+            int topicsCount = 0;
+            foreach (var item in topics)
+            {
+                if(item.Status)
+                {
+                    topicsCount++;
+                }
+            }
+            
+            return topics.Count == topicsCount;
+        }
         public Dictionary<string, string> UserDashboardDetails(int userId)
         {
             var user = dbContext.Users.Where(u => u.Id == userId).Include(u => u.Role).FirstOrDefault();

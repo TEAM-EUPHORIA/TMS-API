@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using TMS.BAL;
 using TMS.API.UtilityFunctions;
 using Microsoft.AspNetCore.Authorization;
+using TMS.API.ViewModels;
+
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -51,6 +53,35 @@ namespace TMS.API.Controllers
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Topic was Updated successfully" });
                     }
                     return BadRequest(IsValid);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateTopic));
+                    return Problem("sorry somthing went wrong");
+                }
+            }
+            return NotFound("NotFound");
+        }
+        [HttpPut("MarkAsComplete")]
+        
+        [Authorize(Roles = "Trainer")]
+        public IActionResult MarkAsComplete([FromBody]TopicStatus topic)
+        {
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            var access = _service.Validation.ValidateCourseAccess(topic.CourseId, userId);
+            var topicExists = _service.Validation.TopicExists(topic.TopicId, topic.CourseId);
+            if (topicExists && access)
+            {
+                try
+                {
+                    var result = _context.Topics.Where(t => t.TopicId == topic.TopicId && t.CourseId == topic.CourseId).FirstOrDefault();
+                    if(result != null)
+                    {
+                        result.Status = true;
+                        _context.Update(result);
+                        _context.SaveChanges();     
+                        return Ok(new {Response = "The topic has been Marked as completed"});               
+                    }
                 }
                 catch (InvalidOperationException ex)
                 {

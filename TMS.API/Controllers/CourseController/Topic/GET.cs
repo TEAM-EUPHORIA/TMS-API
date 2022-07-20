@@ -21,10 +21,22 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         [HttpGet("{courseId:int}/topics")]
+        [Authorize(Roles="Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetTopicsByCourseId(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            if (courseExists)
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
+            if (courseExists && access)
             {
                 try
                 {
@@ -36,7 +48,7 @@ namespace TMS.API.Controllers
                     return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound("NotFound");
+            return NotFound("Not Found");
         }
         /// <summary>
         /// Gets a single topic by courseId and topicId
@@ -54,14 +66,25 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}")]
+        [Authorize(Roles="Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetTopicByIds(int courseId, int topicId)
         {
             var topicExists = _service.Validation.TopicExists(topicId, courseId);
-            if (topicExists)
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
+            if (topicExists && access)
             {
                 try
                 {
-                    int userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
@@ -71,7 +94,7 @@ namespace TMS.API.Controllers
                     return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound("NotFound");
+            return NotFound("Not Found");
         }
         /// <summary>
         /// Gets a list of users present in a course
@@ -85,6 +108,7 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <returns></returns>
         [HttpGet("getCourseUser/{courseId:int}")]
+        [Authorize(Roles="Training Head, Training Coordinator")]
         public IActionResult GetCourseUser(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);

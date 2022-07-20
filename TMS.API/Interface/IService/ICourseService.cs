@@ -10,6 +10,7 @@ namespace TMS.API.Services
         Dictionary<string, string> CreateAssignment(Assignment assignment, int createdBy);
         Dictionary<string, string> CreateCourse(Course course, int createdBy);
         Dictionary<string, string> CreateTopic(Topic topic, int createdBy);
+        Dictionary<string, string> UpdateTopic(Topic topic);
         bool DisableCourse(int courseId, int updatedBy);
         bool DisableTopic(int courseId, int topicId, int updatedBy);
         Assignment GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId);

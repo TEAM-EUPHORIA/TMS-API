@@ -24,10 +24,22 @@ namespace TMS.API.Controllers
         /// <param name="topicId"></param>
         /// <returns></returns>
         [HttpGet("getAttendance")]
+        [Authorize(Roles= "Trainer,Training Coordinator")]
         public IActionResult GetAttendanceList(int courseId, int topicId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            if (courseExists)
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
+            if (courseExists && access)
             {
                 try
                 {

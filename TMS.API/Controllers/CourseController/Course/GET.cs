@@ -46,9 +46,30 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="userId"></param>
         [HttpGet("users/{userId:int}")]
-        [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
+        [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCoursesByUserId(int userId)
         {
+            
+            var userExists = _service.Validation.UserExists(userId);
+            if (userExists)
+            {
+                try
+                {
+                    return Ok(_service.CourseService.GetCoursesByUserId(userId));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
+                    return Problem("sorry somthing went wrong");
+                }
+            }
+            return NotFound("Not Found");
+        }
+        [HttpGet("myCourses")]
+        [Authorize(Roles = "Trainer, Trainee")]
+        public IActionResult GetCoursesByUserId()
+        {
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
             var userExists = _service.Validation.UserExists(userId);
             if (userExists)
             {
@@ -95,7 +116,7 @@ namespace TMS.API.Controllers
                     return Problem("sorry somthing went wrong");
                 }
             }
-            return NotFound("NotFound");
+            return NotFound("Not Found");
         }
         /// <summary>
         /// Gets a single course by courseId
@@ -116,11 +137,21 @@ namespace TMS.API.Controllers
         public IActionResult GetCourseById(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            if (courseExists)
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
+            if (courseExists && access)
             {
                 try
                 {
-                    var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var result = _service.CourseService.GetCourseById(courseId, userId);
                     if (result is not null) return Ok(result);
                 }
