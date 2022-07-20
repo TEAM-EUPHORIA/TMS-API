@@ -37,10 +37,22 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments")]
+        [Authorize(Roles= "Trainer,Trainee,Training Coordinator")]
         public IActionResult GetAssignmentsByTopicId(int courseId, int topicId)
         {
             var topicExists = _service.Validation.TopicExists(topicId, courseId);
-            if (topicExists)
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
+            if (topicExists && access)
             {
                 try
                 {
@@ -71,10 +83,22 @@ namespace TMS.API.Controllers
         /// <param name="topicId"></param>
         /// <param name="ownerId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments/{ownerId:int}")]
+        [Authorize(Roles= "Trainer,Trainee,Training Coordinator")]
         public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
             var assignmentExists = _service.Validation.AssignmentExists(courseId, topicId, ownerId);
-            if (assignmentExists)
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
+            if (assignmentExists && access)
             {
                 try
                 {

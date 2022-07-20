@@ -30,5 +30,22 @@ namespace TMS.API.UtilityFunctions
             }
             return userId;
         } 
+        public static string GetCurrentUserRole(HttpContext context)
+        {
+            string role = "";
+            if (context.User.Identity is ClaimsIdentity identity)
+            {
+                try
+                {
+                    role = identity.FindFirst("Role")!.Value;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+            }
+            return role;
+        } 
     }
 }

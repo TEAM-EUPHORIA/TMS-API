@@ -39,6 +39,7 @@ namespace TMS.API
         Dictionary<string, string> ValidateTopic(Topic topic);
         Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback);
         Dictionary<string, string> ValidateUser(User user);
+        public bool ValidateCourseAccess(int courseId, int userId);
     }
 
 }

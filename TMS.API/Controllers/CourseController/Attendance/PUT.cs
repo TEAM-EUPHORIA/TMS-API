@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using TMS.BAL;
 using TMS.API.UtilityFunctions;
 using Microsoft.AspNetCore.Authorization;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -18,16 +17,18 @@ namespace TMS.API.Controllers
         /// <param name="attendance"></param>
         /// <returns></returns>
         [HttpPut("attendance")]
-        
         [Authorize(Roles = "Trainer, Trainee")]
-        public IActionResult MarkAttendance([FromBody]Attendance attendance)
+        public IActionResult MarkAttendance([FromBody] Attendance attendance)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
                 var IsValid = _service.Validation.ValidateAttendance(attendance);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = false;
+                access = _service.Validation.ValidateCourseAccess(attendance.CourseId, attendance.OwnerId);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't mark. The attendance already exists");
-                if (IsValid.ContainsKey("IsValid"))
+                if (IsValid.ContainsKey("IsValid") && access)
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     attendance.CreatedBy = currentUserId;

@@ -31,28 +31,35 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPost("assignment")]
-        
-        [Authorize(Roles = "Trainer,Trainee")]
-        public IActionResult CreateAssignment([FromBody]Assignment assignment)
+
+        [Authorize(Roles = "Trainer, Trainee")]
+        public IActionResult CreateAssignment([FromBody] Assignment assignment)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            try
+
+            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            bool access = _service.Validation.ValidateCourseAccess(assignment.CourseId, assignment.OwnerId);
+            if (access)
             {
-                var IsValid = _service.Validation.ValidateAssignment(assignment);
-                if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create assignment. The assignment already exists");
-                if (IsValid.ContainsKey("IsValid"))
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                try
                 {
-                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.CourseService.CreateAssignment(assignment,createdBy);
-                    if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Assignment was submitted successfully" });
+                    var IsValid = _service.Validation.ValidateAssignment(assignment);
+                    if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create assignment. The assignment already exists");
+                    if (IsValid.ContainsKey("IsValid"))
+                    {
+                        int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        var res = _service.CourseService.CreateAssignment(assignment, createdBy);
+                        if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Assignment was submitted successfully" });
+                    }
+                    return BadRequest(IsValid);
                 }
-                return BadRequest(IsValid);
+                catch (InvalidOperationException ex)
+                {
+                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateAssignment));
+                    return Problem("sorry somthing went wrong");
+                }
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateAssignment));
-            }
-            return Problem("sorry somthing went wrong");
+            return Unauthorized("UnAuthorized, contect your admin");
         }
     }
 }
