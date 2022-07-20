@@ -32,9 +32,11 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="traineeId"></param>
         [HttpGet("course/{courseId:int},{traineeId:int}")]
+        [Authorize(Roles="Training Head, Training Coordinator, Trainee")]
         public IActionResult GetCourseFeedbackByCourseIdAndTraineeId(int courseId,int traineeId)
         {
             var feedbackExists = _service.Validation.CourseFeedbackExists(courseId,traineeId);
+
             if(feedbackExists)
             {
                 try
