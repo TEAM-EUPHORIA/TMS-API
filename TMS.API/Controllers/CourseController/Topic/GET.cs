@@ -108,7 +108,7 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <returns></returns>
         [HttpGet("getCourseUser/{courseId:int}")]
-        [Authorize(Roles="Training Head, Training Coordinator")]
+        [Authorize(Roles="Training Head, Training Coordinator, Trainer")]
         public IActionResult GetCourseUser(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
