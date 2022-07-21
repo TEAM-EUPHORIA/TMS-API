@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
+using TMS.API.ViewModels;
 using TMS.BAL;
 
 namespace TMS.API.Controllers
@@ -38,7 +39,7 @@ namespace TMS.API.Controllers
         [HttpPut("user")]
         
         [Authorize(Roles = "Training Head, Training Coordinator")]
-        public IActionResult UpdateUser([FromBody]User user)
+        public IActionResult UpdateUser([FromBody]UpdateUserModel user)
         {
             // checks if the model is valid or not
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -49,7 +50,7 @@ namespace TMS.API.Controllers
                 try
                 {
                     // validating the user model and business logics
-                    var modelValidation = _service.Validation.ValidateUser(user);
+                    var modelValidation = _service.Validation.ValidateUpdtateUser(user);
                     if (modelValidation.ContainsKey("IsValid") && modelValidation.ContainsKey("Exists"))
                     {
                         // getting the logged in user id

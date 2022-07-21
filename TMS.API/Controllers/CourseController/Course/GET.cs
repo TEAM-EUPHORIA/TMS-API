@@ -137,18 +137,11 @@ namespace TMS.API.Controllers
         public IActionResult GetCourseById(int courseId)
         {
             var courseExists = _service.Validation.CourseExists(courseId);
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = false;
-            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-            if (check)
-            {
-                access = true;
-            }
-            else
-            {
-                access = _service.Validation.ValidateCourseAccess(courseId, userId);
-            }
-            if (courseExists && access)
+            int userId;
+            bool access;
+            VerifyAccess(courseId, out userId, out access);
+            if(!access) return Unauthorized("UnAuthorized, contect your admin");
+            if (courseExists)
             {
                 try
                 {
@@ -162,6 +155,21 @@ namespace TMS.API.Controllers
                 }
             }
             return NotFound("NotFound");
+        }
+
+        private void VerifyAccess(int courseId, out int userId, out bool access)
+        {
+            userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+            access = false;
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+            if (check)
+            {
+                access = true;
+            }
+            else
+            {
+                access = _service.Validation.ValidateCourseAccess(courseId, userId);
+            }
         }
     }
 }

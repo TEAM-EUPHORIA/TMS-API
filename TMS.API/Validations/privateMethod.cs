@@ -163,6 +163,13 @@ namespace TMS.API
                     user.Id,
                     user.Email!);
         }
+        private void CheckForUserMailAvailablity(UpdateUserModel user)
+        {
+            if (departmentExists && roleExists)
+                isUserMailAvailable = IsUserMailAvailable(
+                    user.Id,
+                    user.Email!);
+        }
         private void CheckForDepartmentNameAvailablity(Department department)
         {
             // if (userExists)

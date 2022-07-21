@@ -1,4 +1,5 @@
 using TMS.API.UtilityFunctions;
+using TMS.API.ViewModels;
 using TMS.BAL;
 
 namespace TMS.API.Services
@@ -42,6 +43,12 @@ namespace TMS.API.Services
             user.Base64 = Image.Header!;
             user.Image = Image.Bytes;
         }
+        private static void SetUpImage(UpdateUserModel user)
+        {
+            File Image = FileService.GetBase64HeaderAndByteArray(user.Base64!);
+            user.Base64 = Image.Header!;
+            user.Image = Image.Bytes;
+        }
         /// <summary>
         /// used to setup the user model for creating.
         /// </summary>
@@ -65,6 +72,33 @@ namespace TMS.API.Services
         private static void SetUpUserDetailsForUpdate(User user, User dbUser, int updateBy)
         {
             dbUser.Password = HashPassword.Sha256(user.Password!);
+
+            if (dbUser.FullName != user.FullName)
+                dbUser.FullName = user.FullName;
+
+            if (dbUser.UserName != user.UserName)
+                dbUser.UserName = user.UserName;
+                
+            if (dbUser.Email != user.Email)
+                dbUser.Email = user.Email;
+
+            SetUpImage(user);
+            dbUser.Base64 = user.Base64;
+            dbUser.Image = user.Image;
+            
+            dbUser.UpdatedOn = DateTime.Now;
+            dbUser.UpdatedBy = updateBy;
+            
+            if (user.DepartmentId != 0 && user.DepartmentId != null) dbUser.DepartmentId = user.DepartmentId;
+        }
+        /// <summary>
+        /// used to setup the user model for update.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="dbUser"></param>
+        /// <param name="updateBy"></param>
+        private static void SetUpUserDetailsForUpdate(UpdateUserModel user, User dbUser, int updateBy)
+        {
 
             if (dbUser.FullName != user.FullName)
                 dbUser.FullName = user.FullName;

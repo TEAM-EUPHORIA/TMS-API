@@ -1,3 +1,4 @@
+using TMS.API.ViewModels;
 using TMS.BAL;
 
 namespace TMS.API.Services
@@ -11,6 +12,6 @@ namespace TMS.API.Services
         IEnumerable<User> GetUsersByDepartment(int departmentId);
         IEnumerable<User> GetUsersByDeptandRole(int departmentId, int roleId);
         IEnumerable<User> GetUsersByRole(int roleId);
-        Dictionary<string, string> UpdateUser(User user, int updatedBy);
+        Dictionary<string, string> UpdateUser(UpdateUserModel user, int updatedBy);
     }
 }

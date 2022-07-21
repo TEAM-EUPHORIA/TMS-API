@@ -287,5 +287,27 @@ namespace TMS.API
             CheckIsValid();
             return result;
         }
+         public Dictionary<string, string> ValidateUpdtateUser(UpdateUserModel user)
+        {
+            departmentExists = true;
+            CheckRoleExists(user.RoleId);
+            if (user.DepartmentId != null) CheckDepartmentExists((int)user.DepartmentId);
+            AddEntryForRoleAndDepartment();
+            if (result.Count == 0 && roleExists)
+            {
+                ValidateAndAddEntery(nameof(user.FullName), user.FullName!, fullNameValidation);
+                ValidateAndAddEntery(nameof(user.UserName), user.UserName!, userNameValidation);
+                ValidateAndAddEntery(nameof(user.Email), user.Email!, emailValidation);
+                ValidateAndAddEntery(nameof(user.Base64), user.Base64!, Image);
+
+                CheckUserExists(user.Id);
+                CheckForUserMailAvailablity(user);
+                AddEnteryValidateUser(isUserMailAvailable);
+                if (userExists)
+                    AddEntryExists();
+            }
+            CheckIsValid();
+            return result;
+        }
     }
 }

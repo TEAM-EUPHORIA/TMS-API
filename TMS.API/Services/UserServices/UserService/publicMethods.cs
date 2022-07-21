@@ -1,5 +1,6 @@
 using TMS.API.Repositories;
 using TMS.API.UtilityFunctions;
+using TMS.API.ViewModels;
 using TMS.BAL;
 
 namespace TMS.API.Services
@@ -174,12 +175,12 @@ namespace TMS.API.Services
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// </exception>
-        public Dictionary<string, string> UpdateUser(User user, int updatedBy)
+        public Dictionary<string, string> UpdateUser(UpdateUserModel user, int updatedBy)
         {
             try
             {
                 if (user is null) throw new ArgumentNullException(nameof(user));
-                var result = _repo.Validation.ValidateUser(user);
+                var result = _repo.Validation.ValidateUpdtateUser(user);
                 if (result.ContainsKey("IsValid") && result.ContainsKey("Exists"))
                 {
                     var dbUser = _repo.Users.GetUserById(user.Id);
