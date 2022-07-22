@@ -26,7 +26,7 @@ namespace TMS.API.Controllers
             _context = context;
         }
         /// <summary>
-        /// Gets a list of assigments in a topic by courseId and topicId
+        /// Gets a list of assignments in a topic by courseId and topicId
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -34,7 +34,7 @@ namespace TMS.API.Controllers
         ///     url : https://localhost:5001/Course/(courseId:int)/topics/(topicId:int)/assignments
         ///
         /// </remarks>
-        /// <response code="200">Returns a list of assigments present in a topic. </response>
+        /// <response code="200">Returns a list of assignments present in a topic. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="404">If course was not found. </response>
         /// <response code="500">If there is problem in server. </response>
@@ -71,7 +71,7 @@ namespace TMS.API.Controllers
             return NotFound("Not found");
         }
         /// <summary>
-        /// Gets a single assigments in a topic by courseId, topicId and ownerId
+        /// Gets a single assignments in a topic by courseId, topicId and ownerId
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -79,7 +79,7 @@ namespace TMS.API.Controllers
         ///     url : https://localhost:5001/Course/(courseId:int)/topics/(topicId:int)/assignments/(ownerId:int)
         ///
         /// </remarks>
-        /// <response code="200">Returns a single assigments in a topic by courseId, topicId and ownerId. </response>
+        /// <response code="200">Returns a single assignments in a topic by courseId, topicId and ownerId. </response>
         /// <response code="400">The server will not process the request due to something that is perceived to be a client error. </response>
         /// <response code="404">If assignment was not found. </response>
         /// <response code="500">If there is problem in server. </response>
@@ -112,7 +112,7 @@ namespace TMS.API.Controllers
                 catch (InvalidOperationException ex)
                 {
                     TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
-                    return Problem("sorry somthing went wrong");
+                    return Problem("sorry something went wrong");
                 }
             }
             return NotFound("Not Found");
