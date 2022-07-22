@@ -23,7 +23,7 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         /// <returns></returns>
-        [HttpGet("getAttendance")]
+        [HttpGet("getAttendance/{courseId:int}/{topicId:int}")]
         [Authorize(Roles= "Trainer,Training Coordinator")]
         public IActionResult GetAttendanceList(int courseId, int topicId)
         {
