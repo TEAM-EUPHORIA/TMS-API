@@ -1,5 +1,7 @@
 using TMS.BAL;
 using Microsoft.EntityFrameworkCore;
+using TMS.API.UtilityFunctions;
+
 namespace TMS.API
 {
     public class AppDbContext : DbContext
@@ -59,6 +61,12 @@ namespace TMS.API
                 new ReviewStatus() { Id = 1, Name = "Assigned", CreatedOn = DateTime.Now },
                 new ReviewStatus() { Id = 2, Name = "Completed", CreatedOn = DateTime.Now },
                 new ReviewStatus() { Id = 3, Name = "Canceled", CreatedOn = DateTime.Now }
+            );
+            // user
+            var pass = HashPassword.Sha256("abcd1234");
+            modelBuilder.Entity<User>().HasData(
+                new User() { Id = 1, RoleId = 1, FullName = "Sera", UserName = "Sera", Password = pass, Email = "sera@gmail.com", EmployeeId = "TMS101", isDisabled = false, Base64 = "" },
+                new User() { Id = 2, RoleId = 2, FullName = "Sally", UserName = "Sally", Password = pass, Email = "sally@gmail.com", EmployeeId = "TMS201", isDisabled = false, Base64  = ""}
             );
         }
     }

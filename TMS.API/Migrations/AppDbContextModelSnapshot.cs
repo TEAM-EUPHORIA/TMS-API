@@ -253,7 +253,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5335),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8691),
                             Name = ".NET",
                             isDisabled = false
                         },
@@ -261,7 +261,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5337),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8693),
                             Name = "JAVA",
                             isDisabled = false
                         },
@@ -269,7 +269,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5337),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8695),
                             Name = "LAMP",
                             isDisabled = false
                         });
@@ -310,6 +310,9 @@ namespace TMS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ReviewId", "TraineeId");
+
+                    b.HasIndex("ReviewId")
+                        .IsUnique();
 
                     b.HasIndex("TraineeId");
 
@@ -404,21 +407,21 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5348),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8715),
                             Name = "Assigned"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5349),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8716),
                             Name = "Completed"
                         },
                         new
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5350),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8717),
                             Name = "Canceled"
                         });
                 });
@@ -459,7 +462,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5230),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8493),
                             Name = "Training Head",
                             isDisabled = false
                         },
@@ -467,7 +470,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5231),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8506),
                             Name = "Training Coordinator",
                             isDisabled = false
                         },
@@ -475,7 +478,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5232),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8508),
                             Name = "Trainer",
                             isDisabled = false
                         },
@@ -483,7 +486,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 4,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5233),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8509),
                             Name = "Trainee",
                             isDisabled = false
                         },
@@ -491,7 +494,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 5,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 6, 23, 10, 27, 17, 657, DateTimeKind.Local).AddTicks(5234),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8510),
                             Name = "Reviewer",
                             isDisabled = false
                         });
@@ -525,6 +528,9 @@ namespace TMS.API.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
@@ -644,6 +650,36 @@ namespace TMS.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Base64 = "",
+                            CreatedBy = 0,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "sera@gmail.com",
+                            EmployeeId = "TMS101",
+                            FullName = "Sera",
+                            Password = "6c7nGrky/ehjM40Ivk3p3+OeoEm9r7NCzmWexUULaa4=",
+                            RoleId = 1,
+                            UserName = "Sera",
+                            isDisabled = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Base64 = "",
+                            CreatedBy = 0,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "sally@gmail.com",
+                            EmployeeId = "TMS201",
+                            FullName = "Sally",
+                            Password = "6c7nGrky/ehjM40Ivk3p3+OeoEm9r7NCzmWexUULaa4=",
+                            RoleId = 2,
+                            UserName = "Sally",
+                            isDisabled = false
+                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.Assignment", b =>
@@ -752,8 +788,8 @@ namespace TMS.API.Migrations
             modelBuilder.Entity("TMS.BAL.MOM", b =>
                 {
                     b.HasOne("TMS.BAL.Review", "Review")
-                        .WithMany()
-                        .HasForeignKey("ReviewId")
+                        .WithOne("Mom")
+                        .HasForeignKey("TMS.BAL.MOM", "ReviewId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -815,7 +851,7 @@ namespace TMS.API.Migrations
             modelBuilder.Entity("TMS.BAL.TraineeFeedback", b =>
                 {
                     b.HasOne("TMS.BAL.Course", "Course")
-                        .WithMany()
+                        .WithMany("TraineeFeedbacks")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -862,7 +898,14 @@ namespace TMS.API.Migrations
 
                     b.Navigation("Topics");
 
+                    b.Navigation("TraineeFeedbacks");
+
                     b.Navigation("UserMapping");
+                });
+
+            modelBuilder.Entity("TMS.BAL.Review", b =>
+                {
+                    b.Navigation("Mom");
                 });
 
             modelBuilder.Entity("TMS.BAL.Topic", b =>

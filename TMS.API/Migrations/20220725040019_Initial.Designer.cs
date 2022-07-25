@@ -12,8 +12,8 @@ using TMS.API;
 namespace TMS.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220720105615_test")]
-    partial class test
+    [Migration("20220725040019_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -255,7 +255,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5455),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8691),
                             Name = ".NET",
                             isDisabled = false
                         },
@@ -263,7 +263,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5457),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8693),
                             Name = "JAVA",
                             isDisabled = false
                         },
@@ -271,7 +271,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5457),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8695),
                             Name = "LAMP",
                             isDisabled = false
                         });
@@ -409,21 +409,21 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5471),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8715),
                             Name = "Assigned"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5472),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8716),
                             Name = "Completed"
                         },
                         new
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5472),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8717),
                             Name = "Canceled"
                         });
                 });
@@ -464,7 +464,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5325),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8493),
                             Name = "Training Head",
                             isDisabled = false
                         },
@@ -472,7 +472,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5336),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8506),
                             Name = "Training Coordinator",
                             isDisabled = false
                         },
@@ -480,7 +480,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5337),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8508),
                             Name = "Trainer",
                             isDisabled = false
                         },
@@ -488,7 +488,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 4,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5338),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8509),
                             Name = "Trainee",
                             isDisabled = false
                         },
@@ -496,7 +496,7 @@ namespace TMS.API.Migrations
                         {
                             Id = 5,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2022, 7, 20, 16, 26, 15, 543, DateTimeKind.Local).AddTicks(5339),
+                            CreatedOn = new DateTime(2022, 7, 25, 9, 30, 19, 249, DateTimeKind.Local).AddTicks(8510),
                             Name = "Reviewer",
                             isDisabled = false
                         });
@@ -652,6 +652,36 @@ namespace TMS.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Base64 = "",
+                            CreatedBy = 0,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "sera@gmail.com",
+                            EmployeeId = "TMS101",
+                            FullName = "Sera",
+                            Password = "6c7nGrky/ehjM40Ivk3p3+OeoEm9r7NCzmWexUULaa4=",
+                            RoleId = 1,
+                            UserName = "Sera",
+                            isDisabled = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Base64 = "",
+                            CreatedBy = 0,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "sally@gmail.com",
+                            EmployeeId = "TMS201",
+                            FullName = "Sally",
+                            Password = "6c7nGrky/ehjM40Ivk3p3+OeoEm9r7NCzmWexUULaa4=",
+                            RoleId = 2,
+                            UserName = "Sally",
+                            isDisabled = false
+                        });
                 });
 
             modelBuilder.Entity("TMS.BAL.Assignment", b =>
