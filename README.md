@@ -21,7 +21,7 @@
 
 # Setup
 
-## Initail Setup
+## Initial Setup
 
 ```bash
 
