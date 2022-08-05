@@ -35,15 +35,15 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Trainee")]
         public IActionResult UpdateCourseFeedback([FromBody] CourseFeedback feedback)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var feedbackExists = _service.Validation.CourseFeedbackExists(feedback.CourseId, feedback.TraineeId);
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = userId == feedback.TraineeId;
-            if(access)
+            try
             {
-                if (feedbackExists)
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var feedbackExists = _service.Validation.CourseFeedbackExists(feedback.CourseId, feedback.TraineeId);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = userId == feedback.TraineeId;
+                if (access)
                 {
-                    try
+                    if (feedbackExists)
                     {
                         var IsValid = _service.Validation.ValidateCourseFeedback(feedback);
                         if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
@@ -54,15 +54,20 @@ namespace TMS.API.Controllers
                         }
                         return BadRequest(IsValid);
                     }
-                    catch (InvalidOperationException ex)
-                    {
-                        TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
-                        return Problem("sorry somthing went wrong");
-                    }
+                    return NotFound("Not Found");
                 }
-                return NotFound("Not Found");
+                return Unauthorized("UnAuthorized, contect your admin");
             }
-            return Unauthorized("UnAuthorized, contect your admin");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(UpdateCourseFeedback));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

@@ -1,3 +1,5 @@
+using TMS.API.UtilityFunctions;
+
 namespace TMS.API.Services
 {
 
@@ -15,32 +17,44 @@ namespace TMS.API.Services
         /// </exception>
         public Dictionary<string, string> Dashboard(int userId)
         {
-            
-            var userExists = _repo.Validation.UserExists(userId);
-            var user = _repo.Users.GetUserById(userId);
-            if (userExists)
+            try
             {
-                switch (user.RoleId)
+                var userExists = _repo.Validation.UserExists(userId);
+                var user = _repo.Users.GetUserById(userId);
+                if (userExists)
                 {
-                    case 1:
-                        PrepareHeadDashboard(userId);
-                        break;
-                    case 2:
-                        PrepareCoordinatorDashboard(userId);
-                        break;
-                    case 3:
-                        PrepareTrainerDashboard(userId);
-                        break;
-                    case 4:
-                        PrepareTraineeDashboard(userId);
-                        break;
-                    case 5:
-                        PrepareReviewerDashboard(userId);
-                        break;
+                    switch (user.RoleId)
+                    {
+                        case 1:
+                            PrepareHeadDashboard(userId);
+                            break;
+                        case 2:
+                            PrepareCoordinatorDashboard(userId);
+                            break;
+                        case 3:
+                            PrepareTrainerDashboard(userId);
+                            break;
+                        case 4:
+                            PrepareTraineeDashboard(userId);
+                            break;
+                        case 5:
+                            PrepareReviewerDashboard(userId);
+                            break;
+                    }
+                    return DashboardResult!;
                 }
-                return DashboardResult!;
+                else throw new ArgumentException("Invalid User");
             }
-            else throw new ArgumentException("Invalid User");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(UserService),nameof(Dashboard));
+                throw;
+            }
+             catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(Dashboard));
+                throw;
+            }
         }
     }
 }

@@ -37,17 +37,17 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="user"></param>
         [HttpPut("user")]
-        
+
         [Authorize(Roles = "Training Head, Training Coordinator")]
-        public IActionResult UpdateUser([FromBody]UpdateUserModel user)
+        public IActionResult UpdateUser([FromBody] UpdateUserModel user)
         {
-            // checks if the model is valid or not
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            // checks the user exists or not
-            var userExists = _service.Validation.UserExists(user.Id);
-            if(userExists)
+            try
             {
-                try
+                // checks if the model is valid or not
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                // checks the user exists or not
+                var userExists = _service.Validation.UserExists(user.Id);
+                if (userExists)
                 {
                     // validating the user model and business logics
                     var modelValidation = _service.Validation.ValidateUpdtateUser(user);
@@ -56,26 +56,31 @@ namespace TMS.API.Controllers
                         // getting the logged in user id
                         int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                         // calling service to update the user
-                        var res = _service.UserService.UpdateUser(user,updatedBy);
+                        var res = _service.UserService.UpdateUser(user, updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists"))
                         {
                             // returning a list of users
                             var response = _service.UserService.GetUsersByRole(user.RoleId);
-                            return Ok(new {response});
-                        } 
+                            return Ok(new { response });
+                        }
                     }
                     // if model is not valid
                     return BadRequest(modelValidation);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    // An exception occurs only if IUnitOfService Dependency Injection (DI) is failed
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(UpdateUser));
-                    return Problem("sorry somthing went wrong");
-                }
+                // if the user is not found or disabled
+                return NotFound("NotFound");
             }
-            // if the user is not found or disabled
-            return NotFound("NotFound");
+            catch (InvalidOperationException ex)
+            {
+                // An exception occurs only if IUnitOfService Dependency Injection (DI) is failed
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(UpdateUser));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(UpdateUser));
+                return Problem("sorry somthing went wrong");
+            }
         }
 
     }

@@ -50,6 +50,11 @@ namespace TMS.API.Services
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUsersByDepartment));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByDepartment));
+                throw;
+            }
         }
         /// <summary>
         /// used to get users by role based on role id
@@ -73,6 +78,11 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByRole));
                 throw;
             }
         }
@@ -102,6 +112,11 @@ namespace TMS.API.Services
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandRole));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByDeptandRole));
+                throw;
+            }
         }
         /// <summary>
         /// used to get single user by user id
@@ -128,6 +143,11 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUser));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetUser));
                 throw;
             }
         }
@@ -160,6 +180,11 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(CreateUser));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(CreateUser));
                 throw;
             }
         }
@@ -195,6 +220,11 @@ namespace TMS.API.Services
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(UpdateUser));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(UpdateUser));
+                throw;
+            }
         }
         /// <summary>
         /// used to disable the user.
@@ -226,6 +256,11 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByRole));
                 throw;
             }
         }

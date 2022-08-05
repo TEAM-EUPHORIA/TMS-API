@@ -36,16 +36,16 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult UpdateAssignment([FromBody] Assignment assignment)
         {
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = userId == assignment.OwnerId;
-            if (access)
+            try
             {
-                access = _service.Validation.ValidateCourseAccess(assignment.CourseId, assignment.OwnerId);
-                if (!ModelState.IsValid) return BadRequest(ModelState);
-                var assignmentExists = _service.Validation.AssignmentExists(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
-                if (assignmentExists && access)
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = userId == assignment.OwnerId;
+                if (access)
                 {
-                    try
+                    access = _service.Validation.ValidateCourseAccess(assignment.CourseId, assignment.OwnerId);
+                    if (!ModelState.IsValid) return BadRequest(ModelState);
+                    var assignmentExists = _service.Validation.AssignmentExists(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
+                    if (assignmentExists && access)
                     {
                         var IsValid = _service.Validation.ValidateAssignment(assignment);
                         if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
@@ -56,15 +56,20 @@ namespace TMS.API.Controllers
                         }
                         return BadRequest(IsValid);
                     }
-                    catch (InvalidOperationException ex)
-                    {
-                        TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateAssignment));
-                    }
-                    return Problem("sorry somthing went wrong");
+                    return NotFound("Not found");
                 }
-                return NotFound("Not found");
+                return Unauthorized("UnAuthorized, contect your admin");
             }
-            return Unauthorized("UnAuthorized, contect your admin");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateAssignment));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(UpdateAssignment));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

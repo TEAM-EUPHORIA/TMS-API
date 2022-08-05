@@ -35,25 +35,30 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="traineeId"></param>
         [HttpGet("course/{courseId:int},{traineeId:int}")]
-        [Authorize(Roles="Training Head, Training Coordinator, Trainee")]
-        public IActionResult GetCourseFeedbackByCourseIdAndTraineeId(int courseId,int traineeId)
+        [Authorize(Roles = "Training Head, Training Coordinator, Trainee")]
+        public IActionResult GetCourseFeedbackByCourseIdAndTraineeId(int courseId, int traineeId)
         {
-            var feedbackExists = _service.Validation.CourseFeedbackExists(courseId,traineeId);
-
-            if(feedbackExists)
+            try
             {
-                try
+                var feedbackExists = _service.Validation.CourseFeedbackExists(courseId, traineeId);
+
+                if (feedbackExists)
                 {
-                    var result = _service.FeedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId);
+                    var result = _service.FeedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId, traineeId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(GetCourseFeedbackByCourseIdAndTraineeId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("NotFound");
             }
-            return NotFound("NotFound");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(GetCourseFeedbackByCourseIdAndTraineeId));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetCourseFeedbackByCourseIdAndTraineeId));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

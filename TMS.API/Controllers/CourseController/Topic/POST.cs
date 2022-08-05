@@ -32,19 +32,19 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
         [HttpPost("topic")]
-        
+
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult CreateTopic([FromBody]Topic topic)
+        public IActionResult CreateTopic([FromBody] Topic topic)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var IsValid = _service.Validation.ValidateTopic(topic);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create topic. The topic already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.CourseService.CreateTopic(topic,createdBy);
+                    var res = _service.CourseService.CreateTopic(topic, createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Topic was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -52,6 +52,11 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateTopic));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(CreateTopic));
                 return Problem("sorry somthing went wrong");
             }
         }

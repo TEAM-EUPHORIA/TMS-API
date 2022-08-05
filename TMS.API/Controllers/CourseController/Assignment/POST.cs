@@ -36,13 +36,13 @@ namespace TMS.API.Controllers
         public IActionResult CreateAssignment([FromBody] Assignment assignment)
         {
 
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = _service.Validation.ValidateCourseAccess(assignment.CourseId, assignment.OwnerId);
-            if (access)
+            try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
-                try
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = _service.Validation.ValidateCourseAccess(assignment.CourseId, assignment.OwnerId);
+                if (access)
                 {
+                    if (!ModelState.IsValid) return BadRequest(ModelState);
                     var IsValid = _service.Validation.ValidateAssignment(assignment);
                     if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create assignment. The assignment already exists");
                     if (IsValid.ContainsKey("IsValid"))
@@ -53,13 +53,18 @@ namespace TMS.API.Controllers
                     }
                     return BadRequest(IsValid);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateAssignment));
-                    return Problem("sorry somthing went wrong");
-                }
+                return Unauthorized("UnAuthorized, contect your admin");
             }
-            return Unauthorized("UnAuthorized, contect your admin");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateAssignment));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(CreateAssignment));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

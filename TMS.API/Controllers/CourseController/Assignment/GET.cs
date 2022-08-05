@@ -41,34 +41,39 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments")]
-        [Authorize(Roles= "Trainer,Trainee,Training Coordinator")]
+        [Authorize(Roles = "Trainer,Trainee,Training Coordinator")]
         public IActionResult GetAssignmentsByTopicId(int courseId, int topicId)
         {
-            var topicExists = _service.Validation.TopicExists(topicId, courseId);
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = false;
-            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-            if (check)
+            try
             {
-                access = true;
-            }
-            else
-            {
-                access = _service.Validation.ValidateCourseAccess(courseId, userId);
-            }
-            if (topicExists && access)
-            {
-                try
+                var topicExists = _service.Validation.TopicExists(topicId, courseId);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = false;
+                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+                if (check)
+                {
+                    access = true;
+                }
+                else
+                {
+                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
+                }
+                if (topicExists && access)
                 {
                     return Ok(_service.CourseService.GetAssignmentsByTopicId(topicId));
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentsByTopicId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not found");
             }
-            return NotFound("Not found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentsByTopicId));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetAssignmentsByTopicId));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets a single assignments in a topic by courseId, topicId and ownerId
@@ -87,35 +92,40 @@ namespace TMS.API.Controllers
         /// <param name="topicId"></param>
         /// <param name="ownerId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}/assignments/{ownerId:int}")]
-        [Authorize(Roles= "Trainer,Trainee,Training Coordinator")]
+        [Authorize(Roles = "Trainer,Trainee,Training Coordinator")]
         public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
-            var assignmentExists = _service.Validation.AssignmentExists(courseId, topicId, ownerId);
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = false;
-            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-            if (check)
+            try
             {
-                access = true;
-            }
-            else
-            {
-                access = _service.Validation.ValidateCourseAccess(courseId, userId);
-            }
-            if (assignmentExists && access)
-            {
-                try
+                var assignmentExists = _service.Validation.AssignmentExists(courseId, topicId, ownerId);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = false;
+                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+                if (check)
+                {
+                    access = true;
+                }
+                else
+                {
+                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
+                }
+                if (assignmentExists && access)
                 {
                     var result = _service.CourseService.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
-                    return Problem("sorry something went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
+                return Problem("sorry something went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

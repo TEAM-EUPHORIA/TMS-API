@@ -21,34 +21,39 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="courseId"></param>
         [HttpGet("{courseId:int}/topics")]
-        [Authorize(Roles="Training Head, Training Coordinator, Trainer, Trainee")]
+        [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetTopicsByCourseId(int courseId)
         {
-            var courseExists = _service.Validation.CourseExists(courseId);
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = false;
-            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-            if (check)
+            try
             {
-                access = true;
-            }
-            else
-            {
-                access = _service.Validation.ValidateCourseAccess(courseId, userId);
-            }
-            if (courseExists && access)
-            {
-                try
+                var courseExists = _service.Validation.CourseExists(courseId);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = false;
+                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+                if (check)
+                {
+                    access = true;
+                }
+                else
+                {
+                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
+                }
+                if (courseExists && access)
                 {
                     return Ok(_service.CourseService.GetTopicsByCourseId(courseId));
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetTopicsByCourseId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetTopicsByCourseId));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetTopicsByCourseId));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets a single topic by courseId and topicId
@@ -66,35 +71,40 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpGet("{courseId:int}/topics/{topicId:int}")]
-        [Authorize(Roles="Training Head, Training Coordinator, Trainer, Trainee")]
+        [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetTopicByIds(int courseId, int topicId)
         {
-            var topicExists = _service.Validation.TopicExists(topicId, courseId);
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = false;
-            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-            if (check)
+            try
             {
-                access = true;
-            }
-            else
-            {
-                access = _service.Validation.ValidateCourseAccess(courseId, userId);
-            }
-            if (topicExists && access)
-            {
-                try
+                var topicExists = _service.Validation.TopicExists(topicId, courseId);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = false;
+                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+                if (check)
+                {
+                    access = true;
+                }
+                else
+                {
+                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
+                }
+                if (topicExists && access)
                 {
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetTopicByIds));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetTopicByIds));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetTopicByIds));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets a list of users present in a course
@@ -108,16 +118,29 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <returns></returns>
         [HttpGet("getCourseUser/{courseId:int}")]
-        [Authorize(Roles="Training Head, Training Coordinator, Trainer")]
+        [Authorize(Roles = "Training Head, Training Coordinator, Trainer")]
         public IActionResult GetCourseUser(int courseId)
         {
-            var courseExists = _service.Validation.CourseExists(courseId);
-            if (courseExists)
-            {
-                var result = _service.CourseService.GetCourseUsers(courseId);
-                return Ok(result);
+            try
+            {    
+                var courseExists = _service.Validation.CourseExists(courseId);
+                if (courseExists)
+                {
+                    var result = _service.CourseService.GetCourseUsers(courseId);
+                    return Ok(result);
+                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourseUser));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetCourseUser));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

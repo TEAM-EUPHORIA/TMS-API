@@ -31,8 +31,13 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(GetDepartments));
                 return Problem("sorry somthing went wrong");
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetDepartments));
+                return Problem("sorry somthing went wrong");
+            }
         }
-           
+
         /// <summary>
         /// Gets a single Department by departmentId
         /// </summary>
@@ -51,22 +56,26 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetDepartmentById(int departmentId)
         {
-            var departmentExists = _service.Validation.DepartmentExists(departmentId);
-            if(departmentExists)
+            try
             {
-                try
+                var departmentExists = _service.Validation.DepartmentExists(departmentId);
+                if (departmentExists)
                 {
                     var result = _service.DepartmentService.GetDepartmentById(departmentId);
                     if (result is not null) return Ok(result);
-                    return NotFound("Not Found");
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(GetDepartmentById));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
-        }   
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(GetDepartmentById));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetDepartmentById));
+                return Problem("sorry somthing went wrong");
+            }
+        }
     }
 }

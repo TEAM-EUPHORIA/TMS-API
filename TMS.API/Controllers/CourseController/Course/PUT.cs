@@ -34,32 +34,37 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
         [HttpPut("course")]
-        
+
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult UpdateCourse([FromBody]Course course)
+        public IActionResult UpdateCourse([FromBody] Course course)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var courseExists = _service.Validation.CourseExists(course.Id);
-            if (courseExists)
+            try
             {
-                try
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var courseExists = _service.Validation.CourseExists(course.Id);
+                if (courseExists)
                 {
                     var IsValid = _service.Validation.ValidateCourse(course);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
                         int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.CourseService.UpdateCourse(course,updatedBy);
+                        var res = _service.CourseService.UpdateCourse(course, updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Course was Updated successfully" });
                     }
                     return BadRequest(IsValid);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateCourse));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("NotFound");
             }
-            return NotFound("NotFound");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateCourse));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(UpdateCourse));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// To assign users to the course
@@ -89,26 +94,31 @@ namespace TMS.API.Controllers
         /// <response code="404">If course was not found. </response>
         /// <response code="500">If there is problem in server. </response>
         [HttpPut("assignUsers")]
-        
+
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult AssignUsersToCourse([FromBody]AddUsersToCourse data)
+        public IActionResult AssignUsersToCourse([FromBody] AddUsersToCourse data)
         {
-            var courseExists = _service.Validation.CourseExists(data.CourseId);
-            if (courseExists)
+            try
             {
-                try
+                var courseExists = _service.Validation.CourseExists(data.CourseId);
+                if (courseExists)
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var result = _service.CourseService.AddUsersToCourse(data, currentUserId);
                     return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(AssignUsersToCourse));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(AssignUsersToCourse));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(AssignUsersToCourse));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// To remove users from the course
@@ -139,26 +149,31 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>
         [HttpPut("removeUsers")]
-        
+
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult RemoveUsersFromCourse([FromBody]AddUsersToCourse data)
+        public IActionResult RemoveUsersFromCourse([FromBody] AddUsersToCourse data)
         {
-            var courseExists = _service.Validation.CourseExists(data.CourseId);
-            if (courseExists)
+            try
             {
-                try
+                var courseExists = _service.Validation.CourseExists(data.CourseId);
+                if (courseExists)
                 {
                     int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     var result = _service.CourseService.RemoveUsersFromCourse(data, currentUserId);
                     return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(RemoveUsersFromCourse));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not found");
             }
-            return NotFound("Not found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(RemoveUsersFromCourse));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(RemoveUsersFromCourse));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

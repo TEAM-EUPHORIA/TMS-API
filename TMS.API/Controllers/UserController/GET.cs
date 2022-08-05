@@ -24,21 +24,21 @@ namespace TMS.API.Controllers
         [HttpGet("role/{roleId:int}")]
         public IActionResult GetAllUserByRole(int roleId)
         {
-            var roleExists = _service.Validation.RoleExists(roleId);
-            if(roleExists)
+            try
             {
-                try
+                var roleExists = _service.Validation.RoleExists(roleId);
+                if (roleExists)
                 {
                     var result = _service.UserService.GetUsersByRole(roleId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("NotFound");
             }
-            return NotFound("NotFound");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetAllUserByRole));
+                return Problem("sorry somthing went wrong");
+            }
         }
 
         /// <summary>
@@ -58,21 +58,21 @@ namespace TMS.API.Controllers
         [HttpGet("department/{departmentId:int}")]
         public IActionResult GetAllUserByDepartment(int departmentId)
         {
-            var departmentExists = _service.Validation.DepartmentExists(departmentId);
-            if(departmentExists)
+            try
             {
-                try
+                var departmentExists = _service.Validation.DepartmentExists(departmentId);
+                if (departmentExists)
                 {
                     var result = _service.UserService.GetUsersByDepartment(departmentId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetAllUserByDepartment));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets the list of Users based on Department and Role
@@ -91,24 +91,29 @@ namespace TMS.API.Controllers
         /// <param name="departmentId"></param>
         /// <param name="roleId"></param>
         [HttpGet("GetUsersByDepartmentAndRole/{departmentId:int},{roleId:int}")]
-        public IActionResult GetUsersByDeptandrole(int departmentId,int roleId)
+        public IActionResult GetUsersByDeptandrole(int departmentId, int roleId)
         {
-            var departmentExists = _service.Validation.DepartmentExists(departmentId);
-            var roleExists = _service.Validation.RoleExists(roleId);
-            if(departmentExists && roleExists)
+            try
             {
-                try
+                var departmentExists = _service.Validation.DepartmentExists(departmentId);
+                var roleExists = _service.Validation.RoleExists(roleId);
+                if (departmentExists && roleExists)
                 {
-                    var result = _service.UserService.GetUsersByDeptandRole(departmentId,roleId);
+                    var result = _service.UserService.GetUsersByDeptandRole(departmentId, roleId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("not found");
             }
-            return NotFound("not found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetUsersByDeptandrole));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByDeptandrole));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Get list of Users by Id
@@ -127,22 +132,27 @@ namespace TMS.API.Controllers
         [HttpGet("{userId:int}")]
         public IActionResult GetUserById(int userId)
         {
-            var userExists = _service.Validation.UserExists(userId);
-            if(userExists)
+            try
             {
-                try
+                var userExists = _service.Validation.UserExists(userId);
+                if (userExists)
                 {
                     var result = _service.UserService.GetUser(userId);
                     if (result is not null) return Ok(result);
                     return NotFound("Not Found");
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetUserById));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetUserById));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetUserById));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets Logged in user data
@@ -160,23 +170,28 @@ namespace TMS.API.Controllers
         [HttpGet]
         public IActionResult GetUserProfile()
         {
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            var userExists = _service.Validation.UserExists(userId);
-            if(userExists)
+            try
             {
-                try
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                var userExists = _service.Validation.UserExists(userId);
+                if (userExists)
                 {
                     var result = _service.UserService.GetUser(userId);
                     if (result is not null) return Ok(result);
                     return NotFound("Not Found");
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetUserById));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(GetUserById));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetUserById));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets a Dashboard
@@ -193,14 +208,19 @@ namespace TMS.API.Controllers
         [HttpGet("Dashboard")]
         public IActionResult DashboardData()
         {
-            int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
             try
             {
+                int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
                 return Ok(_service.UserService.Dashboard(currentUserId));
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(DashboardData));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(DashboardData));
                 return Problem("sorry somthing went wrong");
             }
         }

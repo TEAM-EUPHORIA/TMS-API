@@ -57,6 +57,11 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(CreateCourse));
                 return Problem("sorry somthing went wrong");
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(CreateCourse));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

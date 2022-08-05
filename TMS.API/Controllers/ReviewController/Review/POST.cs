@@ -33,19 +33,19 @@ namespace TMS.API.Controllers.ReviewController
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPost("review")]
-        
+
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult CreateReview([FromBody]Review review)
+        public IActionResult CreateReview([FromBody] Review review)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var IsValid = _service.Validation.ValidateReview(review);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create the review. the review already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.ReviewService.CreateReview(review,createdBy);
+                    var res = _service.ReviewService.CreateReview(review, createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Review was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -53,6 +53,11 @@ namespace TMS.API.Controllers.ReviewController
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(CreateReview));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(CreateReview));
                 return Problem("sorry somthing went wrong");
             }
         }

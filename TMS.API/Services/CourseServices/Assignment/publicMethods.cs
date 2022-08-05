@@ -10,6 +10,7 @@ namespace TMS.API.Services
     {
         private readonly IUnitOfWork _repo;
         private readonly ILogger _logger;
+        const string INVALID_ID = "Invalid Id";
 
         /// <summary>
         /// Constructor of CourseService
@@ -38,17 +39,22 @@ namespace TMS.API.Services
         {
             try
             {
-            var topicExists = _repo.Validation.TopicExists(topicId);
-            if (topicExists)
-            {
-                return _repo.Courses.GetAssignmentsByTopicId(topicId);
+                var topicExists = _repo.Validation.TopicExists(topicId);
+                if (topicExists)
+                {
+                    return _repo.Courses.GetAssignmentsByTopicId(topicId);
+                }
+                else throw new ArgumentException(INVALID_ID);
             }
-            else throw new ArgumentException("Invalid Id");
-            }
-            
+
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetAssignmentsByTopicId));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetAssignmentsByTopicId));
                 throw;
             }
         }
@@ -71,22 +77,26 @@ namespace TMS.API.Services
         {
             try
             {
-            var assignmentExists = _repo.Validation.AssignmentExists(courseId, topicId, ownerId);
-            if (assignmentExists)
-            {
-                return _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId);
+                var assignmentExists = _repo.Validation.AssignmentExists(courseId, topicId, ownerId);
+                if (assignmentExists)
+                {
+                    return _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId);
+                }
+                else throw new ArgumentException(INVALID_ID);
             }
-            else throw new ArgumentException("Invalid Id's");
-            }
-            
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetAssignmentsByTopicId));
+                throw;
+            }
 
         }
-        
+
         /// <summary>
         /// used to create assignment.
         /// </summary>
@@ -105,20 +115,24 @@ namespace TMS.API.Services
             try
             {
 
-            if (assignment is null) throw new ArgumentNullException(nameof(assignment));
-            var validation = _repo.Validation.ValidateAssignment(assignment);
-            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
-            {
-                PrepareAssignment(assignment,createdBy);
-                _repo.Courses.CreateAssignment(assignment);
-                _repo.Complete();
+                if (assignment is null) throw new ArgumentNullException(nameof(assignment));
+                var validation = _repo.Validation.ValidateAssignment(assignment);
+                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
+                {
+                    PrepareAssignment(assignment, createdBy);
+                    _repo.Courses.CreateAssignment(assignment);
+                    _repo.Complete();
+                }
+                return validation;
             }
-            return validation;
-            }
-            
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(CreateAssignment));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(CreateAssignment));
                 throw;
             }
         }
@@ -139,21 +153,25 @@ namespace TMS.API.Services
         {
             try
             {
-            if (assignment is null) throw new ArgumentNullException(nameof(assignment));
-            var validation = _repo.Validation.ValidateAssignment(assignment);
-            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
-            {
-                var dbAssignment = _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
-                PrepareAssignment(assignment, dbAssignment,updatedBy);
-                _repo.Courses.UpdateAssignment(dbAssignment);
-                _repo.Complete();
+                if (assignment is null) throw new ArgumentNullException(nameof(assignment));
+                var validation = _repo.Validation.ValidateAssignment(assignment);
+                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
+                {
+                    var dbAssignment = _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
+                    PrepareAssignment(assignment, dbAssignment, updatedBy);
+                    _repo.Courses.UpdateAssignment(dbAssignment);
+                    _repo.Complete();
+                }
+                return validation;
             }
-            return validation;
-            }
-            
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(UpdateAssignment));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(UpdateAssignment));
                 throw;
             }
 

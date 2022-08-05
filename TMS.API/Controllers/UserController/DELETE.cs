@@ -14,7 +14,7 @@ namespace TMS.API.Controllers
 
         public UserController(IUnitOfService service, ILogger<UserController> logger)
         {
-            _logger = logger; 
+            _logger = logger;
             _service = service;
         }
         /// <summary>
@@ -32,34 +32,39 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="userId"></param>
         [HttpDelete("disable/{userId:int}")]
-        
+
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
         {
             // checks the user exists or not
-            var userExists = _service.Validation.UserExists(userId);
-            if(userExists)
+            try
             {
-                try
+                var userExists = _service.Validation.UserExists(userId);
+                if (userExists)
                 {
                     // getting the logged in user id
                     int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
                     // calling service to disable the user
-                    var res = _service.UserService.DisableUser(userId,updatedBy);
+                    var res = _service.UserService.DisableUser(userId, updatedBy);
                     // response
-                    if (res) return Ok(new {message = "The User was Disabled successfully"});
+                    if (res) return Ok(new { message = "The User was Disabled successfully" });
                 }
-                catch (InvalidOperationException ex)
-                {
-                    // An exception occurs only if IUnitOfService Dependency Injection (DI) is failed
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(DisableUser));
-                    // response
-                    return Problem("sorry somthing went wrong");
-                }
+                // if the user is not found or already disabled
+                // response
+                return NotFound("NotFound");
             }
-            // if the user is not found or already disabled
-            // response
-            return NotFound("NotFound");
+            catch (InvalidOperationException ex)
+            {
+                // An exception occurs only if IUnitOfService Dependency Injection (DI) is failed
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(DisableUser));
+                // response
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(DisableUser));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

@@ -45,6 +45,11 @@ namespace TMS.API.Services
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetListOfMomByUserId));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetListOfMomByUserId));
+                throw;
+            }
         }
 
         /// <summary>
@@ -81,6 +86,11 @@ namespace TMS.API.Services
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetMomByReviewIdAndTraineeId));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetMomByReviewIdAndTraineeId));
+                throw;
+            }
         }
 
         /// <summary>
@@ -115,6 +125,11 @@ namespace TMS.API.Services
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(CreateMom));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(CreateMom));
+                throw;
+            }
         }
 
         /// <summary>
@@ -147,6 +162,11 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(UpdateMom));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(UpdateMom));
                 throw;
             }
         }

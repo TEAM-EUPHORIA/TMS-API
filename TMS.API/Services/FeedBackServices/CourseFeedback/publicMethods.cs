@@ -38,18 +38,22 @@ namespace TMS.API.Services
         {
             try
             {
-            var courseExists = _repo.Validation.CourseExists(courseId);
-            var traineeExists = _repo.Validation.UserExists(traineeId);
-            if (courseExists && traineeExists)
-            {
-                return _repo.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseId, traineeId);
+                var courseExists = _repo.Validation.CourseExists(courseId);
+                var traineeExists = _repo.Validation.UserExists(traineeId);
+                if (courseExists && traineeExists)
+                {
+                    return _repo.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseId, traineeId);
+                }
+                else throw new ArgumentException("Invalid Id's");
             }
-            else throw new ArgumentException("Invalid Id's");
-            }
-
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedbackService), nameof(GetCourseFeedbackByCourseIdAndTraineeId));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetCourseFeedbackByCourseIdAndTraineeId));
                 throw;
             }
         }
@@ -71,23 +75,27 @@ namespace TMS.API.Services
         {
             try
             {
-            if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
-            var validation = _repo.Validation.ValidateCourseFeedback(courseFeedback);
-            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
-            {
-                SetUpCourseFeedbackDetails(courseFeedback);
-                _repo.Feedbacks.CreateCourseFeedback(courseFeedback);
-                _repo.Complete();
+                if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
+                var validation = _repo.Validation.ValidateCourseFeedback(courseFeedback);
+                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
+                {
+                    SetUpCourseFeedbackDetails(courseFeedback);
+                    _repo.Feedbacks.CreateCourseFeedback(courseFeedback);
+                    _repo.Complete();
+                }
+                return validation;
             }
-            return validation;
-            }
-
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedbackService), nameof(CreateCourseFeedback));
                 throw;
             }
-            
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(CreateCourseFeedback));
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -105,21 +113,25 @@ namespace TMS.API.Services
         {
             try
             {
-            if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
-            var validation = _repo.Validation.ValidateCourseFeedback(courseFeedback);
-            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
-            {
-                var dbCourseFeedback = _repo.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseFeedback.CourseId, courseFeedback.TraineeId);
-                SetUpCourseFeedbackDetails(courseFeedback, dbCourseFeedback);
-                _repo.Feedbacks.UpdateCourseFeedback(dbCourseFeedback);
-                _repo.Complete();
+                if (courseFeedback is null) throw new ArgumentNullException(nameof(courseFeedback));
+                var validation = _repo.Validation.ValidateCourseFeedback(courseFeedback);
+                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
+                {
+                    var dbCourseFeedback = _repo.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseFeedback.CourseId, courseFeedback.TraineeId);
+                    SetUpCourseFeedbackDetails(courseFeedback, dbCourseFeedback);
+                    _repo.Feedbacks.UpdateCourseFeedback(dbCourseFeedback);
+                    _repo.Complete();
+                }
+                return validation;
             }
-            return validation;
-            }
-            
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedbackService), nameof(UpdateCourseFeedback));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(UpdateCourseFeedback));
                 throw;
             }
         }

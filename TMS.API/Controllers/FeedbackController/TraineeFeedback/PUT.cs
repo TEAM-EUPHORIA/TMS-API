@@ -34,33 +34,37 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("trainee/feedback")]
-        
+
         [Authorize(Roles = "Trainer")]
-        public IActionResult UpdateTraineeFeedback([FromBody]TraineeFeedback feedback)
+        public IActionResult UpdateTraineeFeedback([FromBody] TraineeFeedback feedback)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var feedbackExists = _service.Validation.TraineeFeedbackExists(feedback.CourseId, feedback.TraineeId, feedback.TrainerId);
-            if (feedbackExists)
+            try
             {
-                try
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var feedbackExists = _service.Validation.TraineeFeedbackExists(feedback.CourseId, feedback.TraineeId, feedback.TrainerId);
+                if (feedbackExists)
                 {
                     var IsValid = _service.Validation.ValidateTraineeFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid"))
                     {
                         int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.FeedbackService.UpdateTraineeFeedback(feedback,updatedBy);
+                        var res = _service.FeedbackService.UpdateTraineeFeedback(feedback, updatedBy);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }
                     return BadRequest(IsValid);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(UpdateTraineeFeedback));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("NotFound");
             }
-            return NotFound("NotFound");
-
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(UpdateTraineeFeedback));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(UpdateTraineeFeedback));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

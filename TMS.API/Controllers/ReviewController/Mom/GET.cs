@@ -33,21 +33,26 @@ namespace TMS.API.Controllers.ReviewController
         [HttpGet("mom/user/{userId:int}")]
         public IActionResult GetListOfMomByUserId(int userId)
         {
-            var userExists = _service.Validation.UserExists(userId);
-            if (userExists)
+            try
             {
-                try
+                var userExists = _service.Validation.UserExists(userId);
+                if (userExists)
                 {
                     var result = _service.ReviewService.GetListOfMomByUserId(userId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetListOfMomByUserId));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Get a MOM
@@ -67,21 +72,26 @@ namespace TMS.API.Controllers.ReviewController
         [HttpGet("mom/{reviewId:int},{traineeId:int}")]
         public IActionResult GetMomByReviewIdAndTraineeId(int reviewId, int traineeId)
         {
-            var momExists = _service.Validation.MOMExists(reviewId, traineeId);
-            if (momExists)
+            try
             {
-                try
+                var momExists = _service.Validation.MOMExists(reviewId, traineeId);
+                if (momExists)
                 {
                     var result = _service.ReviewService.GetMomByReviewIdAndTraineeId(reviewId, traineeId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetMomByReviewIdAndTraineeId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetMomByReviewIdAndTraineeId));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetMomByReviewIdAndTraineeId));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

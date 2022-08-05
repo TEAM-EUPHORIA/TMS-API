@@ -29,19 +29,19 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPost("department")]
-        
+
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult CreateDepartment([FromBody]Department department)
+        public IActionResult CreateDepartment([FromBody] Department department)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var IsValid = _service.Validation.ValidateDepartment(department);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create department. The department already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.DepartmentService.CreateDepartment(department,createdBy);
+                    var res = _service.DepartmentService.CreateDepartment(department, createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Department was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -51,6 +51,11 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(CreateDepartment));
                 return Problem("sorry somthing went wrong");
             }
-        }       
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(CreateDepartment));
+                return Problem("sorry somthing went wrong");
+            }
+        }
     }
 }

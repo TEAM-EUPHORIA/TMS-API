@@ -30,6 +30,11 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourses));
                 return Problem("sorry somthing went wrong");
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetCourses));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets a list of courses assigned to user by userId
@@ -49,41 +54,51 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCoursesByUserId(int userId)
         {
-            
-            var userExists = _service.Validation.UserExists(userId);
-            if (userExists)
+
+            try
             {
-                try
+                var userExists = _service.Validation.UserExists(userId);
+                if (userExists)
                 {
                     return Ok(_service.CourseService.GetCoursesByUserId(userId));
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetCoursesByUserId));
+                return Problem("sorry somthing went wrong");
+            }
         }
         [HttpGet("myCourses")]
         [Authorize(Roles = "Trainer, Trainee")]
         public IActionResult GetCoursesByUserId()
         {
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            var userExists = _service.Validation.UserExists(userId);
-            if (userExists)
+            try
             {
-                try
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                var userExists = _service.Validation.UserExists(userId);
+                if (userExists)
                 {
                     return Ok(_service.CourseService.GetCoursesByUserId(userId));
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetCoursesByUserId));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets a list of courses in a department by departmentId
@@ -103,20 +118,25 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCoursesByDepartmentId(int departmentId)
         {
-            var departmentExists = _service.Validation.DepartmentExists(departmentId);
-            if (departmentExists)
+            try
             {
-                try
+                var departmentExists = _service.Validation.DepartmentExists(departmentId);
+                if (departmentExists)
                 {
                     return Ok(_service.CourseService.GetCoursesByDepartmentId(departmentId));
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByDepartmentId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByDepartmentId));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetCoursesByDepartmentId));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets a single course by courseId
@@ -136,31 +156,33 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Head, Training Coordinator, Trainer, Trainee")]
         public IActionResult GetCourseById(int courseId)
         {
-            var courseExists = _service.Validation.CourseExists(courseId);
-            int userId;
-            bool access;
-            VerifyAccess(courseId, out userId, out access);
-            if(!access) return Unauthorized("UnAuthorized, contect your admin");
-            if (courseExists)
+            try
             {
-                try
+                var courseExists = _service.Validation.CourseExists(courseId);
+                VerifyAccess(courseId, out int userId, out bool access);
+                if (!access) return Unauthorized("UnAuthorized, contect your admin");
+                if (courseExists)
                 {
                     var result = _service.CourseService.GetCourseById(courseId, userId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourseById));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("NotFound");
             }
-            return NotFound("NotFound");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourseById));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetCourseById));
+                return Problem("sorry somthing went wrong");
+            }
         }
 
         private void VerifyAccess(int courseId, out int userId, out bool access)
         {
             userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            access = false;
             var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
             if (check)
             {

@@ -1,10 +1,12 @@
 using TMS.API.Services;
+using TMS.API.UtilityFunctions;
 
 namespace TMS.API.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext dbContext;
+        private readonly ILogger _logger;
 
         public IUserRepository Users { get; set; }
         public IRoleRepository Roles { get; set; }
@@ -15,7 +17,8 @@ namespace TMS.API.Repositories
         public IValidation Validation { get; set; }
         public IStatistics Stats { get; set; }
 
-        public UnitOfWork(AppDbContext dbContext)
+
+        public UnitOfWork(AppDbContext dbContext, ILogger<UnitOfWork> logger)
         {
             this.dbContext = dbContext;
             Users = new UserRepository(dbContext);
@@ -26,11 +29,20 @@ namespace TMS.API.Repositories
             Departments = new DepartmentRepository(dbContext);
             Validation = new Validation(dbContext);
             Stats = new Statistics(dbContext);
+            _logger = logger;
         }
 
         public void Complete()
         {
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.DbException(ex,_logger,nameof(Complete));
+                throw;
+            }
         }
     }
 }

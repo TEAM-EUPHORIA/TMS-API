@@ -23,21 +23,21 @@ namespace TMS.API.Controllers.ReviewController
         [HttpGet("review/status/{statusId:int}")]
         public IActionResult GetReviewByStatusId(int statusId)
         {
-            var statusExists = _service.Validation.ReviewStatusExists(statusId);
-            if (statusExists)
+            try
             {
-                try
+                var statusExists = _service.Validation.ReviewStatusExists(statusId);
+                if (statusExists)
                 {
                     var result = _service.ReviewService.GetReviewByStatusId(statusId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Get all Review by Status 
@@ -54,23 +54,23 @@ namespace TMS.API.Controllers.ReviewController
         /// <param name="statusId"></param>
         /// <param name="userId"></param>
         [HttpGet("review/status/{statusId:int},{userId:int}")]
-        public IActionResult GetReviewByStatusId(int statusId,int userId)
+        public IActionResult GetReviewByStatusId(int statusId, int userId)
         {
-            var statusExists = _service.Validation.ReviewStatusExists(statusId);
-            if (statusExists)
+            try
             {
-                try
+                var statusExists = _service.Validation.ReviewStatusExists(statusId);
+                if (statusExists)
                 {
-                    var result = _service.ReviewService.GetReviewByStatusId(statusId,userId);
+                    var result = _service.ReviewService.GetReviewByStatusId(statusId, userId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewByStatusId));
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Get a Review
@@ -88,21 +88,26 @@ namespace TMS.API.Controllers.ReviewController
         [HttpGet("{reviewId:int}")]
         public IActionResult GetReviewById(int reviewId)
         {
-            var reviewExists = _service.Validation.ReviewExists(reviewId);
-            if (reviewExists)
+            try
             {
-                try
+                var reviewExists = _service.Validation.ReviewExists(reviewId);
+                if (reviewExists)
                 {
                     var result = _service.ReviewService.GetReviewById(reviewId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetReviewById));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetReviewById));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

@@ -30,6 +30,11 @@ namespace TMS.API.Services
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetReviewByStatusId));
+                throw;
+            }
         }
         /// <summary>
         /// used to get review  based on status id
@@ -54,6 +59,11 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetReviewByStatusId));
                 throw;
             }
         }
@@ -84,6 +94,11 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewById));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(GetReviewById));
                 throw;
             }
         }
@@ -120,6 +135,11 @@ namespace TMS.API.Services
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(CreateReview));
                 throw;
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(CreateReview));
+                throw;
+            }
         }
 
         /// <summary>
@@ -152,6 +172,11 @@ namespace TMS.API.Services
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(UpdateReview));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(UpdateReview));
                 throw;
             }
         }

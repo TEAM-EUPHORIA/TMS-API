@@ -34,28 +34,29 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="user"></param>
         [HttpPost("user")]
-          
+
         [Authorize(Roles = "Training Head, Training Coordinator")]
-        public IActionResult CreateUser([FromBody]User user)
+        public IActionResult CreateUser([FromBody] User user)
         {
-            // checks if the model is valid or not
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
+                // checks if the model is valid or not
+                if (!ModelState.IsValid) return BadRequest(ModelState);
                 // validating the user model and business logics
                 var modelValidation = _service.Validation.ValidateUser(user);
                 // if the user already exists
-                if(modelValidation.ContainsKey("Exists")) return BadRequest("Can't create the user. The user Already exists.");
+                if (modelValidation.ContainsKey("Exists")) return BadRequest("Can't create the user. The user Already exists.");
                 // if model is valid
                 if (modelValidation.ContainsKey("IsValid"))
                 {
                     // getting the logged in user id
                     int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.UserService.CreateUser(user,createdBy); 
-                    if (res.ContainsKey("IsValid")){
-                       var response = _service.UserService.GetUsersByRole(user.RoleId);  
-                       return Ok(new { response });
-                    } 
+                    var res = _service.UserService.CreateUser(user, createdBy);
+                    if (res.ContainsKey("IsValid"))
+                    {
+                        var response = _service.UserService.GetUsersByRole(user.RoleId);
+                        return Ok(new { response });
+                    }
                 }
                 return BadRequest(modelValidation);
             }
@@ -64,7 +65,12 @@ namespace TMS.API.Controllers
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(CreateUser));
                 return Problem("sorry somthing went wrong");
             }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(CreateUser));
+                return Problem("sorry somthing went wrong");
+            }
         }
-        
+
     }
 }

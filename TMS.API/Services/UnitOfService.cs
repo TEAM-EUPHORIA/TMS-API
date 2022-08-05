@@ -14,10 +14,10 @@ namespace TMS.API.Services
         public ICourseService CourseService { get; set; }
         public IValidation Validation { get; set; }
 
-        public UnitOfService(IUnitOfWork repo,IConfiguration configuration,ILogger<UnitOfService> logger)
+        public UnitOfService(IUnitOfWork repo, IConfiguration configuration, ILogger<UnitOfService> logger)
         {
             _repo = repo;
-            AuthService = new AuthService(repo,configuration);
+            AuthService = new AuthService(repo, configuration, logger);
             UserService = new UserService(repo, logger);
             RoleService = new RoleService(repo, logger);
             ReviewService = new ReviewService(repo, logger);

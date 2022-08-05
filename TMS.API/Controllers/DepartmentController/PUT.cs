@@ -31,32 +31,37 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPut("department")]
-        
+
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult UpdateDepartment([FromBody]Department department)
+        public IActionResult UpdateDepartment([FromBody] Department department)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var departmentExists = _service.Validation.DepartmentExists(department.Id);
-            if(departmentExists)
+            try
             {
-                try
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var departmentExists = _service.Validation.DepartmentExists(department.Id);
+                if (departmentExists)
                 {
                     var IsValid = _service.Validation.ValidateDepartment(department);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
                         int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                        var res = _service.DepartmentService.UpdateDepartment(department,updatedBy);
+                        var res = _service.DepartmentService.UpdateDepartment(department, updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Department was Updated successfully" });
                     }
                     return BadRequest(IsValid);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(UpdateDepartment));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
-        }   
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(UpdateDepartment));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(UpdateDepartment));
+                return Problem("sorry somthing went wrong");
+            }
+        }
     }
 }

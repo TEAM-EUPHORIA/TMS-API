@@ -24,35 +24,40 @@ namespace TMS.API.Controllers
         /// <param name="topicId"></param>
         /// <returns></returns>
         [HttpGet("getAttendance/{courseId:int}/{topicId:int}")]
-        [Authorize(Roles= "Trainer,Training Coordinator")]
+        [Authorize(Roles = "Trainer,Training Coordinator")]
         public IActionResult GetAttendanceList(int courseId, int topicId)
         {
-            var courseExists = _service.Validation.CourseExists(courseId);
-            var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            bool access = false;
-            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-            if (check)
+            try
             {
-                access = true;
-            }
-            else
-            {
-                access = _service.Validation.ValidateCourseAccess(courseId, userId);
-            }
-            if (courseExists && access)
-            {
-                try
+                var courseExists = _service.Validation.CourseExists(courseId);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                bool access = false;
+                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
+                if (check)
+                {
+                    access = true;
+                }
+                else
+                {
+                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
+                }
+                if (courseExists && access)
                 {
                     var result = _service.CourseService.GetAttendanceList(courseId, topicId);
                     if (result is not null) return Ok(result);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAttendanceList));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAttendanceList));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetAttendanceList));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

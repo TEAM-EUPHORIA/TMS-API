@@ -33,19 +33,19 @@ namespace TMS.API.Controllers.ReviewController
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPost("mom")]
-        
+
         [Authorize(Roles = "Trainee")]
-        public IActionResult CreateMom([FromBody]MOM mom)
+        public IActionResult CreateMom([FromBody] MOM mom)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var IsValid = _service.Validation.ValidateMOM(mom);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create the mom. The Mom Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
                     int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.ReviewService.CreateMom(mom,createdBy);
+                    var res = _service.ReviewService.CreateMom(mom, createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Created successfully" });
                 }
                 return BadRequest(IsValid);
@@ -53,6 +53,11 @@ namespace TMS.API.Controllers.ReviewController
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(CreateMom));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(CreateMom));
                 return Problem("sorry somthing went wrong");
             }
         }

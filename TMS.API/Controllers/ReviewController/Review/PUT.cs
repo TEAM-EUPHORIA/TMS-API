@@ -36,15 +36,15 @@ namespace TMS.API.Controllers.ReviewController
         /// <response code="500">If there is problem in server.</response>
         /// <param name="review"></param>
         [HttpPut("review")]
-        
+
         [Authorize(Roles = "Training Coordinator")]
-        public IActionResult UpdateReview([FromBody]Review review)
+        public IActionResult UpdateReview([FromBody] Review review)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var reviewExists = _service.Validation.ReviewExists(review.Id);
-            if (reviewExists)
+            try
             {
-                try
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var reviewExists = _service.Validation.ReviewExists(review.Id);
+                if (reviewExists)
                 {
                     var IsValid = _service.Validation.ValidateReview(review);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
@@ -55,13 +55,18 @@ namespace TMS.API.Controllers.ReviewController
                     }
                     return BadRequest(IsValid);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
-                    return Problem("sorry somthing went wrong");
-                }
+                return NotFound("Not Found");
             }
-            return NotFound("Not Found");
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(UpdateReview));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(UpdateReview));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }

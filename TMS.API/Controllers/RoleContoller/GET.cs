@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
 
-namespace TMS.API.Controllers.RoleController
+namespace TMS.API.Controllers
 {
     [Authorize]
     [ApiController]
@@ -43,6 +43,11 @@ namespace TMS.API.Controllers.RoleController
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtController(ex, _logger, nameof(RoleController), nameof(GetRoles));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(GetRoles));
                 return Problem("sorry somthing went wrong");
             }
         }

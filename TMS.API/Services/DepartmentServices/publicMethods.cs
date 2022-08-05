@@ -28,7 +28,15 @@ namespace TMS.API.Services
         /// </returns>
         public IEnumerable<Department> GetDepartments()
         {
-            return _repo.Departments.GetDepartments();
+            try
+            {
+                return _repo.Departments.GetDepartments();
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(DepartmentService),nameof(GetDepartments));
+                throw;
+            }
         }
         /// <summary>
         /// used to get department by departmentid
@@ -47,15 +55,14 @@ namespace TMS.API.Services
             try
             {
 
-            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
-            if (departmentExists)
-            {
-                var result = _repo.Departments.GetDepartmentById(departmentId);
-                return result;
+                var departmentExists = _repo.Validation.DepartmentExists(departmentId);
+                if (departmentExists)
+                {
+                    var result = _repo.Departments.GetDepartmentById(departmentId);
+                    return result;
+                }
+                else throw new ArgumentException("Invalid Id");
             }
-            else throw new ArgumentException("Invalid Id");
-            }
-
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentService), nameof(GetDepartmentById));
@@ -116,16 +123,16 @@ namespace TMS.API.Services
         {
             try
             {
-            if (department is null) throw new ArgumentNullException(nameof(department));
-            var validation = _repo.Validation.ValidateDepartment(department);
-            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
-            {
-                var dbDeparment = _repo.Departments.GetDepartmentById(department.Id);
-                SetUpDepartmentDetails(department, dbDeparment);
-                _repo.Departments.UpdateDepartment(dbDeparment);
-                _repo.Complete();
-            }
-            return validation;
+                if (department is null) throw new ArgumentNullException(nameof(department));
+                var validation = _repo.Validation.ValidateDepartment(department);
+                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
+                {
+                    var dbDeparment = _repo.Departments.GetDepartmentById(department.Id);
+                    SetUpDepartmentDetails(department, dbDeparment);
+                    _repo.Departments.UpdateDepartment(dbDeparment);
+                    _repo.Complete();
+                }
+                return validation;
             }
             catch (InvalidOperationException ex)
             {
@@ -148,24 +155,28 @@ namespace TMS.API.Services
         /// </exception>
 
         public bool DisableDepartment(int departmentId, int updatedBy)
-        { 
+        {
             try
             {
-            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
-            if (departmentExists)
-            {
-                var dbDeparment = _repo.Departments.GetDepartmentById(departmentId);
-                Disable(updatedBy, dbDeparment);
-                _repo.Departments.UpdateDepartment(dbDeparment);
-                _repo.Complete();
+                var departmentExists = _repo.Validation.DepartmentExists(departmentId);
+                if (departmentExists)
+                {
+                    var dbDeparment = _repo.Departments.GetDepartmentById(departmentId);
+                    Disable(updatedBy, dbDeparment);
+                    _repo.Departments.UpdateDepartment(dbDeparment);
+                    _repo.Complete();
+                }
+                return departmentExists;
+                throw new ArgumentException("Invalid Id");
             }
-            return departmentExists;
-            throw new ArgumentException("Invalid Id");
-            }
-
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentService), nameof(DisableDepartment));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex, _logger, nameof(DisableDepartment));
                 throw;
             }
         }

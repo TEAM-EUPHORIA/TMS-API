@@ -21,7 +21,7 @@ namespace TMS.API
             _logger = logger;
             _service = service;
         }
-        
+
         /// <summary>
         /// Used for loging into the system
         /// </summary>
@@ -41,21 +41,25 @@ namespace TMS.API
         /// <response code="500">If there is problem in server. </response>
         /// <param name="user"></param>
         [HttpPost("login")]
-        public IActionResult Login([FromBody]LoginModel user)
+        public IActionResult Login([FromBody] LoginModel user)
         {
-            var validation = _service.Validation.ValidateLoginDetails(user);
             try
             {
-                if(validation.ContainsKey("IsValid"))
+                var validation = _service.Validation.ValidateLoginDetails(user);
+                if (validation.ContainsKey("IsValid"))
                 {
                     var result = _service.AuthService.Login(user);
-                    if(result is not null) return Ok(result);
+                    if (result is not null) return Ok(result);
                 }
-                
             }
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(AuthController), nameof(Login));
+                return Problem("sorry somthing went wrong");
+            }
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(Login));
                 return Problem("sorry somthing went wrong");
             }
             return Unauthorized("Unauthorized user");

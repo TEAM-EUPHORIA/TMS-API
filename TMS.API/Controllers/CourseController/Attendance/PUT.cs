@@ -41,8 +41,13 @@ namespace TMS.API.Controllers
             catch (InvalidOperationException ex)
             {
                 TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(MarkAttendance));
+                return Problem("sorry somthing went wrong");
             }
-            return Problem("sorry somthing went wrong");
+            catch (Exception ex)
+            {
+                TMSLogger.GeneralException(ex,_logger,nameof(MarkAttendance));
+                return Problem("sorry somthing went wrong");
+            }
         }
     }
 }
