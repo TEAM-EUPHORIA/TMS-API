@@ -32,16 +32,16 @@ namespace TMS.TEST.Controller
         int courseId = 1;
          int traineeId=1;
          int trainerId=1;
-        public TraineeFeedbackControllerTest()
+        public TraineeFeedbackControllerTest(IStatistics stats)
         {
-            _feedbackController = new FeedBackController(_unitOfService.Object, _Logger.Object);
+            _feedbackController = new FeedBackController(_unitOfService.Object, _Logger.Object, stats);
 
             // Arrange
             _unitOfService.Setup(obj => obj.Validation.TraineeFeedbackExists(TraineeFeedback.CourseId,TraineeFeedback.TraineeId,TraineeFeedback.TrainerId)).Returns(true);
             _unitOfService.Setup(obj => obj.Validation.ValidateTraineeFeedback(TraineeFeedback)).Returns(result);
 
-            _unitOfService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Returns(result);
-            _unitOfService.Setup(obj => obj.FeedbackService.UpdateTraineeFeedback(TraineeFeedback)).Returns(result);
+            _unitOfService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback,1)).Returns(result);
+            _unitOfService.Setup(obj => obj.FeedbackService.UpdateTraineeFeedback(TraineeFeedback,1)).Returns(result);
          _unitOfService.Setup(obj => obj.FeedbackService.GetTraineeFeedbackByCourseIdTrainerIdAndTraineeId(courseId,traineeId,trainerId)).Returns(TraineeFeedback);
 
          }
@@ -84,7 +84,7 @@ namespace TMS.TEST.Controller
         {
              AddIsValid();
             // Arrange
-            _unitOfService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Throws(new InvalidOperationException());
+            _unitOfService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback,1)).Throws(new InvalidOperationException());
             // Act
             var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
@@ -95,7 +95,7 @@ namespace TMS.TEST.Controller
         public void CreateTraineeFeedback_Return400Status_AddExists()
         {
             // AddExists();
-            _unitofService.Setup(obj => obj.FeedbackService. CreateTraineeFeedback(TraineeFeedback)).Returns(result);
+            _unitofService.Setup(obj => obj.FeedbackService. CreateTraineeFeedback(TraineeFeedback,1)).Returns(result);
             // Act
             var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
@@ -106,7 +106,7 @@ namespace TMS.TEST.Controller
         public void CreateTraineeFeedback_Return400Status_IsValid()
         {
             //  AddIsValid();
-         _unitofService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback)).Returns(result);
+         _unitofService.Setup(obj => obj.FeedbackService.CreateTraineeFeedback(TraineeFeedback,1)).Returns(result);
             // Act
             var Result = _feedbackController.CreateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
@@ -139,7 +139,7 @@ namespace TMS.TEST.Controller
         public void UpdateTraineeFeedback_Return400Status_AddExists()
         {
             // AddExists();
-            _unitofService.Setup(obj => obj.FeedbackService. UpdateTraineeFeedback(TraineeFeedback)).Returns(result);
+            _unitofService.Setup(obj => obj.FeedbackService. UpdateTraineeFeedback(TraineeFeedback,1)).Returns(result);
             // Act
             var Result = _feedbackController.UpdateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert
@@ -150,7 +150,7 @@ namespace TMS.TEST.Controller
         public void UpdateTraineeFeedback_Return400Status_IsValid()
         {
             //  AddIsValid();
-         _unitofService.Setup(obj => obj.FeedbackService.UpdateTraineeFeedback(TraineeFeedback)).Returns(result);
+         _unitofService.Setup(obj => obj.FeedbackService.UpdateTraineeFeedback(TraineeFeedback,1)).Returns(result);
             // Act
             var Result = _feedbackController.UpdateTraineeFeedback(TraineeFeedback) as ObjectResult;
             // Assert

@@ -8,7 +8,8 @@ using TMS.API.Repositories;
 using Moq;
 using Xunit;
 using TMS.BAL;
-
+using Microsoft.Extensions.Logging;
+using TMS.API.ViewModels;
 
 namespace TMS.TEST.Services
 {
@@ -18,8 +19,9 @@ namespace TMS.TEST.Services
         private readonly Mock<Statistics> _statistics = new();
         private readonly IUserService _userService;
         private readonly List<User> _users;
-        private readonly User _user ;
-        private readonly Dictionary<string,string> result = new();
+        private readonly User _user;
+        private readonly UpdateUserModel _updateUser;
+        private readonly Dictionary<string, string> result = new();
         int dept;
         int role;
         int id;
@@ -38,13 +40,14 @@ namespace TMS.TEST.Services
             result.Add("Exists", "true");
 
         }
-        public UserServiceTest()
-       {
-        _userService = new UserService(_unitOfWork.Object);
-            _users= UserMock.GetAllUserByRole();
-            _user= UserMock.GetUserById();
+        public UserServiceTest(ILogger<UserService> logger)
+        {
+            _userService = new UserService(_unitOfWork.Object, logger);
+            _users = UserMock.GetAllUserByRole();
+            _user = UserMock.GetUserById();
+            _updateUser = UserMock.GetUpdateUser();
 
-       } 
+        }
 
         [Fact]
         public void GetUsersByDepartment()
@@ -55,7 +58,7 @@ namespace TMS.TEST.Services
             // Act
             var result = _userService.GetUsersByDepartment(dept);
             // Assert
-            Assert.Equal(_users,result);
+            Assert.Equal(_users, result);
         }
 
         [Fact]
@@ -67,7 +70,7 @@ namespace TMS.TEST.Services
             // Act
             var result = _userService.GetUsersByRole(role);
             // Assert
-            Assert.Equal(_users,result);
+            Assert.Equal(_users, result);
         }
 
         [Fact]
@@ -76,11 +79,11 @@ namespace TMS.TEST.Services
             // Arrange
             _unitOfWork.Setup(obj => obj.Validation.RoleExists(role)).Returns(true);
             _unitOfWork.Setup(obj => obj.Validation.DepartmentExists(dept)).Returns(true);
-            _unitOfWork.Setup(obj => obj.Users.GetUsersByDeptandrole(role,dept)).Returns(_users);
+            _unitOfWork.Setup(obj => obj.Users.GetUsersByDeptandRole(dept, role)).Returns(_users);
             // Act
-            var result = _userService.GetUsersByDeptandrole(role,dept);
+            var result = _userService.GetUsersByDeptandRole(dept, role);
             // Assert
-            Assert.Equal(_users,result);
+            Assert.Equal(_users, result);
         }
 
         [Fact]
@@ -90,66 +93,66 @@ namespace TMS.TEST.Services
             _unitOfWork.Setup(obj => obj.Validation.UserExists(id)).Returns(true);
             _unitOfWork.Setup(obj => obj.Users.GetUserById(id)).Returns(_user);
             // Act
-            var result = _userService.GetUserById(id);
+            var result = _userService.GetUser(id);
             // Assert
-            Assert.Equal(_user,result);
+            Assert.Equal(_user, result);
         }
-    [Fact]
-    public void CreateUser()
+        [Fact]
+        public void CreateUser()
 
-    {
+        {
 
-      AddIsValid();
+            AddIsValid();
 
-     _unitOfWork.Setup(obj => obj.Validation.ValidateUser(_user)).Returns(result);
-     _unitOfWork.Setup(obj => obj.Stats.GetUserCount()).Returns(0);
+            _unitOfWork.Setup(obj => obj.Validation.ValidateUser(_user)).Returns(result);
+            _unitOfWork.Setup(obj => obj.Stats.GetUserCount()).Returns(0);
 
-     _unitOfWork.Setup(obj => obj.Users.CreateUser(_user));
+            _unitOfWork.Setup(obj => obj.Users.CreateUser(_user));
 
-     _unitOfWork.Setup(obj => obj.Complete());
+            _unitOfWork.Setup(obj => obj.Complete());
 
-     var Result = _userService.CreateUser(_user);
+            var Result = _userService.CreateUser(_user,1);
 
-     Assert.Equal(result,Result);
+            Assert.Equal(result, Result);
 
-    }
+        }
 
-    [Fact]
-    public void UpdateUser()
+        [Fact]
+        public void UpdateUser()
 
-    {
+        {
 
-      AddIsValid();
+            AddIsValid();
 
-     _unitOfWork.Setup(obj => obj.Validation.ValidateUser(_user)).Returns(result);
-     _unitOfWork.Setup(obj => obj.Stats.GetUserCount()).Returns(0);
+            _unitOfWork.Setup(obj => obj.Validation.ValidateUser(_user)).Returns(result);
+            _unitOfWork.Setup(obj => obj.Stats.GetUserCount()).Returns(0);
 
-     _unitOfWork.Setup(obj => obj.Users.UpdateUser(_user));
+            _unitOfWork.Setup(obj => obj.Users.UpdateUser(_user));
 
-     _unitOfWork.Setup(obj => obj.Complete());
+            _unitOfWork.Setup(obj => obj.Complete());
 
-     var Result = _userService.UpdateUser(_user);
+            var Result = _userService.UpdateUser(_updateUser,1);
 
-     Assert.Equal(result,Result);
+            Assert.Equal(result, Result);
 
-    }
+        }
 
-    [Fact]
-    public void DisableUser()
+        [Fact]
+        public void DisableUser()
 
-    {
+        {
             // Arrange
             _unitOfWork.Setup(obj => obj.Validation.UserExists(id)).Returns(true);
             _unitOfWork.Setup(obj => obj.Users.GetUserById(id)).Returns(_user);
             // Act
-            var result = _userService.GetUserById(cid);
+            var result = _userService.GetUser(cid);
             // Assert
-            Assert.Equal(_user,result);
-      
+            Assert.Equal(_user, result);
 
-    }
-    
-    
+
+        }
+
+
 
 
 

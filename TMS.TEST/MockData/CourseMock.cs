@@ -37,26 +37,26 @@ namespace TMS.TEST
         {
             return new AddUsersToCourse()
             {
-                CourseId=1,
-                users=new List<CourseUser>(){
+                CourseId = 1,
+                Users = new List<CourseUser>(){
                     new CourseUser(){
                         UserId = 1,
                         RoleId = 4
-                    },  
+                    },
                     new CourseUser(){
                         UserId = 2,
                         RoleId = 4
-                    },  
+                    },
                     new CourseUser(){
                         UserId = 3,
                         RoleId = 4
-                    }, 
+                    },
                     new CourseUser(){
                         UserId = 4,
                         RoleId = 4
-                    }  
+                    }
                 }
-            };         
+            };
         }
         public static List<CourseUsers> GetResult()
         {
@@ -64,22 +64,22 @@ namespace TMS.TEST
                 new CourseUsers(){
                     CourseId = 1,
                     UserId = 1,
-                    RoleId = 4                     
+                    RoleId = 4
                 },
                 new CourseUsers(){
                     CourseId = 1,
                     UserId = 2,
-                    RoleId = 4                     
+                    RoleId = 4
                 },
                 new CourseUsers(){
                     CourseId = 1,
                     UserId = 3,
-                    RoleId = 4                     
+                    RoleId = 4
                 }
             };
         }
 
-        
-       
+
+
     }
 }

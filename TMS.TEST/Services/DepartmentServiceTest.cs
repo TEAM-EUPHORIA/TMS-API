@@ -8,6 +8,7 @@ using TMS.API.Repositories;
 using Moq;
 using Xunit;
 using TMS.BAL;
+using Microsoft.Extensions.Logging;
 
 namespace TMS.TEST.Services
 {
@@ -18,9 +19,9 @@ namespace TMS.TEST.Services
         private readonly List<Department> _departments;
         private readonly Department _department;
 
-        public DepartmentServiceTest()
+        public DepartmentServiceTest(ILogger<DepartmentService> logger)
         {
-            _departmentService = new DepartmentService(_unitOfWork.Object);
+            _departmentService = new DepartmentService(_unitOfWork.Object, logger);
             _departments = DeparmentMock.GetDepartments();
             _department = DeparmentMock.GetDepartment();
         }
@@ -32,7 +33,7 @@ namespace TMS.TEST.Services
             // Act
             var result = _departmentService.GetDepartments();
             // Assert
-            Assert.Equal(_departments,result);
+            Assert.Equal(_departments, result);
         }
         [Fact]
         public void GetDepartmentById()
@@ -43,7 +44,7 @@ namespace TMS.TEST.Services
             // Act
             var result = _departmentService.GetDepartmentById(_department.Id);
             // Assert
-            Assert.Equal(_department,result);
+            Assert.Equal(_department, result);
         }
     }
 }

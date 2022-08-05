@@ -7,6 +7,7 @@ using TMS.API.Controllers;
 using Xunit;
 using TMS.BAL;
 using System;
+using TMS.API.ViewModels;
 
 namespace TMS.TEST.Controller
 {
@@ -15,6 +16,7 @@ namespace TMS.TEST.Controller
         private readonly Mock<ILogger<UserController>>_Logger =new ();
         private readonly Mock<IUnitOfService> _unitOfService =new();
         private readonly UserController _userController;
+        private readonly UpdateUserModel _updateUser;
         private readonly Dictionary<string,string> result =new();
         readonly List<User> Users = UserMock.GetAllUserByRole();
         readonly User User = UserMock.GetUserById();
@@ -34,6 +36,7 @@ namespace TMS.TEST.Controller
         public UserControllerTest()
         {
             _userController = new UserController(_unitOfService.Object, _Logger.Object);
+            _updateUser = UserMock.GetUpdateUser();
             // Arrange
             _unitOfService.Setup(obj => obj.Validation.UserExists(User.Id)).Returns(true);
             _unitOfService.Setup(obj => obj.Validation.RoleExists(User.Id)).Returns(true);
@@ -42,10 +45,10 @@ namespace TMS.TEST.Controller
 
             _unitOfService.Setup(obj => obj.UserService.GetUsersByRole(role)).Returns(Users);
             _unitOfService.Setup(obj => obj.UserService.GetUsersByDepartment(dept)).Returns(Users);
-            _unitOfService.Setup(obj => obj.UserService.GetUsersByDeptandrole(dept,role)).Returns(Users);
-            _unitOfService.Setup(obj => obj.UserService.GetUserById(id)).Returns(User);
-            _unitOfService.Setup(obj => obj.UserService.CreateUser(User)).Returns(result);
-            _unitOfService.Setup(obj => obj.UserService.UpdateUser(User)).Returns(result);
+            _unitOfService.Setup(obj => obj.UserService.GetUsersByDeptandRole(dept,role)).Returns(Users);
+            _unitOfService.Setup(obj => obj.UserService.GetUser(id)).Returns(User);
+            _unitOfService.Setup(obj => obj.UserService.CreateUser(User,1)).Returns(result);
+            _unitOfService.Setup(obj => obj.UserService.UpdateUser(_updateUser,1)).Returns(result);
             _unitOfService.Setup(obj => obj.UserService.DisableUser(User.Id, 1)).Returns(true);
 
         }
@@ -97,7 +100,7 @@ namespace TMS.TEST.Controller
 
             _unitOfService.Setup(obj => obj.Validation.UserExists(User.Id)).Returns(false);
             // Act
-            var Result = _userController.UpdateUser(User) as ObjectResult;
+            var Result = _userController.UpdateUser(_updateUser) as ObjectResult;
             // Assert
             Assert.Equal(404, Result?.StatusCode);
         }
@@ -137,7 +140,7 @@ namespace TMS.TEST.Controller
         public void GetUsersByDeptandrole_Return500Status()
         {
             AddIsValid();
-            _unitOfService.Setup(obj => obj.UserService.GetUsersByDeptandrole(dept,role)).Throws(new InvalidOperationException());
+            _unitOfService.Setup(obj => obj.UserService.GetUsersByDeptandRole(dept,role)).Throws(new InvalidOperationException());
             // Act
             var Result = _userController.GetUsersByDeptandrole(dept,role) as ObjectResult;
             // Assert
@@ -162,7 +165,7 @@ namespace TMS.TEST.Controller
         public void CreateUsers_Return400Status_Exist()
         {
             AddExists();
-            _unitOfService.Setup(obj => obj.UserService.CreateUser(User)).Returns(result);
+            _unitOfService.Setup(obj => obj.UserService.CreateUser(User,1)).Returns(result);
             // Act
             var Result = _userController.CreateUser(User) as ObjectResult;
             // Assert
@@ -174,7 +177,7 @@ namespace TMS.TEST.Controller
         public void CreateUsers_Return400Status()
         {
             
-            _unitOfService.Setup(obj => obj.UserService.CreateUser(User)).Returns(result);
+            _unitOfService.Setup(obj => obj.UserService.CreateUser(User,1)).Returns(result);
             // Act
             var Result = _userController.CreateUser(User) as ObjectResult;
             // Assert
@@ -187,7 +190,7 @@ namespace TMS.TEST.Controller
         public void CreateUsers_Return500Status()
         {
             AddIsValid();
-            _unitOfService.Setup(obj => obj.UserService.CreateUser(User)).Throws(new InvalidOperationException());
+            _unitOfService.Setup(obj => obj.UserService.CreateUser(User,1)).Throws(new InvalidOperationException());
             // Act
             var Result = _userController.CreateUser(User) as ObjectResult;
             // Assert
@@ -201,7 +204,7 @@ namespace TMS.TEST.Controller
             AddIsValid();
             AddExists();
             // Act
-            var Result = _userController.UpdateUser(User) as ObjectResult;
+            var Result = _userController.UpdateUser(_updateUser) as ObjectResult;
             // Assert
             Assert.Equal(200, Result?.StatusCode);
         }
@@ -209,9 +212,9 @@ namespace TMS.TEST.Controller
                  [Fact]
         public void UpdateUser_Return400Status()
         {
-            _unitOfService.Setup(obj => obj.UserService.UpdateUser(User)).Returns(result);
+            _unitOfService.Setup(obj => obj.UserService.UpdateUser(_updateUser,1)).Returns(result);
             // Act
-            var Result = _userController.UpdateUser(User) as ObjectResult;
+            var Result = _userController.UpdateUser(_updateUser) as ObjectResult;
             // Assert
             Assert.Equal(400, Result?.StatusCode);
         }
@@ -221,9 +224,9 @@ namespace TMS.TEST.Controller
         {
             AddIsValid();
             AddExists();
-            _unitOfService.Setup(obj => obj.UserService.UpdateUser(User)).Throws(new InvalidOperationException());
+            _unitOfService.Setup(obj => obj.UserService.UpdateUser(_updateUser,1)).Throws(new InvalidOperationException());
             // Act
-            var Result = _userController.UpdateUser(User) as ObjectResult;
+            var Result = _userController.UpdateUser(_updateUser) as ObjectResult;
             // Assert
             Assert.Equal(500, Result?.StatusCode);
         }
@@ -235,7 +238,7 @@ namespace TMS.TEST.Controller
             AddExists();
             _unitOfService.Setup(obj => obj.Validation.UserExists(User.Id)).Returns(false);
             // Act
-            var Result = _userController.UpdateUser(User) as ObjectResult;
+            var Result = _userController.UpdateUser(_updateUser) as ObjectResult;
             // Assert
             Assert.Equal(404, Result?.StatusCode);
         }

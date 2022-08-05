@@ -8,6 +8,7 @@ using Xunit;
 using TMS.BAL;
 using System;
 using TMS.API.ViewModels;
+using TMS.API;
 
 namespace TMS.TEST.Controller
 {
@@ -15,8 +16,8 @@ namespace TMS.TEST.Controller
     {
         private readonly Mock<ILogger<CourseController>> _Logger = new();
         private readonly Mock<IUnitOfService> _unitofService = new();
+        private readonly Mock<AppDbContext> _context = new();
         private readonly CourseController _courseController;
-        private readonly UserController _UserController;
 
         private readonly Dictionary<string, string> result = new();
         readonly List<Course> Courses = CourseMock.GetCourses();
@@ -46,8 +47,8 @@ namespace TMS.TEST.Controller
         public CourseControllerTest()
         {
             _result.Add("hello", CourseMock.GetResult());
-            _courseController = new CourseController(_unitofService.Object, _Logger.Object);
-
+            _courseController = new CourseController(_unitofService.Object, _Logger.Object, _context.Object);
+            
             // Arrange Course
             _unitofService.Setup(obj => obj.Validation.CourseExists(Course.Id)).Returns(true);
             _unitofService.Setup(obj => obj.Validation.UserExists(userId)).Returns(true);
@@ -58,9 +59,9 @@ namespace TMS.TEST.Controller
             _unitofService.Setup(obj => obj.CourseService.GetCourses()).Returns(Courses);
             _unitofService.Setup(obj => obj.CourseService.GetCoursesByUserId(userId)).Returns(Courses);
             _unitofService.Setup(obj => obj.CourseService.GetCoursesByDepartmentId(departmentId)).Returns(Courses);
-            _unitofService.Setup(obj => obj.CourseService.GetCourseById(courseId)).Returns(Course);
-            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Returns(result);
-            _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.GetCourseById(courseId,1)).Returns(Course);
+            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course,1)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course,1)).Returns(result);
 
             // Arrange Topic
             _unitofService.Setup(obj => obj.Validation.TopicExists(Topic.TopicId, Topic.CourseId)).Returns(true);
@@ -71,7 +72,7 @@ namespace TMS.TEST.Controller
 
             _unitofService.Setup(obj => obj.CourseService.GetTopicsByCourseId(Topic.CourseId)).Returns(topics);
             _unitofService.Setup(obj => obj.CourseService.GetTopicById(Topic.CourseId, Topic.TopicId, userId)).Returns(Topic);
-            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic,1)).Returns(result);
             _unitofService.Setup(obj => obj.CourseService.UpdateTopic(Topic)).Returns(result);
             _unitofService.Setup(obj => obj.CourseService.DisableTopic(Topic.CourseId, Topic.TopicId, 1)).Returns(true);
             
@@ -86,8 +87,8 @@ namespace TMS.TEST.Controller
             _unitofService.Setup(obj => obj.CourseService.AddUsersToCourse(data, userId)).Returns(_result);
             _unitofService.Setup(obj => obj.CourseService.RemoveUsersFromCourse(data, userId)).Returns(_result);
             _unitofService.Setup(obj => obj.CourseService.GetAssignmentsByTopicId(topicId)).Returns(Topic.Assignments);
-            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment)).Returns(result);
-            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment,1)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment,1)).Returns(result);
 
         }
 
@@ -192,7 +193,7 @@ namespace TMS.TEST.Controller
         [Fact]
         public void GetCourseById_Return500Status()
         {
-            _unitofService.Setup(obj => obj.CourseService.GetCourseById(courseId)).Throws(new InvalidOperationException());
+            _unitofService.Setup(obj => obj.CourseService.GetCourseById(courseId,1)).Throws(new InvalidOperationException());
             // Act
             var Result = _courseController.GetCourseById(courseId) as ObjectResult;
             // Assert
@@ -204,7 +205,7 @@ namespace TMS.TEST.Controller
         public void CreateCourse_Return400Status_AddExists()
         {
             AddExists();
-            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course,1)).Returns(result);
             // Act
             var Result = _courseController.CreateCourse(Course) as ObjectResult;
             // Assert
@@ -214,7 +215,7 @@ namespace TMS.TEST.Controller
         [Fact]
         public void CreateCourse_Return400Status_IsValid()
         {
-            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course,1)).Returns(result);
             // Act
             var Result = _courseController.CreateCourse(Course) as ObjectResult;
             // Assert
@@ -235,7 +236,7 @@ namespace TMS.TEST.Controller
         public void CreateCourse_Return500Status()
         {
             AddIsValid();
-            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course)).Throws(new InvalidOperationException());
+            _unitofService.Setup(obj => obj.CourseService.CreateCourse(Course,1)).Throws(new InvalidOperationException());
             // Act
             var Result = _courseController.CreateCourse(Course) as ObjectResult;
             // Assert
@@ -258,7 +259,7 @@ namespace TMS.TEST.Controller
         {
             AddIsValid();
             AddExists();
-            _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course)).Throws(new InvalidOperationException());
+            _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course,1)).Throws(new InvalidOperationException());
             // Act
             var Result = _courseController.UpdateCourse(Course) as ObjectResult;
             // Assert
@@ -282,7 +283,7 @@ namespace TMS.TEST.Controller
         {
             //AddIsValid();
             // AddExists();
-            _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.UpdateCourse(Course,1)).Returns(result);
             // Act
             var Result = _courseController.UpdateCourse(Course) as ObjectResult;
             // Assert
@@ -379,7 +380,7 @@ namespace TMS.TEST.Controller
         public void CreateTopic_Return500Status()
         {
             AddIsValid();
-            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Throws(new InvalidOperationException());
+            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic,1)).Throws(new InvalidOperationException());
             var Result = _courseController.CreateTopic(Topic) as ObjectResult;
             Assert.Equal(500, Result?.StatusCode);
         }
@@ -420,7 +421,7 @@ namespace TMS.TEST.Controller
         public void CreateTopic_Return400tatus_IsValid()
         {
 
-            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic,1)).Returns(result);
             var Result = _courseController.CreateTopic(Topic) as ObjectResult;
             Assert.Equal(400, Result?.StatusCode);
         }
@@ -428,7 +429,7 @@ namespace TMS.TEST.Controller
         public void CreateTopic_Return400tatus_Exists()
         {
             AddExists();
-            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.CreateTopic(Topic,1)).Returns(result);
             var Result = _courseController.CreateTopic(Topic) as ObjectResult;
             Assert.Equal(400, Result?.StatusCode);
 
@@ -635,7 +636,7 @@ namespace TMS.TEST.Controller
         public void  CreateAssignment_Return400Status_AddExists()
         {
             AddExists();
-            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment,1)).Returns(result);
             // Act
             var Result = _courseController.CreateAssignment(assignment) as ObjectResult;
             // Assert
@@ -648,7 +649,7 @@ namespace TMS.TEST.Controller
         public void CreateAssignment_Return500Status()
         {
             AddIsValid();
-            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment)).Throws(new InvalidOperationException());
+            _unitofService.Setup(obj => obj.CourseService.CreateAssignment(assignment,1)).Throws(new InvalidOperationException());
             // Act
             var Result = _courseController.CreateAssignment(assignment) as ObjectResult;
             // Assert
@@ -670,7 +671,7 @@ namespace TMS.TEST.Controller
         {
             AddIsValid();
             AddExists();
-            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment)).Throws(new InvalidOperationException());
+            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment,1)).Throws(new InvalidOperationException());
             // Act
             var Result = _courseController.UpdateAssignment(assignment) as ObjectResult;
             // Assert
@@ -694,7 +695,7 @@ namespace TMS.TEST.Controller
         {
             //AddIsValid();
             // AddExists();
-            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment)).Returns(result);
+            _unitofService.Setup(obj => obj.CourseService.UpdateAssignment(assignment,1)).Returns(result);
             // Act
             var Result = _courseController.UpdateAssignment(assignment) as ObjectResult;
             // Assert

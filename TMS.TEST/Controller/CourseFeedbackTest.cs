@@ -31,16 +31,16 @@ namespace TMS.TEST.Controller
         }
          int courseId = 1;
          int traineeId=1;
-        public CourseFeedbackControllerTest()
+        public CourseFeedbackControllerTest(IStatistics stats)
         {
-            _feedbackController = new FeedBackController(_unitOfService.Object, _Logger.Object);
+            _feedbackController = new FeedBackController(_unitOfService.Object, _Logger.Object, stats);
 
             // Arrange
             _unitOfService.Setup(obj => obj.Validation.CourseFeedbackExists(CourseFeedback.CourseId,CourseFeedback.TraineeId)).Returns(true);
             _unitOfService.Setup(obj => obj.Validation.ValidateCourseFeedback(CourseFeedback)).Returns(result);
              
-            _unitOfService.Setup(obj => obj.FeedbackService.CreateCourseFeedback(CourseFeedback)).Returns(result);
-            _unitOfService.Setup(obj => obj.FeedbackService.UpdateCourseFeedback(CourseFeedback)).Returns(result);
+            _unitOfService.Setup(obj => obj.FeedbackService.CreateCourseFeedback(CourseFeedback,1)).Returns(result);
+            _unitOfService.Setup(obj => obj.FeedbackService.UpdateCourseFeedback(CourseFeedback,1)).Returns(result);
             _unitOfService.Setup(obj => obj.FeedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId)).Returns(CourseFeedback);
           
          
@@ -113,7 +113,7 @@ namespace TMS.TEST.Controller
         public void CreateCourseFeedback_Return400Status_AddExists()
         {
             // AddExists();
-            _unitofService.Setup(obj => obj.FeedbackService. CreateCourseFeedback(CourseFeedback)).Returns(result);
+            _unitofService.Setup(obj => obj.FeedbackService. CreateCourseFeedback(CourseFeedback,1)).Returns(result);
             // Act
             var Result = _feedbackController.CreateCourseFeedback(CourseFeedback) as ObjectResult;
             // Assert
@@ -124,7 +124,7 @@ namespace TMS.TEST.Controller
         public void CreateCourseFeedback_Return400Status_IsValid()
         {
             //  AddIsValid();
-         _unitofService.Setup(obj => obj.FeedbackService.CreateCourseFeedback(CourseFeedback)).Returns(result);
+         _unitofService.Setup(obj => obj.FeedbackService.CreateCourseFeedback(CourseFeedback,1)).Returns(result);
             // Act
             var Result = _feedbackController.CreateCourseFeedback(CourseFeedback) as ObjectResult;
             // Assert
@@ -161,7 +161,7 @@ namespace TMS.TEST.Controller
         public void UpdateCourseFeedback_Return400Status_AddExists()
         {
             // AddExists();
-            _unitofService.Setup(obj => obj.FeedbackService. UpdateCourseFeedback(CourseFeedback)).Returns(result);
+            _unitofService.Setup(obj => obj.FeedbackService. UpdateCourseFeedback(CourseFeedback,1)).Returns(result);
             // Act
             var Result = _feedbackController.UpdateCourseFeedback(CourseFeedback) as ObjectResult;
             // Assert
@@ -172,7 +172,7 @@ namespace TMS.TEST.Controller
         public void UpdateCourseFeedback_Return400Status_IsValid()
         {
             //  AddIsValid();
-         _unitofService.Setup(obj => obj.FeedbackService.UpdateCourseFeedback(CourseFeedback)).Returns(result);
+         _unitofService.Setup(obj => obj.FeedbackService.UpdateCourseFeedback(CourseFeedback,1)).Returns(result);
             // Act
             var Result = _feedbackController.UpdateCourseFeedback(CourseFeedback) as ObjectResult;
             // Assert

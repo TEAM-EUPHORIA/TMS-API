@@ -9,33 +9,37 @@ using Moq;
 using Xunit;
 using TMS.BAL;
 using TMS.API.ViewModels;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace TMS.TEST.Services
 {
     public class AuthServiceTest
     {
-       private readonly Mock<IUnitOfWork> _unitOfWork = new();
+        private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
-       private readonly IAuthService _authService;
+        private readonly IAuthService _authService;
 
-        private readonly Dictionary<string,string> result = new();
+        private readonly Dictionary<string, string> result = new();
 
-       private readonly object _unityService;
-       
-       private readonly LoginModel _user = AuthMock.GetUseCredentials();
-       private readonly User resultUser = new User(){
-        Email="david@gmail.com",
-        FullName="David",
-        Role = new Role(){
-          Name="Trainer"
-        },
-        RoleId = 4,
-        Id = 1
-       };
-        
-        
-        
-       private void token()
+        private readonly object _unityService;
+
+        private readonly LoginModel _user = AuthMock.GetUseCredentials();
+        private readonly User resultUser = new User()
+        {
+            Email = "david@gmail.com",
+            FullName = "David",
+            Role = new Role()
+            {
+                Name = "Trainer"
+            },
+            RoleId = 4,
+            Id = 1
+        };
+
+
+
+        private void token()
         {
             result.Add("token", "");
         }
@@ -43,25 +47,25 @@ namespace TMS.TEST.Services
         {
             result.Add("IsValid", "true");
         }
-       
-        public AuthServiceTest()
-       {
-         _authService = new AuthService(_unitOfWork.Object);
-          
-       } 
-       
-    [Fact]
-    public void Login()
-    {
-      AddIsValid();
-     _unitOfWork.Setup(obj => obj.Validation.ValidateLoginDetails(_user)).Returns(result);
-      _unitOfWork.Setup(obj => obj.Users.GetUserByEmailAndPassword(_user)).Returns(resultUser);
-     _unitOfWork.Setup(obj => obj.Complete());
-     var Result = _authService.Login(_user);
-     result.Clear();
-     token();
-     Assert.Equal(result.ContainsKey("token"),Result.ContainsKey("token"));
-    }
-    
+
+        public AuthServiceTest(IConfiguration configurations, ILogger<AuthService> logger)
+        {
+            _authService = new AuthService(_unitOfWork.Object, configurations, logger);
+
+        }
+
+        [Fact]
+        public void Login()
+        {
+            AddIsValid();
+            _unitOfWork.Setup(obj => obj.Validation.ValidateLoginDetails(_user)).Returns(result);
+            _unitOfWork.Setup(obj => obj.Users.GetUserByEmailAndPassword(_user)).Returns(resultUser);
+            _unitOfWork.Setup(obj => obj.Complete());
+            var Result = _authService.Login(_user);
+            result.Clear();
+            token();
+            Assert.Equal(result.ContainsKey("token"), Result.ContainsKey("token"));
+        }
+
     }
 }

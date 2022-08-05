@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMS.API.ViewModels;
 using TMS.BAL;
 namespace TMS.TEST
 {
@@ -28,6 +29,14 @@ namespace TMS.TEST
                 Id = 1,
                 FullName= "Thomas",
                 Password = ""
+            };
+        }
+        public static UpdateUserModel GetUpdateUser()
+        {
+            return new UpdateUserModel ()
+            {
+                Id = 1,
+                FullName= "Thomas"
             };
         }
     }

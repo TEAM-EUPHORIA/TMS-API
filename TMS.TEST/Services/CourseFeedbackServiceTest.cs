@@ -4,6 +4,8 @@ using TMS.API.Repositories;
 using Moq;
 using Xunit;
 using TMS.BAL;
+using Microsoft.Extensions.Logging;
+
 namespace TMS.TEST.Services
 {
     public class CourseFeedbackServiceTest
@@ -12,49 +14,49 @@ namespace TMS.TEST.Services
         private readonly IFeedbackService _feedbackService;
         private readonly List<CourseFeedback> _courseFeedbacks;
         private readonly CourseFeedback _courseFeedback;
-         private readonly Dictionary<string,string> result = new();
+        private readonly Dictionary<string, string> result = new();
 
-         private int courseId;
+        private int courseId;
         private int traineeId;
-      
-        public CourseFeedbackServiceTest()
+
+        public CourseFeedbackServiceTest(ILogger<FeedbackService> logger)
         {
-            _feedbackService = new FeedbackService(_unitOfWork.Object);
+            _feedbackService = new FeedbackService(_unitOfWork.Object, logger);
             _courseFeedbacks = CourseFeedbackMock.GetCourseFeedbacks();
             _courseFeedback = CourseFeedbackMock.GetCourseFeedback();
         }
-       
-          [Fact]
-       public void GetCourseFeedbackByCourseIdAndTraineeId()
-       {
-         _unitOfWork.Setup(obj => obj.Validation.CourseExists(courseId)).Returns(true);
-         _unitOfWork.Setup(obj => obj.Validation.UserExists(traineeId)).Returns(true);
 
-         _unitOfWork.Setup(obj => obj.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId)).Returns(_courseFeedback);
-       
-       var result = _feedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId,traineeId);
-       Assert.Equal(_courseFeedback,result);
-    }
-             [Fact]
-    public void CreateCourseFeedback()
-    {
-    //   AddIsValid();
-     _unitOfWork.Setup(obj => obj.Validation.ValidateCourseFeedback(_courseFeedback)).Returns(result);
-     _unitOfWork.Setup(obj => obj.Feedbacks.CreateCourseFeedback(_courseFeedback));
-     _unitOfWork.Setup(obj => obj.Complete());
-     var Result = _feedbackService.CreateCourseFeedback(_courseFeedback);
-     Assert.Equal(result,Result);
-    }
-    [Fact]
-    public void UpdateCourseFeedback()
-    {
-    //  AddIsValid();
-     _unitOfWork.Setup(obj => obj.Validation.ValidateCourseFeedback(_courseFeedback)).Returns(result);
-     _unitOfWork.Setup(obj => obj.Feedbacks.UpdateCourseFeedback(_courseFeedback));
-     _unitOfWork.Setup(obj => obj.Complete());
-     var Result = _feedbackService.UpdateCourseFeedback(_courseFeedback);
-     Assert.Equal(result,Result); 
-    }
+        [Fact]
+        public void GetCourseFeedbackByCourseIdAndTraineeId()
+        {
+            _unitOfWork.Setup(obj => obj.Validation.CourseExists(courseId)).Returns(true);
+            _unitOfWork.Setup(obj => obj.Validation.UserExists(traineeId)).Returns(true);
+
+            _unitOfWork.Setup(obj => obj.Feedbacks.GetCourseFeedbackByCourseIdAndTraineeId(courseId, traineeId)).Returns(_courseFeedback);
+
+            var result = _feedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId, traineeId);
+            Assert.Equal(_courseFeedback, result);
+        }
+        [Fact]
+        public void CreateCourseFeedback()
+        {
+            //   AddIsValid();
+            _unitOfWork.Setup(obj => obj.Validation.ValidateCourseFeedback(_courseFeedback)).Returns(result);
+            _unitOfWork.Setup(obj => obj.Feedbacks.CreateCourseFeedback(_courseFeedback));
+            _unitOfWork.Setup(obj => obj.Complete());
+            var Result = _feedbackService.CreateCourseFeedback(_courseFeedback,1);
+            Assert.Equal(result, Result);
+        }
+        [Fact]
+        public void UpdateCourseFeedback()
+        {
+            //  AddIsValid();
+            _unitOfWork.Setup(obj => obj.Validation.ValidateCourseFeedback(_courseFeedback)).Returns(result);
+            _unitOfWork.Setup(obj => obj.Feedbacks.UpdateCourseFeedback(_courseFeedback));
+            _unitOfWork.Setup(obj => obj.Complete());
+            var Result = _feedbackService.UpdateCourseFeedback(_courseFeedback,1);
+            Assert.Equal(result, Result);
+        }
 
 
     }

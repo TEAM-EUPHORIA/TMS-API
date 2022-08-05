@@ -37,8 +37,8 @@ namespace TMS.TEST.Controller
 
             _unitOfService.Setup(obj => obj.DepartmentService.GetDepartments()).Returns(Departments);
             _unitOfService.Setup(obj => obj.DepartmentService.GetDepartmentById(departmentId)).Returns(Department);
-            _unitOfService.Setup(obj => obj.DepartmentService.CreateDepartment(Department)).Returns(result);
-            _unitOfService.Setup(obj => obj.DepartmentService.UpdateDepartment(Department)).Returns(result);
+            _unitOfService.Setup(obj => obj.DepartmentService.CreateDepartment(Department,1)).Returns(result);
+            _unitOfService.Setup(obj => obj.DepartmentService.UpdateDepartment(Department,1)).Returns(result);
             _unitOfService.Setup(obj => obj.DepartmentService.DisableDepartment(Department.Id, 1)).Returns(true);
 
         }

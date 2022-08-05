@@ -4,6 +4,7 @@ using TMS.API.Repositories;
 using Moq;
 using Xunit;
 using TMS.BAL;
+using Microsoft.Extensions.Logging;
 
 namespace TMS.TEST.Services
 {
@@ -14,9 +15,9 @@ namespace TMS.TEST.Services
         private readonly List<Role> _roles;
         private readonly Role _role;
 
-        public RoleServiceTest()
+        public RoleServiceTest(ILogger<RoleService> logger)
         {
-            _roleService = new RoleService(_unitOfWork.Object);
+            _roleService = new RoleService(_unitOfWork.Object, logger);
             _roles = RoleMock.GetRoles();
             _role = RoleMock.GetRole();
         }
@@ -28,8 +29,8 @@ namespace TMS.TEST.Services
             // Act
             var result = _roleService.GetRoles();
             // Assert
-            Assert.Equal(_roles,result);
+            Assert.Equal(_roles, result);
         }
-       
+
     }
 }
