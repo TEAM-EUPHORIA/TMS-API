@@ -250,8 +250,7 @@ namespace TMS.TEST.Controller
             // Act  
             var Result = _userController.DisableUser(User.Id) as ObjectResult;
             // Assert
-           
-         Assert.Equal(200, Result?.StatusCode);
+            Assert.Equal(200, Result?.StatusCode);
         }
 
         
