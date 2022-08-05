@@ -36,9 +36,9 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
         {
-            // checks the user exists or not
             try
             {
+                // checks the user exists or not
                 var userExists = _service.Validation.UserExists(userId);
                 if (userExists)
                 {
