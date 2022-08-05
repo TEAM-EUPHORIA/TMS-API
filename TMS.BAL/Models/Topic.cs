@@ -10,8 +10,12 @@ namespace TMS.BAL
         [Required]
         public int CourseId { get; set; }
         [Required]
+        [MinLength(3)]
+        [MaxLength(15)]
         public string? Name { get; set; }
         [Required]
+        [MinLength(3)]
+        [MaxLength(15)]
         public string? Duration { get; set; }
         [Required]
         public string? Content { get; set; }

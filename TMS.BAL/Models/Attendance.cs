@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TMS.BAL
 {
-    public class Attendance:AuditFields
+    public class Attendance : AuditFields
     {
-        [Key,Column(Order=0)]
+        [Key, Column(Order = 0)]
         public int CourseId { get; set; }
-        [Key,Column(Order=1)]
+        [Key, Column(Order = 1)]
         public int TopicId { get; set; }
-        [Key,Column(Order=2)]
+        [Key, Column(Order = 2)]
         public int OwnerId { get; set; }
         [Required]
         public bool Status { get; set; }

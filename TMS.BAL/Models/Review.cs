@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TMS.BAL
 {
-    public class Review:AuditFields
+    public class Review : AuditFields
     {
         [Key]
         public int Id { get; set; }
@@ -19,7 +19,7 @@ namespace TMS.BAL
         [Required]
         public DateTime ReviewTime { get; set; }
         [Required]
-        public string ?Mode { get; set; }
+        public string? Mode { get; set; }
         //virtual navigation properties
         public virtual User? Reviewer { get; set; }
         public virtual User? Trainee { get; set; }

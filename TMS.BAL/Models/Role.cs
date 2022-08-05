@@ -2,11 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS.BAL
 {
-    public class Role:AuditFields
+    public class Role : AuditFields
     {
         public int Id { get; set; }
         [Required]
-        public string ?Name { get; set; }
+        [MinLength(3)]
+        [MaxLength(15)]
+        public string? Name { get; set; }
         public bool? isDisabled { get; set; }
     }
 }

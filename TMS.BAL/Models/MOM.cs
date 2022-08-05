@@ -10,10 +10,16 @@ namespace TMS.BAL
         [Key, Column(Order = 1)]
         public int TraineeId { get; set; }
         [Required]
+        [MinLength(3)]
+        [MaxLength(100)]
         public string? Agenda { get; set; }
         [Required]
+        [MinLength(3)]
+        [MaxLength(1000)]
         public string? MeetingNotes { get; set; }
         [Required]
+        [MinLength(3)]
+        [MaxLength(100)]
         public string? PurposeOfMeeting { get; set; }
         //virtual navigation properties
         public virtual Review? Review { get; set; }

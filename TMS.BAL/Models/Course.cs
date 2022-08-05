@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TMS.BAL
 {
-    public class Course:AuditFields
+    public class Course : AuditFields
     {
         public int Id { get; set; }
         [Required]
@@ -12,11 +12,17 @@ namespace TMS.BAL
         [Required]
         public int DepartmentId { get; set; }
         [Required]
-        public string ?Name { get; set; }
+        [MinLength(3)]
+        [MaxLength(15)]
+        public string? Name { get; set; }
         [Required]
-        public string ?Duration { get; set; }
+        [MinLength(3)]
+        [MaxLength(15)]
+        public string? Duration { get; set; }
         [Required]
-        public string ?Description { get; set; }
+        [MinLength(20)]
+        [MaxLength(1500)]
+        public string? Description { get; set; }
         public bool? isDisabled { get; set; }
         // virtual navigation properties
         [NotMapped]
