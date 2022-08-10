@@ -41,9 +41,9 @@ namespace TMS.API.Controllers
             {
                 return BadRequest("Course is required");
             }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var courseExists = _service.Validation.CourseExists(course.Id);
                 if (courseExists)
                 {
@@ -60,7 +60,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -112,7 +112,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -165,7 +165,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

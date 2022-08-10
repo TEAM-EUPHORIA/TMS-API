@@ -37,9 +37,9 @@ namespace TMS.API.Controllers
             {
                 return BadRequest("feedback is required");
             }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                 bool access = _service.Validation.ValidateCourseAccess(feedback.CourseId, userId);
                 bool courseComplete = _stats.IsCourseCompleted(feedback.CourseId);
@@ -59,7 +59,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

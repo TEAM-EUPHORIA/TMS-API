@@ -22,11 +22,11 @@ namespace TMS.API.Controllers
         {
             if (attendance is null)
             {
-                BadRequest("attendance is required");
+                return BadRequest("attendance is required");
             }
             try
             {
-                bool access = _service.Validation.ValidateCourseAccess(attendance!.CourseId, attendance.OwnerId);
+                bool access = _service.Validation.ValidateCourseAccess(attendance.CourseId, attendance.OwnerId);
                 if (!access) return Unauthorized("Unauthorized");
                 if (!ModelState.IsValid) return BadRequest(ModelState);
                 var IsValid = _service.Validation.ValidateAttendance(attendance!);
@@ -43,7 +43,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

@@ -37,19 +37,18 @@ namespace TMS.API.Controllers
         {
             try
             {
-                
-            var departmentExists = _service.Validation.DepartmentExists(departmentId);
-            if (departmentExists)
-            {
-                int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
-                var res = _service.DepartmentService.DisableDepartment(departmentId, currentUserId);
-                if (res) return Ok(new { Response = "The Department was Deleted successfully" });
-            }
-            return NotFound("Not Found");
+                var departmentExists = _service.Validation.DepartmentExists(departmentId);
+                if (departmentExists)
+                {
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+                    var res = _service.DepartmentService.DisableDepartment(departmentId, currentUserId);
+                    if (res) return Ok(new { Response = "The Department was Deleted successfully" });
+                }
+                return NotFound("Not Found");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

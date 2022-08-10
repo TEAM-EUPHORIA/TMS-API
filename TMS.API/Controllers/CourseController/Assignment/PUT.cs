@@ -32,18 +32,18 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPut("assignment")]
-        [Authorize(Roles = "Trainer,Trainee")]
+        [Authorize(Roles = "Trainer, Trainee")]
         public IActionResult UpdateAssignment([FromBody] Assignment assignment)
         {
             if (assignment is null)
             {
-                BadRequest("assignment is required");
+                return BadRequest("assignment is required");
             }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            GetUserId(out int userId);
+            bool access = userId == assignment.OwnerId;
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
-                bool access = userId == assignment!.OwnerId;
                 if (access)
                 {
                     var assignmentExists = _service.Validation.AssignmentExists(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
@@ -64,7 +64,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

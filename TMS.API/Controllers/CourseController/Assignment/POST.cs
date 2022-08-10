@@ -36,12 +36,12 @@ namespace TMS.API.Controllers
         {
             if (assignment is null)
             {
-                BadRequest("assignment is required");
+                return BadRequest("assignment is required");
             }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
-                bool access = _service.Validation.ValidateCourseAccess(assignment!.CourseId, assignment.OwnerId);
+                bool access = _service.Validation.ValidateCourseAccess(assignment.CourseId, assignment.OwnerId);
                 if (access)
                 {
                     var IsValid = _service.Validation.ValidateAssignment(assignment);
@@ -58,7 +58,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

@@ -21,6 +21,11 @@ namespace TMS.API
         /// <param name="user"></param>
         private void CheckCourseUserExists(CourseUsers user)
         {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             if (result.Count == 0 &&
             courseExists && userExists)
             {
@@ -72,6 +77,11 @@ namespace TMS.API
         /// <param name="assignment"></param>
         private void CheckAssignmentExists(Assignment assignment)
         {
+            if (assignment is null)
+            {
+                throw new ArgumentNullException(nameof(assignment));
+            }
+
             if (result.Count == 0 &&
                 courseExists &&
                 topicExists &&
@@ -106,6 +116,11 @@ namespace TMS.API
         /// <param name="attendance"></param>
         private void CheckAttendanceExists(Attendance attendance)
         {
+            if (attendance is null)
+            {
+                throw new ArgumentNullException(nameof(attendance));
+            }
+
             if (courseExists &&
                 topicExists &&
                 userExists)
@@ -123,6 +138,11 @@ namespace TMS.API
         /// <param name="course"></param>
         private void CheckCourseIfIdIsNotZero(Course course)
         {
+            if (course is null)
+            {
+                throw new ArgumentNullException(nameof(course));
+            }
+
             if (course.Id != 0)
             {
                 CheckCourseExists(course.Id);
@@ -148,7 +168,7 @@ namespace TMS.API
         /// checks if course name is available
         /// </summary>
         /// <param name="course"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckForCourseNameAvailablity(Course course)
         {
@@ -167,7 +187,7 @@ namespace TMS.API
         /// 
         /// </summary>
         /// <param name="user"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckForUserMailAvailablity(User user)
         {
@@ -185,7 +205,7 @@ namespace TMS.API
         /// 
         /// </summary>
         /// <param name="user"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckForUserMailAvailablity(UpdateUserModel user)
         {
@@ -226,7 +246,7 @@ namespace TMS.API
         /// sets courseFeedbackExists to true if the feedback actually exists 
         /// </summary>
         /// <param name="feedback"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckCourseFeedbackExists(CourseFeedback feedback)
         {
@@ -253,7 +273,7 @@ namespace TMS.API
         /// sets mom exists to true if the condition holds true
         /// </summary>
         /// <param name="mom"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckMomExists(MOM mom)
         {
@@ -269,7 +289,7 @@ namespace TMS.API
         /// sets reviewExists to true if the review was scheduled
         /// </summary>
         /// <param name="mom"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckMomReviewExists(MOM mom)
         {
@@ -293,7 +313,7 @@ namespace TMS.API
         /// checks trainee availablity for review if trainee is not available adds msg
         /// </summary>
         /// <param name="review"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckTraineeAvailablity(Review review)
         {
@@ -316,7 +336,7 @@ namespace TMS.API
         /// checks reviewer availablity for review if reviewer is not available adds msg
         /// </summary>
         /// <param name="review"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckReviewerAvailablity(Review review)
         {
@@ -340,7 +360,7 @@ namespace TMS.API
         /// sets revieweExists to true if the review exists
         /// </summary>
         /// <param name="review"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckReviewExists(Review review)
         {
@@ -384,7 +404,7 @@ namespace TMS.API
         /// checks if the topic name is available or not
         /// </summary>
         /// <param name="topic"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckForTopicNameAvailablelity(Topic topic)
         {
@@ -402,7 +422,7 @@ namespace TMS.API
         /// sets traineeFeedbackExists to true if the condition holds true
         /// </summary>
         /// <param name="feedback"></param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         private void CheckTraineeFeedbackExists(TraineeFeedback feedback)
         {

@@ -27,8 +27,8 @@ namespace TMS.API.Controllers
             try
             {
                 var courseExists = _service.Validation.CourseExists(courseId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
-                var isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
+                GetUserId(out int userId);
+                CheckIsCoOrdinator(out bool isCoordinator);
                 bool access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
                 if (courseExists && access)
                 {
@@ -38,7 +38,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -64,10 +64,9 @@ namespace TMS.API.Controllers
             try
             {
                 var topicExists = _service.Validation.TopicExists(topicId, courseId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
-                bool access;
-                var isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
-                access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
+                GetUserId(out int userId);
+                CheckIsCoOrdinator(out bool isCoordinator);
+                bool access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
                 if (topicExists && access)
                 {
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
@@ -77,7 +76,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -108,7 +107,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

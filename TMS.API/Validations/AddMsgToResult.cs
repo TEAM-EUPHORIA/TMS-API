@@ -205,11 +205,30 @@ namespace TMS.API
         }
         private void ValidateAndAddEntery(string key, string input, string regex)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or empty.", nameof(key));
+            }
+
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new ArgumentException($"'{nameof(input)}' cannot be null or empty.", nameof(input));
+            }
+
+            if (string.IsNullOrEmpty(regex))
+            {
+                throw new ArgumentException($"'{nameof(regex)}' cannot be null or empty.", nameof(regex));
+            }
+
             if (!Regex.Match(input, regex).Success)
                 AddEntery(key, "Invalid Data");
         }
         private void CheckIdAndAddEntery(int id, string key)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
             if (id == 0) AddEntery(key, "can't be zero");
         }
     }

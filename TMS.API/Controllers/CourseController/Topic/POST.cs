@@ -35,9 +35,14 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult CreateTopic([FromBody] Topic topic)
         {
+            if (topic is null)
+            {
+                return BadRequest("topic is required");
+            }
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var IsValid = _service.Validation.ValidateTopic(topic);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create topic. The topic already exists");
                 if (IsValid.ContainsKey("IsValid"))
@@ -50,7 +55,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

@@ -42,11 +42,11 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Trainer,Trainee,Training Coordinator")]
         public IActionResult GetAssignmentsByTopicId(int courseId, int topicId)
         {
+            var topicExists = _service.Validation.TopicExists(topicId, courseId);
+            GetUserId(out int userId);
+            CheckIsCoOrdinator(out bool isCoordinator);
             try
             {
-                var topicExists = _service.Validation.TopicExists(topicId, courseId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
-                var isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
                 bool access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
                 if (topicExists && access)
                 {
@@ -56,7 +56,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -80,11 +80,11 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Trainer,Trainee,Training Coordinator")]
         public IActionResult GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
+            var assignmentExists = _service.Validation.AssignmentExists(courseId, topicId, ownerId);
+            GetUserId(out int userId);
+            CheckIsCoOrdinator(out bool isCoordinator);
             try
             {
-                var assignmentExists = _service.Validation.AssignmentExists(courseId, topicId, ownerId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
-                var isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
                 bool access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
                 if (assignmentExists && access)
                 {
@@ -95,9 +95,18 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
+        }
+
+        private void GetUserId(out int userId)
+        {
+            userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+        }
+        private void CheckIsCoOrdinator(out bool isCoordinator)
+        {
+            isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
         }
     }
 }

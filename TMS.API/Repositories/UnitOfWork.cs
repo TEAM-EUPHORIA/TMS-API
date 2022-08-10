@@ -22,6 +22,7 @@ namespace TMS.API.Repositories
         public UnitOfWork(AppDbContext dbContext, ILogger<UnitOfWork> logger)
         {
             this.dbContext = dbContext ?? throw new ArgumentException(nameof(dbContext));
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
             Users = new UserRepository(dbContext);
             Roles = new RoleRepository(dbContext);
             Courses = new CourseRepository(dbContext);
@@ -30,7 +31,6 @@ namespace TMS.API.Repositories
             Departments = new DepartmentRepository(dbContext);
             Validation = new Validation(dbContext);
             Stats = new Statistics(dbContext);
-            _logger = logger ?? throw new ArgumentException(nameof(logger));
         }
 
         public void Complete()

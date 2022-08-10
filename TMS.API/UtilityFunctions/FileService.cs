@@ -24,7 +24,7 @@ namespace TMS.API
 
             string header = substrings[0];
             string imgData = substrings[1];
-
+            
             byte[] bytes = Convert.FromBase64String(imgData);
 
             return new File { Header = header, Bytes = bytes };

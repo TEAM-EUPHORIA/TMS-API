@@ -2,7 +2,7 @@ namespace TMS.API.UtilityFunctions
 {
     public static class TMSLogger
     {
-        public static void RemovedTheConnectionStringInAppsettings(InvalidOperationException ex, ILogger logger)
+        public static void DbRelatedProblemCheckTheConnectionString(InvalidOperationException ex, ILogger logger)
         {
             logger.LogCritical($"Please check the connection string in appsettings.json");
             logger.LogTrace(ex.ToString());

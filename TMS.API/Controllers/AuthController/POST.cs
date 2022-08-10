@@ -45,21 +45,21 @@ namespace TMS.API
         {
             if (user is null)
             {
-                BadRequest("user is required");
+                return BadRequest("user is required");
             }
             try
             {
-                var validation = _service.Validation.ValidateLoginDetails(user!);
+                var validation = _service.Validation.ValidateLoginDetails(user);
                 if (validation.ContainsKey("IsValid"))
                 {
-                    var result = _service.AuthService.Login(user!);
+                    var result = _service.AuthService.Login(user);
                     if (result is not null) return Ok(result);
                 }
                 return Unauthorized("Unauthorized user");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

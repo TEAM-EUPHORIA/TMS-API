@@ -37,9 +37,13 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateTopic([FromBody] Topic topic)
         {
+            if (topic is null)
+            {
+                return BadRequest("topic is required");
+            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var topicExists = _service.Validation.TopicExists(topic.TopicId, topic.CourseId);
                 if (topicExists)
                 {
@@ -56,7 +60,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -85,7 +89,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

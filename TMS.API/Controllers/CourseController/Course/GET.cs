@@ -21,7 +21,15 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCourses()
         {
-            return Ok(_service.CourseService.GetCourses());
+            try
+            {
+                return Ok(_service.CourseService.GetCourses());
+            }
+            catch (InvalidOperationException ex)
+            {
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
+                return Problem("sorry somthing went wrong");
+            }
         }
         /// <summary>
         /// Gets a list of courses assigned to user by userId
@@ -52,7 +60,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -72,7 +80,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -105,7 +113,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -141,7 +149,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

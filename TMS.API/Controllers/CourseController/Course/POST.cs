@@ -39,9 +39,9 @@ namespace TMS.API.Controllers
             {
                 return BadRequest("Course is required");
             }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var IsValid = _service.Validation.ValidateCourse(course);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create course. The course already exists");
                 if (IsValid.ContainsKey("IsValid"))
@@ -57,7 +57,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
+                TMSLogger.DbRelatedProblemCheckTheConnectionString(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
