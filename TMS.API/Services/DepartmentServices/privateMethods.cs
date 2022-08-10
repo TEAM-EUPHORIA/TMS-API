@@ -11,6 +11,11 @@ namespace TMS.API.Services
 
         private static void SetUpDepartmentDetails(Department department)
         {
+            if (department is null)
+            {
+                throw new ArgumentException(nameof(department));
+            }
+
             department.isDisabled = false;
             department.CreatedOn = DateTime.Now;
         }
@@ -22,6 +27,16 @@ namespace TMS.API.Services
         /// <param name="dbDepartment"></param>
         private static void SetUpDepartmentDetails(Department department,Department dbDepartment)
         {
+            if (department is null)
+            {
+                throw new ArgumentException(nameof(department));
+            }
+
+            if (dbDepartment is null)
+            {
+                throw new ArgumentException(nameof(dbDepartment));
+            }
+
             dbDepartment.Name = department.Name;
             department.UpdatedOn = DateTime.Now;
         }
@@ -34,6 +49,11 @@ namespace TMS.API.Services
 
         private static void Disable(int updatedBy,Department dbDepartment)
         {
+            if (dbDepartment is null)
+            {
+                throw new ArgumentException(nameof(dbDepartment));
+            }
+
             dbDepartment.isDisabled = true;
             dbDepartment.UpdatedBy = updatedBy;
             dbDepartment.UpdatedOn = DateTime.Now;

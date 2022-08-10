@@ -1,11 +1,9 @@
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
 namespace TMS.API.Services
 {
     public partial class ReviewService
     {
-
         /// <summary>
         /// used to get review  based on status id
         /// </summary>
@@ -15,26 +13,11 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public IEnumerable<Review> GetReviewByStatusId(int statusId)
         {
-            try
-            {
-                var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
-                if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId);
-                else throw new ArgumentException("Invalid Id");
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetReviewByStatusId));
-                throw;
-            }
+            var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
+            if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId);
+            else throw new ArgumentException("Invalid Id");
         }
         /// <summary>
         /// used to get review  based on status id
@@ -46,28 +29,12 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
-        public IEnumerable<Review> GetReviewByStatusId(int statusId,int userId)
+        public IEnumerable<Review> GetReviewByStatusId(int statusId, int userId)
         {
-            try
-            {
-                var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
-                if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId,userId);
-                else throw new ArgumentException("Invalid Id");
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewByStatusId));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetReviewByStatusId));
-                throw;
-            }
+            var reviewStatusExists = _repo.Validation.ReviewStatusExists(statusId);
+            if (reviewStatusExists) return _repo.Reviews.GetReviewByStatusId(statusId, userId);
+            else throw new ArgumentException("Invalid Id");
         }
-
         /// <summary>
         /// used to get review  based on review id
         /// </summary>
@@ -75,34 +42,18 @@ namespace TMS.API.Services
         /// <returns>
         /// review if review is found
         /// </returns>
-        /// <exception cref="ArgumentException">
+        /// /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception> 
         public Review GetReviewById(int reviewId)
         {
-            try
+            var reviewExists = _repo.Validation.ReviewExists(reviewId);
+            if (reviewExists)
             {
-                var reviewExists = _repo.Validation.ReviewExists(reviewId);
-                if (reviewExists)
-                {
-                    var result = _repo.Reviews.GetReviewById(reviewId);
-                    return result;
-                }
-                else throw new ArgumentException("Invalid Id");
+                var result = _repo.Reviews.GetReviewById(reviewId);
+                return result;
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(GetReviewById));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetReviewById));
-                throw;
-            }
+            else throw new ArgumentException("Invalid Id");
         }
-
         /// <summary>
         /// used to create Review.
         /// </summary>
@@ -111,37 +62,20 @@ namespace TMS.API.Services
         /// <returns>
         /// validation Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
-
         public Dictionary<string, string> CreateReview(Review review, int createdBy)
         {
-            try
+            if (review is null) throw new ArgumentNullException(nameof(review));
+            var validation = _repo.Validation.ValidateReview(review);
+            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                if (review is null) throw new ArgumentNullException(nameof(review));
-                var validation = _repo.Validation.ValidateReview(review);
-                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
-                {
-                    SetUpReviewDetails(review, createdBy);
-                    _repo.Reviews.CreateReview(review);
-                    _repo.Complete();
-                }
-                return validation;
+                SetUpReviewDetails(review, createdBy);
+                _repo.Reviews.CreateReview(review);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(CreateReview));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(CreateReview));
-                throw;
-            }
+            return validation;
         }
-
         /// <summary>
         /// used to Update Review.
         /// </summary>
@@ -150,35 +84,20 @@ namespace TMS.API.Services
         /// <returns>
         /// validation Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
+        /// /// <exception cref="ArgumentException">
         /// </exception>
         public Dictionary<string, string> UpdateReview(Review review, int updatedBy)
         {
-            try
+            if (review is null) throw new ArgumentNullException(nameof(review));
+            var validation = _repo.Validation.ValidateReview(review);
+            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                if (review is null) throw new ArgumentNullException(nameof(review));
-                var validation = _repo.Validation.ValidateReview(review);
-                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
-                {
-                    var dbReview = _repo.Reviews.GetReviewById(review.Id);
-                    SetUpReviewDetails(review, dbReview, updatedBy);
-                    _repo.Reviews.UpdateReview(dbReview);
-                    _repo.Complete();
-                }
-                return validation;
+                var dbReview = _repo.Reviews.GetReviewById(review.Id);
+                SetUpReviewDetails(review, dbReview, updatedBy);
+                _repo.Reviews.UpdateReview(dbReview);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewService), nameof(UpdateReview));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UpdateReview));
-                throw;
-            }
+            return validation;
         }
     }
 }

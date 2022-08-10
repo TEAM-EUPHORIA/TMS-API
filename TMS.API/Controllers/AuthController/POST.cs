@@ -18,8 +18,8 @@ namespace TMS.API
         /// <param name="logger"></param>
         public AuthController(IUnitOfService service, ILogger<AuthController> logger)
         {
-            _logger = logger;
-            _service = service;
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
+            _service = service ?? throw new ArgumentException(nameof(service));
         }
 
         /// <summary>
@@ -43,26 +43,25 @@ namespace TMS.API
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginModel user)
         {
+            if (user is null)
+            {
+                BadRequest("user is required");
+            }
             try
             {
-                var validation = _service.Validation.ValidateLoginDetails(user);
+                var validation = _service.Validation.ValidateLoginDetails(user!);
                 if (validation.ContainsKey("IsValid"))
                 {
-                    var result = _service.AuthService.Login(user);
+                    var result = _service.AuthService.Login(user!);
                     if (result is not null) return Ok(result);
                 }
+                return Unauthorized("Unauthorized user");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(AuthController), nameof(Login));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(Login));
-                return Problem("sorry somthing went wrong");
-            }
-            return Unauthorized("Unauthorized user");
         }
     }
 }

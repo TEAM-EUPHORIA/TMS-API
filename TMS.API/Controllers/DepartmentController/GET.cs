@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.UtilityFunctions;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -28,16 +27,10 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(GetDepartments));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetDepartments));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
-
         /// <summary>
         /// Gets a single Department by departmentId
         /// </summary>
@@ -68,12 +61,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(GetDepartmentById));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetDepartmentById));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

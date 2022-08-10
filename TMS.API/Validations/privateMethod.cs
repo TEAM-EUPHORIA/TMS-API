@@ -148,31 +148,68 @@ namespace TMS.API
         /// checks if course name is available
         /// </summary>
         /// <param name="course"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckForCourseNameAvailablity(Course course)
         {
+            if (course is null)
+            {
+                throw new ArgumentNullException(nameof(course));
+            }
+
             if (userExists && departmentExists)
                 isCourseNameAvailable = IsCourseNameAvailable(
                     course.Id,
                     course.DepartmentId,
                     course.Name!);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckForUserMailAvailablity(User user)
         {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             if (departmentExists && roleExists)
                 isUserMailAvailable = IsUserMailAvailable(
                     user.Id,
                     user.Email!);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckForUserMailAvailablity(UpdateUserModel user)
         {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             if (departmentExists && roleExists)
                 isUserMailAvailable = IsUserMailAvailable(
                     user.Id,
                     user.Email!);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="department"></param>
         private void CheckForDepartmentNameAvailablity(Department department)
         {
-            // if (userExists)
+            if (department is null)
+            {
+                throw new ArgumentNullException(nameof(department));
+            }
+
             isDepartMentNameAvailable = IsDepartmentNameAvailable(
                 department.Id,
                 department.Name!);
@@ -189,8 +226,15 @@ namespace TMS.API
         /// sets courseFeedbackExists to true if the feedback actually exists 
         /// </summary>
         /// <param name="feedback"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckCourseFeedbackExists(CourseFeedback feedback)
         {
+            if (feedback is null)
+            {
+                throw new ArgumentNullException(nameof(feedback));
+            }
+
             if (courseExists && userExists)
                 courseFeedbackExists = CourseFeedbackExists(
                     feedback.CourseId,
@@ -209,8 +253,15 @@ namespace TMS.API
         /// sets mom exists to true if the condition holds true
         /// </summary>
         /// <param name="mom"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckMomExists(MOM mom)
         {
+            if (mom is null)
+            {
+                throw new ArgumentNullException(nameof(mom));
+            }
+
             if (userExists && reviewExists)
                 momExists = MOMExists(mom.ReviewId, mom.TraineeId);
         }
@@ -218,14 +269,22 @@ namespace TMS.API
         /// sets reviewExists to true if the review was scheduled
         /// </summary>
         /// <param name="mom"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckMomReviewExists(MOM mom)
         {
+            if (mom is null)
+            {
+                throw new ArgumentNullException(nameof(mom));
+            }
+
             reviewExists = MOMReviewExists(mom.ReviewId, mom.TraineeId);
         }
         /// <summary>
         /// sets traineeExists to true 
         /// </summary>
         /// <param name="traineeId"></param>
+        
         private void CheckTraineeExists(int traineeId)
         {
             traineeExists = UserExists(traineeId, 4);
@@ -234,8 +293,15 @@ namespace TMS.API
         /// checks trainee availablity for review if trainee is not available adds msg
         /// </summary>
         /// <param name="review"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckTraineeAvailablity(Review review)
         {
+            if (review is null)
+            {
+                throw new ArgumentNullException(nameof(review));
+            }
+
             if (userExists && traineeExists && reviewStatusExists)
                 traineeAvailabilityExists =
                 TraineeAvailabilityExists(review.Id,
@@ -250,8 +316,15 @@ namespace TMS.API
         /// checks reviewer availablity for review if reviewer is not available adds msg
         /// </summary>
         /// <param name="review"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckReviewerAvailablity(Review review)
         {
+            if (review is null)
+            {
+                throw new ArgumentNullException(nameof(review));
+            }
+
             if (userExists && traineeExists && reviewStatusExists)
                 reviewerAvailabilityExists =
                  ReviewerAvailabilityExists(
@@ -267,8 +340,15 @@ namespace TMS.API
         /// sets revieweExists to true if the review exists
         /// </summary>
         /// <param name="review"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckReviewExists(Review review)
         {
+            if (review is null)
+            {
+                throw new ArgumentNullException(nameof(review));
+            }
+
             if (review.Id != 0)
                 revieweExists = ReviewExists(review.Id);
         }
@@ -304,9 +384,15 @@ namespace TMS.API
         /// checks if the topic name is available or not
         /// </summary>
         /// <param name="topic"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckForTopicNameAvailablelity(Topic topic)
         {
-            // if (courseExists && topicExists)
+            if (topic is null)
+            {
+                throw new ArgumentNullException(nameof(topic));
+            }
+
             isTopicNameAvailabe = IsTopicNameAvailabe(
                 topic.TopicId,
                 topic.CourseId,
@@ -316,8 +402,15 @@ namespace TMS.API
         /// sets traineeFeedbackExists to true if the condition holds true
         /// </summary>
         /// <param name="feedback"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private void CheckTraineeFeedbackExists(TraineeFeedback feedback)
         {
+            if (feedback is null)
+            {
+                throw new ArgumentNullException(nameof(feedback));
+            }
+
             if (courseExists && userExists && traineeExists)
                 traineeFeedbackExists = TraineeFeedbackExists(
                     feedback.CourseId,

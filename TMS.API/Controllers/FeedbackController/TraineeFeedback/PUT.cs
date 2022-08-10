@@ -2,13 +2,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
     public partial class FeedBackController : ControllerBase
     {
-
         /// <summary>
         /// To update a Feedback
         /// </summary>
@@ -34,35 +32,33 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("trainee/feedback")]
-
         [Authorize(Roles = "Trainer")]
         public IActionResult UpdateTraineeFeedback([FromBody] TraineeFeedback feedback)
         {
+            if (feedback is null)
+            {
+                return BadRequest("feedback is required");
+            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var feedbackExists = _service.Validation.TraineeFeedbackExists(feedback.CourseId, feedback.TraineeId, feedback.TrainerId);
                 if (feedbackExists)
                 {
                     var IsValid = _service.Validation.ValidateTraineeFeedback(feedback);
                     if (IsValid.ContainsKey("IsValid"))
                     {
-                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                         var res = _service.FeedbackService.UpdateTraineeFeedback(feedback, updatedBy);
                         if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                     }
                     return BadRequest(IsValid);
                 }
-                return NotFound("NotFound");
+                return NotFound("Not Found");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(UpdateTraineeFeedback));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateTraineeFeedback));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

@@ -2,7 +2,6 @@ using TMS.API.Repositories;
 using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
 using TMS.BAL;
-
 namespace TMS.API.Services
 {
     public partial class UserService
@@ -10,7 +9,6 @@ namespace TMS.API.Services
         private readonly IUnitOfWork _repo;
         private readonly IStatistics _stats;
         private readonly ILogger _logger;
-
         /// <summary>
         /// Constructor of UserService
         /// </summary>
@@ -18,9 +16,9 @@ namespace TMS.API.Services
         /// <param name="logger"></param>
         public UserService(IUnitOfWork repo, ILogger logger)
         {
-            _repo = repo;
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _stats = _repo.Stats;
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         /// <summary>
         /// used to get users by department based on department id
@@ -29,32 +27,15 @@ namespace TMS.API.Services
         /// <returns>
         /// IEnumerable user if department is found
         /// </returns>
-        /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public IEnumerable<User> GetUsersByDepartment(int departmentId)
         {
-            try
+            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
+            if (departmentExists)
             {
-                var departmentExists = _repo.Validation.DepartmentExists(departmentId);
-                if (departmentExists)
-                {
-                    IEnumerable<User> enumerable = _repo.Users.GetUsersByDepartment(departmentId);
-                    return enumerable;
-                }
-                else throw new ArgumentException("Invalid Id");
+                IEnumerable<User> enumerable = _repo.Users.GetUsersByDepartment(departmentId);
+                return enumerable;
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUsersByDepartment));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByDepartment));
-                throw;
-            }
+            else throw new ArgumentException("Invalid Id");
         }
         /// <summary>
         /// used to get users by role based on role id
@@ -65,26 +46,11 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public IEnumerable<User> GetUsersByRole(int roleId)
         {
-            try
-            {
-                var roleExists = _repo.Validation.RoleExists(roleId);
-                if (roleExists) return _repo.Users.GetUsersByRole(roleId);
-                else throw new ArgumentException("Invalid Id");
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByRole));
-                throw;
-            }
+            var roleExists = _repo.Validation.RoleExists(roleId);
+            if (roleExists) return _repo.Users.GetUsersByRole(roleId);
+            else throw new ArgumentException("Invalid Id");
         }
         /// <summary>
         /// used to get users by department and role based on department id and role id
@@ -96,27 +62,12 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public IEnumerable<User> GetUsersByDeptandRole(int departmentId, int roleId)
         {
-            try
-            {
-                var departmentExists = _repo.Validation.DepartmentExists(departmentId);
-                var roleExists = _repo.Validation.RoleExists(roleId);
-                if (departmentExists && roleExists) return _repo.Users.GetUsersByDeptandRole(departmentId, roleId);
-                else throw new ArgumentException("Invalid Id's");
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUsersByDeptandRole));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByDeptandRole));
-                throw;
-            }
+            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
+            var roleExists = _repo.Validation.RoleExists(roleId);
+            if (departmentExists && roleExists) return _repo.Users.GetUsersByDeptandRole(departmentId, roleId);
+            else throw new ArgumentException("Invalid Id's");
         }
         /// <summary>
         /// used to get single user by user id
@@ -127,29 +78,14 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public User GetUser(int userId)
         {
-            try
+            var userExists = _repo.Validation.UserExists(userId);
+            if (userExists)
             {
-                var userExists = _repo.Validation.UserExists(userId);
-                if (userExists)
-                {
-                    return _repo.Users.GetUserById(userId);
-                }
-                else throw new ArgumentException("Invalid Id");
+                return _repo.Users.GetUserById(userId);
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUser));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetUser));
-                throw;
-            }
+            else throw new ArgumentException("Invalid Id");
         }
         /// <summary>
         /// used to create a user.
@@ -159,34 +95,19 @@ namespace TMS.API.Services
         /// <returns>
         /// result Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public Dictionary<string, string> CreateUser(User user, int createdBy)
         {
-            try
+            if (user is null) throw new ArgumentException(nameof(user));
+            var result = _repo.Validation.ValidateUser(user);
+            if (result.ContainsKey("IsValid") && !result.ContainsKey("Exists"))
             {
-                if (user is null) throw new ArgumentNullException(nameof(user));
-                var result = _repo.Validation.ValidateUser(user);
-                if (result.ContainsKey("IsValid") && !result.ContainsKey("Exists"))
-                {
-                    SetUpUserDetailsForCreate(user, createdBy);
-                    _repo.Users.CreateUser(user);
-                    _repo.Complete();
-                }
-                return result;
+                SetUpUserDetailsForCreate(user, createdBy);
+                _repo.Users.CreateUser(user);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(CreateUser));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(CreateUser));
-                throw;
-            }
+            return result;
         }
         /// <summary>
         /// used to update a user.
@@ -196,35 +117,20 @@ namespace TMS.API.Services
         /// <returns>
         ///  result Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public Dictionary<string, string> UpdateUser(UpdateUserModel user, int updatedBy)
         {
-            try
+            if (user is null) throw new ArgumentException(nameof(user));
+            var result = _repo.Validation.ValidateUpdtateUser(user);
+            if (result.ContainsKey("IsValid") && result.ContainsKey("Exists"))
             {
-                if (user is null) throw new ArgumentNullException(nameof(user));
-                var result = _repo.Validation.ValidateUpdtateUser(user);
-                if (result.ContainsKey("IsValid") && result.ContainsKey("Exists"))
-                {
-                    var dbUser = _repo.Users.GetUserById(user.Id);
-                    SetUpUserDetailsForUpdate(user, dbUser, updatedBy);
-                    _repo.Users.UpdateUser(dbUser);
-                    _repo.Complete();
-                }
-                return result;
+                var dbUser = _repo.Users.GetUserById(user.Id);
+                SetUpUserDetailsForUpdate(user, dbUser, updatedBy);
+                _repo.Users.UpdateUser(dbUser);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(UpdateUser));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UpdateUser));
-                throw;
-            }
+            return result;
         }
         /// <summary>
         /// used to disable the user.
@@ -236,33 +142,18 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public bool DisableUser(int userId, int updatedBy)
         {
-            try
+            var userExists = _repo.Validation.UserExists(userId);
+            if (userExists)
             {
-                var userExists = _repo.Validation.UserExists(userId);
-                if (userExists)
-                {
-                    var dbUser = _repo.Users.GetUserById(userId);
-                    Disable(dbUser, updatedBy);
-                    _repo.Users.UpdateUser(dbUser);
-                    _repo.Complete();
-                }
-                return userExists;
-                throw new ArgumentException("Invalid Id");
+                var dbUser = _repo.Users.GetUserById(userId);
+                Disable(dbUser, updatedBy);
+                _repo.Users.UpdateUser(dbUser);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserService), nameof(GetUsersByRole));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetUsersByRole));
-                throw;
-            }
+            return userExists;
+            throw new ArgumentException("Invalid Id");
         }
     }
 }

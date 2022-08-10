@@ -27,17 +27,9 @@ namespace TMS.API.Controllers
             try
             {
                 var courseExists = _service.Validation.CourseExists(courseId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                bool access = false;
-                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-                if (check)
-                {
-                    access = true;
-                }
-                else
-                {
-                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
-                }
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+                var isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
+                bool access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
                 if (courseExists && access)
                 {
                     return Ok(_service.CourseService.GetTopicsByCourseId(courseId));
@@ -46,12 +38,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetTopicsByCourseId));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetTopicsByCourseId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -77,17 +64,10 @@ namespace TMS.API.Controllers
             try
             {
                 var topicExists = _service.Validation.TopicExists(topicId, courseId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                bool access = false;
-                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-                if (check)
-                {
-                    access = true;
-                }
-                else
-                {
-                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
-                }
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+                bool access;
+                var isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
+                access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
                 if (topicExists && access)
                 {
                     var result = _service.CourseService.GetTopicById(courseId, topicId, userId);
@@ -97,12 +77,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetTopicByIds));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetTopicByIds));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -122,7 +97,7 @@ namespace TMS.API.Controllers
         public IActionResult GetCourseUser(int courseId)
         {
             try
-            {    
+            {
                 var courseExists = _service.Validation.CourseExists(courseId);
                 if (courseExists)
                 {
@@ -133,12 +108,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourseUser));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetCourseUser));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

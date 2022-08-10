@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -12,13 +11,11 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<RoleController> _logger;
         private readonly IUnitOfService _service;
-
         public RoleController(IUnitOfService service, ILogger<RoleController> logger)
         {
-            _logger = logger;
-            _service = service;
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
+            _service = service ?? throw new ArgumentException(nameof(service));
         }
-
         /// <summary>
         /// Gets a List of Roles
         /// </summary>
@@ -42,12 +39,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtController(ex, _logger, nameof(RoleController), nameof(GetRoles));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetRoles));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

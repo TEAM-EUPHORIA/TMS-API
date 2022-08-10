@@ -9,13 +9,18 @@ namespace TMS.API
         /// <returns>
         /// file with header string and data byte[]
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         /// <exception cref="FormatException">
         /// </exception>
         public static File GetBase64HeaderAndByteArray(string base64String)
         {
-            String[] substrings = base64String.Split(',');
+            if (base64String is null)
+            {
+                throw new ArgumentException(nameof(base64String));
+            }
+
+            string[] substrings = base64String.Split(',');
 
             string header = substrings[0];
             string imgData = substrings[1];

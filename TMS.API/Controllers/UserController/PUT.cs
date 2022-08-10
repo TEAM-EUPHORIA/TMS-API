@@ -4,7 +4,6 @@ using TMS.API.Services;
 using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
 using TMS.BAL;
-
 namespace TMS.API.Controllers
 {
     public partial class UserController : ControllerBase
@@ -37,14 +36,17 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="user"></param>
         [HttpPut("user")]
-
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult UpdateUser([FromBody] UpdateUserModel user)
         {
+            if (user is null)
+            {
+                return BadRequest("user is required");
+            }
+            // checks if the model is valid or not
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                // checks if the model is valid or not
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 // checks the user exists or not
                 var userExists = _service.Validation.UserExists(user.Id);
                 if (userExists)
@@ -54,7 +56,7 @@ namespace TMS.API.Controllers
                     if (modelValidation.ContainsKey("IsValid") && modelValidation.ContainsKey("Exists"))
                     {
                         // getting the logged in user id
-                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                         // calling service to update the user
                         var res = _service.UserService.UpdateUser(user, updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists"))
@@ -72,16 +74,9 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                // An exception occurs only if IUnitOfService Dependency Injection (DI) is failed
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(UpdateUser));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateUser));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
-
     }
 }

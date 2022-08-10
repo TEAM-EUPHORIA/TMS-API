@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -34,10 +33,14 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Trainee")]
         public IActionResult CreateCourseFeedback([FromBody] CourseFeedback feedback)
         {
+            if (feedback is null)
+            {
+                return BadRequest("feedback is required");
+            }
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                 bool access = _service.Validation.ValidateCourseAccess(feedback.CourseId, userId);
                 bool courseComplete = _stats.IsCourseCompleted(feedback.CourseId);
                 if (access && courseComplete)
@@ -46,29 +49,17 @@ namespace TMS.API.Controllers
                     if (IsValid.ContainsKey("Exists")) return BadRequest("Can't submit the feedback. The feedback Already exists");
                     if (IsValid.ContainsKey("IsValid"))
                     {
-                        int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                         var res = _service.FeedbackService.CreateCourseFeedback(feedback, createdBy);
                         if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                     }
                     return BadRequest(IsValid);
                 }
-                else if (!access)
-                {
-                    return Unauthorized("UnAuthorized, contect your admin");
-                }
-                else
-                {
-                    return BadRequest("The course is not yet completed");
-                }
+                return !access ? Unauthorized("UnAuthorized") : BadRequest("The course is not yet completed");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(CreateCourseFeedback));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(CreateCourseFeedback));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

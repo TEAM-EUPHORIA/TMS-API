@@ -3,7 +3,6 @@ using TMS.BAL;
 using TMS.API.UtilityFunctions;
 using Microsoft.AspNetCore.Authorization;
 using TMS.API.ViewModels;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -35,7 +34,6 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="topic"></param>
         [HttpPut("topic")]
-
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateTopic([FromBody] Topic topic)
         {
@@ -48,7 +46,7 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateTopic(topic);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                         var res = _service.CourseService.UpdateTopic(topic, updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Topic was Updated successfully" });
                     }
@@ -58,24 +56,18 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateTopic));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateTopic));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
         // need to be implemented properly
         [HttpPut("MarkAsComplete")]
-
         [Authorize(Roles = "Trainer")]
         public IActionResult MarkAsComplete([FromBody] TopicStatus topic)
         {
             try
             {
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                 var access = _service.Validation.ValidateCourseAccess(topic.CourseId, userId);
                 var topicExists = _service.Validation.TopicExists(topic.TopicId, topic.CourseId);
                 if (topicExists && access)
@@ -93,12 +85,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateTopic));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateTopic));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

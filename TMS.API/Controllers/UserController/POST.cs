@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
 namespace TMS.API.Controllers
 {
     public partial class UserController : ControllerBase
@@ -34,14 +33,17 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="user"></param>
         [HttpPost("user")]
-
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult CreateUser([FromBody] User user)
         {
+            if (user is null)
+            {
+                return BadRequest("user is required");
+            }
+            // checks if the model is valid or not
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                // checks if the model is valid or not
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 // validating the user model and business logics
                 var modelValidation = _service.Validation.ValidateUser(user);
                 // if the user already exists
@@ -50,7 +52,7 @@ namespace TMS.API.Controllers
                 if (modelValidation.ContainsKey("IsValid"))
                 {
                     // getting the logged in user id
-                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                     var res = _service.UserService.CreateUser(user, createdBy);
                     if (res.ContainsKey("IsValid"))
                     {
@@ -62,15 +64,9 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(CreateUser));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(CreateUser));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
-
     }
 }

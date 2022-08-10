@@ -20,17 +20,20 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Trainer, Trainee")]
         public IActionResult MarkAttendance([FromBody] Attendance attendance)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (attendance is null)
+            {
+                BadRequest("attendance is required");
+            }
             try
             {
-                var IsValid = _service.Validation.ValidateAttendance(attendance);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                bool access = false;
-                access = _service.Validation.ValidateCourseAccess(attendance.CourseId, attendance.OwnerId);
+                bool access = _service.Validation.ValidateCourseAccess(attendance!.CourseId, attendance.OwnerId);
+                if (!access) return Unauthorized("Unauthorized");
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var IsValid = _service.Validation.ValidateAttendance(attendance!);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't mark. The attendance already exists");
                 if (IsValid.ContainsKey("IsValid") && access)
                 {
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                     attendance.CreatedBy = currentUserId;
                     attendance.OwnerId = currentUserId;
                     var res = _service.CourseService.MarkAttendance(attendance);
@@ -40,12 +43,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(MarkAttendance));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(MarkAttendance));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

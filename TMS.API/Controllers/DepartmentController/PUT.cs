@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -31,20 +30,23 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="department"></param>
         [HttpPut("department")]
-
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateDepartment([FromBody] Department department)
         {
+            if (department is null)
+            {
+                return BadRequest("department is required");
+            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var departmentExists = _service.Validation.DepartmentExists(department.Id);
                 if (departmentExists)
                 {
                     var IsValid = _service.Validation.ValidateDepartment(department);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                         var res = _service.DepartmentService.UpdateDepartment(department, updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Department was Updated successfully" });
                     }
@@ -54,12 +56,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(UpdateDepartment));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateDepartment));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

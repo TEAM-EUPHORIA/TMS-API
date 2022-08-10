@@ -8,106 +8,106 @@ namespace TMS.API
         /// </summary>
         private void AddEntryExists()
         {
-            if(result.Count == 0 && !result.ContainsKey("Exists"))
-            AddEntery("Exists", "true");
+            if (result.Count == 0 && !result.ContainsKey("Exists"))
+                AddEntery("Exists", "true");
         }
         /// <summary>
         /// adds msg Course with that name already exists
         /// </summary>
         private void CourseNameIsNotAvailable()
         {
-            if(!result.ContainsKey("name"))
-            AddEntery("name", "Course with that name already exists");
+            if (!result.ContainsKey("name"))
+                AddEntery("name", "Course with that name already exists");
         }
-         private void UserMailIsNotAvailable()
+        private void UserMailIsNotAvailable()
         {
-            if(!result.ContainsKey("email"))
-            AddEntery("email", "User with that mail already exists");
+            if (!result.ContainsKey("email"))
+                AddEntery("email", "User with that mail already exists");
         }
         private void DepartmentNameIsNotAvailable()
         {
-            if(!result.ContainsKey("name"))
-            AddEntery("name", "Department with that name already exists");
+            if (!result.ContainsKey("name"))
+                AddEntery("name", "Department with that name already exists");
         }
         /// <summary>
         /// adds msg can't find the trainer
         /// </summary>
         private void TrainerNotFound()
         {
-            if(!result.ContainsKey("trainerId"))
-            AddEntery("trainerId", "can't find the trainer");
+            if (!result.ContainsKey("trainerId"))
+                AddEntery("trainerId", "can't find the trainer");
         }
         /// <summary>
         /// adds msg can't find the course
         /// </summary>
         private void CourseNotFound()
         {
-            if(!result.ContainsKey("courseId"))
-            AddEntery("courseId", "can't find the course");
+            if (!result.ContainsKey("courseId"))
+                AddEntery("courseId", "can't find the course");
         }
         /// <summary>
         /// adds msg can't find the trainee
         /// </summary>
         private void TraineeNotFound()
         {
-            if(!result.ContainsKey("traineeId"))
-            AddEntery("traineeId", "can't find the trainee");
+            if (!result.ContainsKey("traineeId"))
+                AddEntery("traineeId", "can't find the trainee");
         }
         /// <summary>
         /// adds msg can't find the review
         /// </summary>
         private void ReviewNotFound()
         {
-            if(!result.ContainsKey("reviewId"))
-            AddEntery("reviewId", "can't find the review");
+            if (!result.ContainsKey("reviewId"))
+                AddEntery("reviewId", "can't find the review");
         }
         /// <summary>
         /// adds msg Topic with that name already exists
         /// </summary>
         private void TopicNameIsNotAvailable()
         {
-            if(!result.ContainsKey("name"))
-            AddEntery("name", "Topic with that name already exists");
+            if (!result.ContainsKey("name"))
+                AddEntery("name", "Topic with that name already exists");
         }
         /// <summary>
         /// adds msg Can't find the user
         /// </summary>
         private void OwnerNotFound()
         {
-            if(!result.ContainsKey("ownerId"))
-            AddEntery("ownerId", "Can't find the user");
+            if (!result.ContainsKey("ownerId"))
+                AddEntery("ownerId", "Can't find the user");
         }
         /// <summary>
         /// adds msg Can't find the topic
         /// </summary>
         private void TopicNotFound()
         {
-            if(!result.ContainsKey("topicId"))
-            AddEntery("topicId", "Can't find the topic");
+            if (!result.ContainsKey("topicId"))
+                AddEntery("topicId", "Can't find the topic");
         }
         /// <summary>
         /// adds msg Can't find the department
         /// </summary>
         private void DepartmentNotFound()
         {
-            if(!result.ContainsKey("departmentId"))
-            AddEntery("departmentId", "can't find the department");
+            if (!result.ContainsKey("departmentId"))
+                AddEntery("departmentId", "can't find the department");
         }
         /// <summary>
         /// adds msg Can't find the role
         /// </summary>
         private void RoleNotFound()
         {
-            if(!result.ContainsKey("roleId"))
-            AddEntery("roleId", "can't find the role");
+            if (!result.ContainsKey("roleId"))
+                AddEntery("roleId", "can't find the role");
         }
         /// <summary>
         /// adds msg Can't find the user
         /// </summary>
         private void UserNotFound()
         {
-            if(!result.ContainsKey("userId, roleId"))
-            AddEntery("userId, roleId", "Can't find the user");
+            if (!result.ContainsKey("userId, roleId"))
+                AddEntery("userId, roleId", "Can't find the user");
         }
         /// <summary>
         /// used to add msg to result Dictionary
@@ -162,7 +162,7 @@ namespace TMS.API
             if (isUserMailAvailable)
                 UserMailIsNotAvailable();
         }
-         private void AddEnteryValidateDepartment(bool isDepartmentNameAvailable)
+        private void AddEnteryValidateDepartment(bool isDepartmentNameAvailable)
         {
             if (isDepartmentNameAvailable)
                 DepartmentNameIsNotAvailable();
@@ -180,7 +180,7 @@ namespace TMS.API
                 TraineeNotFound();
             if (!reviewExists)
                 ReviewNotFound();
-            
+
         }
         private void AddEnteryValidateTopic(bool isTopicNameAvailabe, bool courseExists)
         {

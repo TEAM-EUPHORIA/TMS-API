@@ -22,7 +22,6 @@ namespace TMS.API.Controllers
         /// <param name="courseId"></param>
         /// <param name="topicId"></param>
         [HttpDelete("{courseId:int}/topics/disable/{topicId:int}")]
-
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableTopic(int courseId, int topicId)
         {
@@ -31,20 +30,15 @@ namespace TMS.API.Controllers
                 var topicExists = _service.Validation.TopicExists(topicId, courseId);
                 if (topicExists)
                 {
-                    int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                     var res = _service.CourseService.DisableTopic(courseId, topicId, updatedBy);
                     if (res) return Ok(new { message = "The User was Disabled successfully" });
                 }
-                return NotFound("NotFound");
+                return NotFound("Not Found");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(DisableTopic));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(DisableTopic));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

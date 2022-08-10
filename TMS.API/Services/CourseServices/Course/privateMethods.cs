@@ -13,14 +13,15 @@ namespace TMS.API.Services
         /// <returns>
         /// returns list of valid user
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
-
-
         private List<CourseUsers> GetListOfValidUsers(AddUsersToCourse data, int createdBy)
         {
-            try
+            if (data is null)
             {
+                throw new ArgumentException(nameof(data));
+            }
+
             var validList = new List<CourseUsers>();
             bool courseUsertExists;
             foreach (var user in data.Users!)
@@ -40,14 +41,6 @@ namespace TMS.API.Services
                 }
             }
             return validList.Distinct().ToList();
-            }
-            
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(CourseService),nameof(GetListOfValidUsers));
-                throw;
-            }
-
         }
         /// <summary>
         /// used to get course users.
@@ -57,10 +50,15 @@ namespace TMS.API.Services
         /// <returns>
         /// returns list of Course user
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private List<CourseUsers> GetCourseUsers(AddUsersToCourse data, int createdBy)
         {
-            try
+            if (data is null)
             {
+                throw new ArgumentException(nameof(data));
+            }
+
             var validList = new List<CourseUsers>();
             bool courseUsertExists;
             foreach (var user in data.Users!)
@@ -80,21 +78,21 @@ namespace TMS.API.Services
                 }
             }
             return validList.Distinct().ToList();
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(CourseService),nameof(GetCourseUsers));
-                throw;
-            }
-            
         }
         /// <summary>
         /// used to set up Course details with course and createdBy.
         /// </summary>
         /// <param name="course"></param>
         /// <param name="createdBy"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private static void SetUpCourseDetails(Course course, int createdBy)
         {
+            if (course is null)
+            {
+                throw new ArgumentException(nameof(course));
+            }
+
             course.isDisabled = false;
             var courseTrainer = new CourseUsers()
             {
@@ -111,15 +109,26 @@ namespace TMS.API.Services
             course.CreatedOn = DateTime.Now;
             course.CreatedBy = createdBy;
         }
-
         /// <summary>
         /// used to set up Course details with course,dbcourse and updatedBy.
         /// </summary>
         /// <param name="course"></param>
         /// <param name="dbCourse"></param>
         /// <param name="updatedBy"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private static void SetUpCourseDetails(Course course, Course dbCourse, int updatedBy)
         {
+            if (course is null)
+            {
+                throw new ArgumentException(nameof(course));
+            }
+
+            if (dbCourse is null)
+            {
+                throw new ArgumentException(nameof(dbCourse));
+            }
+
             dbCourse.DepartmentId = course.DepartmentId;
             dbCourse.Name = course.Name;
             dbCourse.Duration = course.Duration;
@@ -128,14 +137,20 @@ namespace TMS.API.Services
             dbCourse.UpdatedOn = DateTime.Now;
             dbCourse.UpdatedBy = updatedBy;
         }
-
         /// <summary>
         /// used to disable the course.
         /// </summary>
         /// <param name="dbCourse"></param>
         /// <param name="updatedBy"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private static void Disable(int updatedBy, Course dbCourse)
         {
+            if (dbCourse is null)
+            {
+                throw new ArgumentException(nameof(dbCourse));
+            }
+
             dbCourse.isDisabled = true;
             dbCourse.UpdatedBy = updatedBy;
             dbCourse.UpdatedOn = DateTime.Now;

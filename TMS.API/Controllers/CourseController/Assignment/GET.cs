@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using TMS.API.UtilityFunctions;
 using Microsoft.AspNetCore.Authorization;
 using TMS.API.Services;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -12,7 +11,6 @@ namespace TMS.API.Controllers
         private readonly ILogger<CourseController> _logger;
         private readonly IUnitOfService _service;
         private readonly AppDbContext _context;
-
         /// <summary>
         /// Constructor for CourseController
         /// </summary>
@@ -21,9 +19,9 @@ namespace TMS.API.Controllers
         /// <param name="context"></param>
         public CourseController(IUnitOfService service, ILogger<CourseController> logger, AppDbContext context)
         {
-            _logger = logger;
-            _service = service;
-            _context = context;
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
+            _service = service ?? throw new ArgumentException(nameof(service));
+            _context = context ?? throw new ArgumentException(nameof(context));
         }
         /// <summary>
         /// Gets a list of assignments in a topic by courseId and topicId
@@ -47,17 +45,9 @@ namespace TMS.API.Controllers
             try
             {
                 var topicExists = _service.Validation.TopicExists(topicId, courseId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                bool access = false;
-                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-                if (check)
-                {
-                    access = true;
-                }
-                else
-                {
-                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
-                }
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+                var isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
+                bool access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
                 if (topicExists && access)
                 {
                     return Ok(_service.CourseService.GetAssignmentsByTopicId(topicId));
@@ -66,12 +56,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentsByTopicId));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetAssignmentsByTopicId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -98,17 +83,9 @@ namespace TMS.API.Controllers
             try
             {
                 var assignmentExists = _service.Validation.AssignmentExists(courseId, topicId, ownerId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                bool access = false;
-                var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-                if (check)
-                {
-                    access = true;
-                }
-                else
-                {
-                    access = _service.Validation.ValidateCourseAccess(courseId, userId);
-                }
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+                var isCoordinator = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
+                bool access = isCoordinator || _service.Validation.ValidateCourseAccess(courseId, userId);
                 if (assignmentExists && access)
                 {
                     var result = _service.CourseService.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId);
@@ -118,12 +95,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
-                return Problem("sorry something went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

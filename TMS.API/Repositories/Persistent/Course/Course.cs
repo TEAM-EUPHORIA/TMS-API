@@ -64,7 +64,7 @@ namespace TMS.API.Repositories
         public IEnumerable<Course> GetCoursesByUserId(int userId)
         {
             return dbContext.CourseUsers
-                     .Where(cu => cu.UserId == userId && cu.Course.isDisabled == false)
+                     .Where(cu => cu.UserId == userId && cu.Course!.isDisabled == false)
                      .Select(cu => cu.Course)!;
         }
         public void UpdateCourse(Course course)
@@ -74,14 +74,14 @@ namespace TMS.API.Repositories
         public IEnumerable<User> GetCourseUsers(int courseId)
         {
             var data = dbContext.CourseUsers
-                            .Where(cu => cu.CourseId == courseId && cu.User.isDisabled == false && cu.User!.RoleId != 3)
+                            .Where(cu => cu.CourseId == courseId && cu.User!.isDisabled == false && cu.User!.RoleId != 3)
                             .Include(cu => cu.User).ToList();
             var result = new List<User>();
             bool feedbackExist = false;
             foreach (var item in data)
             {
                feedbackExist = dbContext.TraineeFeedbacks.Any(tf => tf.CourseId == item.CourseId && tf.TraineeId == item.UserId);
-                item.User.FeedBackExists = feedbackExist;
+                item.User!.FeedBackExists = feedbackExist;
                 result.Add(item.User);
             }
             return result!;

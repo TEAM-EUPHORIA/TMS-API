@@ -2,11 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
 using TMS.BAL;
-
-
 namespace TMS.API.Services
 {
-
     public partial class CourseService
     {
         /// <summary>
@@ -18,31 +15,15 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public IEnumerable<Course> GetCoursesByUserId(int userId)
         {
-            try
+            var userExists = _repo.Validation.UserExists(userId);
+            if (userExists)
             {
-                var userExists = _repo.Validation.UserExists(userId);
-                if (userExists)
-                {
-                    return _repo.Courses.GetCoursesByUserId(userId);
-                }
-                else throw new ArgumentException(INVALID_ID);
+                return _repo.Courses.GetCoursesByUserId(userId);
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetCoursesByUserId));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetCoursesByUserId));
-                throw;
-            }
+            else throw new ArgumentException(INVALID_ID);
         }
-
         /// <summary>
         /// used to get course based on department id
         /// </summary>
@@ -52,31 +33,14 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public IEnumerable<Course> GetCoursesByDepartmentId(int departmentId)
         {
-            try
+            var departmentExists = _repo.Validation.DepartmentExists(departmentId);
+            if (departmentExists)
             {
-
-                var departmentExists = _repo.Validation.DepartmentExists(departmentId);
-                if (departmentExists)
-                {
-                    return _repo.Courses.GetCoursesByDepartmentId(departmentId);
-                }
-                else throw new ArgumentException(INVALID_ID);
+                return _repo.Courses.GetCoursesByDepartmentId(departmentId);
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetCoursesByDepartmentId));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetCoursesByDepartmentId));
-                throw;
-            }
-
+            else throw new ArgumentException(INVALID_ID);
         }
         /// <summary>
         /// used to get course
@@ -84,25 +48,10 @@ namespace TMS.API.Services
         /// <returns>
         /// IEnumerable course 
         /// </returns>
-
         public IEnumerable<Course> GetCourses()
         {
-            try
-            {
-                return _repo.Courses.GetCourses();
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetCourses));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetCourses));
-                throw;
-            }
+            return _repo.Courses.GetCourses();
         }
-
         /// <summary>
         /// used to get course by user id,courseId
         /// </summary>
@@ -113,32 +62,16 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public Course GetCourseById(int courseId, int userId)
         {
-            try
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            var userExists = _repo.Validation.UserExists(userId);
+            if (courseExists && userExists)
             {
-                var courseExists = _repo.Validation.CourseExists(courseId);
-                var userExists = _repo.Validation.UserExists(userId);
-                if (courseExists && userExists)
-                {
-                    return _repo.Courses.GetCourseById(courseId, userId);
-                }
-                else throw new ArgumentException(INVALID_ID);
+                return _repo.Courses.GetCourseById(courseId, userId);
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetCourseById));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetCourseById));
-                throw;
-            }
+            else throw new ArgumentException(INVALID_ID);
         }
-
         /// <summary>
         /// used to create a course.
         /// </summary>
@@ -147,36 +80,20 @@ namespace TMS.API.Services
         /// <returns>
         /// validation Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public Dictionary<string, string> CreateCourse(Course course, int createdBy)
         {
-            try
+            if (course is null) throw new ArgumentException(nameof(course));
+            var validation = _repo.Validation.ValidateCourse(course);
+            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                if (course is null) throw new ArgumentNullException(nameof(course));
-                var validation = _repo.Validation.ValidateCourse(course);
-                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
-                {
-                    SetUpCourseDetails(course, createdBy);
-                    _repo.Courses.CreateCourse(course);
-                    _repo.Complete();
-                }
-                return validation;
+                SetUpCourseDetails(course, createdBy);
+                _repo.Courses.CreateCourse(course);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(CreateCourse));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(CreateCourse));
-                throw;
-            }
+            return validation;
         }
-
         /// <summary>
         /// used to update a course.
         /// </summary>
@@ -185,37 +102,21 @@ namespace TMS.API.Services
         /// <returns>
         /// validation Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public Dictionary<string, string> UpdateCourse(Course course, int updatedBy)
         {
-            try
+            if (course is null) throw new ArgumentException(nameof(course));
+            var validation = _repo.Validation.ValidateCourse(course);
+            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                if (course is null) throw new ArgumentNullException(nameof(course));
-                var validation = _repo.Validation.ValidateCourse(course);
-                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
-                {
-                    var dbCourse = _repo.Courses.GetCourseById(course.Id);
-                    SetUpCourseDetails(course, dbCourse, updatedBy);
-                    _repo.Courses.UpdateCourse(dbCourse);
-                    _repo.Complete();
-                }
-                return validation;
+                var dbCourse = _repo.Courses.GetCourseById(course.Id);
+                SetUpCourseDetails(course, dbCourse, updatedBy);
+                _repo.Courses.UpdateCourse(dbCourse);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(UpdateCourse));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UpdateCourse));
-                throw;
-            }
+            return validation;
         }
-
         /// <summary>
         /// used to disable course to user.
         /// </summary>
@@ -226,33 +127,17 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public bool DisableCourse(int courseId, int updatedBy)
         {
-            try
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            if (courseExists)
             {
-                var courseExists = _repo.Validation.CourseExists(courseId);
-                if (courseExists)
-                {
-                    var dbCourse = _repo.Courses.GetCourseById(courseId);
-                    Disable(updatedBy, dbCourse);
-                    _repo.Complete();
-                }
-                return courseExists;
+                var dbCourse = _repo.Courses.GetCourseById(courseId);
+                Disable(updatedBy, dbCourse);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(DisableCourse));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(DisableCourse));
-                throw;
-            }
+            return courseExists;
         }
-
         /// <summary>
         /// used to get course user from course.
         /// </summary>
@@ -262,32 +147,15 @@ namespace TMS.API.Services
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
-
         public object GetCourseUsers(int courseId)
         {
-            try
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            if (courseExists)
             {
-                var courseExists = _repo.Validation.CourseExists(courseId);
-                if (courseExists)
-                {
-                    return _repo.Courses.GetCourseUsers(courseId);
-                }
-                else throw new ArgumentException(INVALID_ID);
+                return _repo.Courses.GetCourseUsers(courseId);
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetCourseUsers));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetCourseUsers));
-                throw;
-            }
+            else throw new ArgumentException(INVALID_ID);
         }
-
         /// <summary>
         /// used to add list of users to course.
         /// </summary>
@@ -296,39 +164,25 @@ namespace TMS.API.Services
         /// <returns>
         /// result Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
-
         public Dictionary<string, List<CourseUsers>> AddUsersToCourse(AddUsersToCourse data, int createdBy)
         {
-            try
+            if (data is null)
             {
-                var courseExists = _repo.Validation.CourseExists(data.CourseId);
-                if (courseExists)
-                {
-                    var result = new Dictionary<string, List<CourseUsers>>();
-                    var validList = GetListOfValidUsers(data, createdBy);
-                    _repo.Courses.AddUsersToCourse(validList);
-                    result.Add("the following records are created", validList);
-                    _repo.Complete();
-                    return result;
-                }
-                else throw new ArgumentException(INVALID_ID);
+                throw new ArgumentException(nameof(data));
             }
-            catch (InvalidOperationException ex)
+            var courseExists = _repo.Validation.CourseExists(data.CourseId);
+            if (courseExists)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(AddUsersToCourse));
-                throw;
+                var result = new Dictionary<string, List<CourseUsers>>();
+                var validList = GetListOfValidUsers(data, createdBy);
+                _repo.Courses.AddUsersToCourse(validList);
+                result.Add("the following records are created", validList);
+                _repo.Complete();
+                return result;
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(AddUsersToCourse));
-                throw;
-            }
+            else throw new ArgumentException("Invalid course id");
         }
         /// <summary>
         /// used remove users from course.
@@ -338,39 +192,25 @@ namespace TMS.API.Services
         /// <returns>
         /// result Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
         /// </exception>
         public Dictionary<string, List<CourseUsers>> RemoveUsersFromCourse(AddUsersToCourse data, int updatedBy)
         {
-            try
+            if (data is null)
             {
-                var courseExists = _repo.Validation.CourseExists(data.CourseId);
-                if (courseExists)
-                {
-                    var result = new Dictionary<string, List<CourseUsers>>();
-                    var validList = GetCourseUsers(data, updatedBy);
-                    _repo.Courses.RemoveUsersFromCourse(validList);
-                    result.Add("the following records are removed", validList);
-                    _repo.Complete();
-                    return result;
-                }
-                else throw new ArgumentException(INVALID_ID);
+                throw new ArgumentException(nameof(data));
             }
-            catch (InvalidOperationException ex)
+            var courseExists = _repo.Validation.CourseExists(data.CourseId);
+            if (courseExists)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(RemoveUsersFromCourse));
-                throw;
+                var result = new Dictionary<string, List<CourseUsers>>();
+                var validList = GetCourseUsers(data, updatedBy);
+                _repo.Courses.RemoveUsersFromCourse(validList);
+                result.Add("the following records are removed", validList);
+                _repo.Complete();
+                return result;
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(RemoveUsersFromCourse));
-                throw;
-            }
-
+            else throw new ArgumentException("Invalid course id");
         }
     }
 }

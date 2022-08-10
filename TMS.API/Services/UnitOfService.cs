@@ -16,7 +16,17 @@ namespace TMS.API.Services
 
         public UnitOfService(IUnitOfWork repo, IConfiguration configuration, ILogger<UnitOfService> logger)
         {
-            _repo = repo;
+            if (configuration is null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            if (logger is null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             AuthService = new AuthService(repo, configuration, logger);
             UserService = new UserService(repo, logger);
             RoleService = new RoleService(repo, logger);

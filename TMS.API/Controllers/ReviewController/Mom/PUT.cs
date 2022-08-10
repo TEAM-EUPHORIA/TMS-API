@@ -35,20 +35,23 @@ namespace TMS.API.Controllers.ReviewController
         /// <response code="500">If there is problem in server.</response>
         /// <param name="mom"></param>
         [HttpPut("mom")]
-
         [Authorize(Roles = "Trainee")]
         public IActionResult UpdateMom([FromBody] MOM mom)
         {
+            if (mom is null)
+            {
+                return BadRequest("Mom is required");
+            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var momExists = _service.Validation.MOMExists(mom.ReviewId, mom.TraineeId);
                 if (momExists)
                 {
                     var IsValid = _service.Validation.ValidateMOM(mom);
                     if (IsValid.ContainsKey("IsValid"))
                     {
-                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                         var res = _service.ReviewService.UpdateMom(mom, updatedBy);
                         if (res.ContainsKey("Exists") && res.ContainsKey("IsValid")) return Ok(new { Response = "The MOM was Updated successfully" });
                     }
@@ -58,12 +61,7 @@ namespace TMS.API.Controllers.ReviewController
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(UpdateMom));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateMom));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

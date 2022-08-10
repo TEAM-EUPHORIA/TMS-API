@@ -8,13 +8,24 @@ namespace TMS.API.UtilityFunctions
         /// used to get logged in user id
         /// </summary>
         /// <param name="context"></param>
+        /// <param name="logger"></param>
         /// <returns>
         /// int userId
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
-        public static int GetCurrentUserId(HttpContext context)
+        public static int GetCurrentUserId(HttpContext context, ILogger logger)
         {
+            if (context is null)
+            {
+                throw new ArgumentException(nameof(context));
+            }
+
+            if (logger is null)
+            {
+                throw new ArgumentException(nameof(logger));
+            }
+
             int userId = 0;
             if (context.User.Identity is ClaimsIdentity identity)
             {
@@ -24,14 +35,25 @@ namespace TMS.API.UtilityFunctions
                 }
                 catch (ArgumentException ex)
                 {
-                    Console.WriteLine(ex);
+                    TMSLogger.GeneralException(ex,logger,nameof(GetCurrentUserId));
+                    logger.LogInformation(ex.ToString());
                     throw;
                 }
             }
             return userId;
         } 
-        public static string GetCurrentUserRole(HttpContext context)
+        public static string GetCurrentUserRole(HttpContext context,ILogger logger)
         {
+            if (context is null)
+            {
+                throw new ArgumentException(nameof(context));
+            }
+
+            if (logger is null)
+            {
+                throw new ArgumentException(nameof(logger));
+            }
+
             string role = "";
             if (context.User.Identity is ClaimsIdentity identity)
             {
@@ -41,7 +63,8 @@ namespace TMS.API.UtilityFunctions
                 }
                 catch (ArgumentException ex)
                 {
-                    Console.WriteLine(ex);
+                    TMSLogger.GeneralException(ex,logger,nameof(GetCurrentUserId));
+                    logger.LogInformation(ex.ToString());
                     throw;
                 }
             }

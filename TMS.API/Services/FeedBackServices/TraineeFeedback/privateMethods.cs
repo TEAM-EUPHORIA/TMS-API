@@ -8,9 +8,15 @@ namespace TMS.API.Services
         /// used to  SetUpTraineeFeedbackDetails to user.
         /// </summary>
         /// <param name="traineeFeedback"></param>
-
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private static void SetUpTraineeFeedbackDetails(TraineeFeedback traineeFeedback)
         {
+            if (traineeFeedback is null)
+            {
+                throw new ArgumentException(nameof(traineeFeedback));
+            }
+
             traineeFeedback.CreatedOn = DateTime.Now;
         }
 
@@ -19,11 +25,23 @@ namespace TMS.API.Services
         /// </summary>
         /// <param name="traineeFeedback"></param>
         /// <param name="dbTraineeFeedback"></param>
-        private static void SetUpTraineeFeedbackDetails(TraineeFeedback traineeFeedback,TraineeFeedback dbTraineeFeedback)
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        private static void SetUpTraineeFeedbackDetails(TraineeFeedback traineeFeedback, TraineeFeedback dbTraineeFeedback)
         {
+            if (traineeFeedback is null)
+            {
+                throw new ArgumentException(nameof(traineeFeedback));
+            }
+
+            if (dbTraineeFeedback is null)
+            {
+                throw new ArgumentException(nameof(dbTraineeFeedback));
+            }
+
             dbTraineeFeedback.Feedback = traineeFeedback.Feedback;
             dbTraineeFeedback.UpdatedOn = DateTime.Now;
-        }    
+        }
 
     }
 }

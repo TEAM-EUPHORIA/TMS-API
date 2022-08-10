@@ -14,8 +14,8 @@ namespace TMS.API.Controllers
         private readonly IUnitOfService _service;
         public DepartmentController(IUnitOfService service, ILogger<DepartmentController> logger)
         {
-            _logger = logger;
-            _service = service;
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
+            _service = service ?? throw new ArgumentException(nameof(service));
         }
         /// <summary>
         /// To disable the department
@@ -32,29 +32,24 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="departmentId"></param>
         [HttpDelete("disable/{departmentId:int}")]
-
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult DisableDepartment(int departmentId)
         {
             try
             {
-                var departmentExists = _service.Validation.DepartmentExists(departmentId);
-                if (departmentExists)
-                {
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                    var res = _service.DepartmentService.DisableDepartment(departmentId, currentUserId);
-                    if (res) return Ok(new { Response = "The Department was Deleted successfully" });
-                }
-                return NotFound("Not Found");
+                
+            var departmentExists = _service.Validation.DepartmentExists(departmentId);
+            if (departmentExists)
+            {
+                int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+                var res = _service.DepartmentService.DisableDepartment(departmentId, currentUserId);
+                if (res) return Ok(new { Response = "The Department was Deleted successfully" });
+            }
+            return NotFound("Not Found");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(DepartmentController), nameof(DisableDepartment));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(DisableDepartment));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

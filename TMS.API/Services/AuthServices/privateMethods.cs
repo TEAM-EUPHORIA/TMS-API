@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TMS.BAL;
-
 namespace TMS.API.Services
 {
     public partial class AuthService
@@ -12,18 +11,19 @@ namespace TMS.API.Services
         /// generate encoded token for authorisation and identity purpose.
         /// </summary>
         /// <param name="dbUser"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="EncoderFallbackException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="SecurityTokenEncryptionFailedException"></exception>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private string GenerateTokenString(User dbUser)
         {
+            if (dbUser is null)
+            {
+                throw new ArgumentException(nameof(dbUser));
+            }
+
             var claims = GenerateClaims(dbUser);
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             // var encryptingCredentials = new EncryptingCredentials(secretKey, JwtConstants.DirectKeyUseAlg, SecurityAlgorithms.Aes256CbcHmacSha512);
-
             var tokenOptions = new JwtSecurityTokenHandler().CreateJwtSecurityToken(
               _configuration["Jwt:Issuer"],
               _configuration["Jwt:Audience"],
@@ -32,7 +32,6 @@ namespace TMS.API.Services
                 DateTime.Now.AddDays(1),
                 DateTime.Now,
                 signinCredentials);
-
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             return tokenString;
         }
@@ -40,10 +39,14 @@ namespace TMS.API.Services
         /// generate user details list of claims for token.
         /// </summary>
         /// <param name="dbUser"></param>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private static List<Claim> GenerateClaims(User dbUser)
         {
+            if (dbUser is null)
+            {
+                throw new ArgumentException(nameof(dbUser));
+            }
 
             return new List<Claim>
             {

@@ -10,6 +10,11 @@ namespace TMS.API.Services
         /// <param name="courseFeedback"></param>
         private static void SetUpCourseFeedbackDetails(CourseFeedback courseFeedback)
         {
+            if (courseFeedback is null)
+            {
+                throw new ArgumentException(nameof(courseFeedback));
+            }
+
             courseFeedback.CreatedOn = DateTime.Now;
         }
 
@@ -21,6 +26,16 @@ namespace TMS.API.Services
     
         private static void SetUpCourseFeedbackDetails(CourseFeedback courseFeedback,CourseFeedback dbCourseFeedback)
         {
+            if (courseFeedback is null)
+            {
+                throw new ArgumentException(nameof(courseFeedback));
+            }
+
+            if (dbCourseFeedback is null)
+            {
+                throw new ArgumentException(nameof(dbCourseFeedback));
+            }
+
             dbCourseFeedback.Feedback = courseFeedback.Feedback;
             dbCourseFeedback.Rating = courseFeedback.Rating;
             dbCourseFeedback.UpdatedOn = DateTime.Now;

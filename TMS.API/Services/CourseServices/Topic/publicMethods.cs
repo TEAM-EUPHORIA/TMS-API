@@ -1,7 +1,5 @@
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
-
 namespace TMS.API.Services
 {
     public partial class CourseService : ICourseService
@@ -13,30 +11,13 @@ namespace TMS.API.Services
         /// <returns>
         /// enumerable topic if course is found.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
         /// </exception>
         public IEnumerable<Topic> GetTopicsByCourseId(int courseId)
         {
-            try
-            {
-                var courseExists = _repo.Validation.CourseExists(courseId);
-                if (courseExists) return _repo.Courses.GetTopicsByCourseId(courseId);
-                else throw new ArgumentException(INVALID_ID);
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetTopicsByCourseId));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetTopicsByCourseId));
-                throw;
-            }
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            if (courseExists) return _repo.Courses.GetTopicsByCourseId(courseId);
+            else throw new ArgumentException(INVALID_ID);
         }
         /// <summary>
         /// Fetching Topics details by CourseId,topicId,userId.
@@ -47,33 +28,16 @@ namespace TMS.API.Services
         /// <returns>
         /// topic details if topic is found
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
         /// </exception>
         public Topic GetTopicById(int courseId, int topicId, int userId)
         {
-            try
+            var topicExists = _repo.Validation.TopicExists(topicId);
+            if (topicExists)
             {
-                var topicExists = _repo.Validation.TopicExists(topicId);
-                if (topicExists)
-                {
-                    return _repo.Courses.GetTopicById(courseId, topicId, userId);
-                }
-                else throw new ArgumentException(INVALID_ID);
+                return _repo.Courses.GetTopicById(courseId, topicId, userId);
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetTopicById));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetTopicById));
-                throw;
-            }
+            else throw new ArgumentException(INVALID_ID);
         }
         /// <summary>
         /// Create the topic
@@ -83,36 +47,19 @@ namespace TMS.API.Services
         /// <returns>
         /// validation dictionary
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
         /// </exception>
         public Dictionary<string, string> CreateTopic(Topic topic, int createdBy)
         {
-            try
+            if (topic is null) throw new ArgumentException(nameof(topic));
+            var validation = _repo.Validation.ValidateTopic(topic);
+            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                if (topic is null) throw new ArgumentNullException(nameof(topic));
-                var validation = _repo.Validation.ValidateTopic(topic);
-                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
-                {
-                    SetUpTopicDetails(topic, createdBy);
-                    _repo.Courses.CreateTopic(topic);
-                    _repo.Complete();
-                }
-                return validation;
+                SetUpTopicDetails(topic, createdBy);
+                _repo.Courses.CreateTopic(topic);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(CreateTopic));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(CreateTopic));
-                throw;
-            }
+            return validation;
         }
         /// <summary>
         /// update the topic details by topicId
@@ -122,61 +69,36 @@ namespace TMS.API.Services
         /// <returns>
         /// validation dictionary
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
         /// </exception>
         public Dictionary<string, string> UpdateTopic(Topic topic, int updatedBy)
         {
-            try
+            if (topic is null) throw new ArgumentException(nameof(topic));
+            var validation = _repo.Validation.ValidateTopic(topic);
+            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                if (topic is null) throw new ArgumentNullException(nameof(topic));
-                var validation = _repo.Validation.ValidateTopic(topic);
-                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
-                {
-                    var dbTopic = _repo.Courses.GetTopicById(topic.CourseId, topic.TopicId);
-                    SetUpTopicDetails(topic, dbTopic, updatedBy);
-                    _repo.Courses.UpdateTopic(dbTopic);
-                    _repo.Complete();
-                }
-                return validation;
+                var dbTopic = _repo.Courses.GetTopicById(topic.CourseId, topic.TopicId);
+                SetUpTopicDetails(topic, dbTopic, updatedBy);
+                _repo.Courses.UpdateTopic(dbTopic);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(UpdateTopic));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UpdateTopic));
-                throw;
-            }
+            return validation;
         }
+        /// <summary>
+        /// used to update topic
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <returns></returns>
         public Dictionary<string, string> UpdateTopic(Topic topic)
         {
-            try
+            if (topic is null) throw new ArgumentException(nameof(topic));
+            var validation = _repo.Validation.ValidateTopic(topic);
+            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                if (topic is null) throw new ArgumentNullException(nameof(topic));
-                var validation = _repo.Validation.ValidateTopic(topic);
-                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
-                {
-                    _repo.Courses.UpdateTopic(topic);
-                    _repo.Complete();
-                }
-                return validation;
+                _repo.Courses.UpdateTopic(topic);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(UpdateTopic));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(UpdateTopic));
-                throw;
-            }
+            return validation;
         }
         /// <summary>
         /// disable the topic by topicId
@@ -189,27 +111,14 @@ namespace TMS.API.Services
         /// </returns>
         public bool DisableTopic(int courseId, int topicId, int updatedBy)
         {
-            try
+            var topicExists = _repo.Validation.TopicExists(topicId, courseId);
+            if (topicExists)
             {
-                var topicExists = _repo.Validation.TopicExists(topicId, courseId);
-                if (topicExists)
-                {
-                    var dbTopic = _repo.Courses.GetTopicById(courseId, topicId);
-                    Disable(updatedBy, dbTopic);
-                    _repo.Complete();
-                }
-                return topicExists;
+                var dbTopic = _repo.Courses.GetTopicById(courseId, topicId);
+                Disable(updatedBy, dbTopic);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(DisableTopic));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(DisableTopic));
-                throw;
-            }
+            return topicExists;
         }
         /// <summary>
         /// mark the attendance 
@@ -218,35 +127,18 @@ namespace TMS.API.Services
         /// <returns>
         /// validation dictionary
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
         /// </exception>
         public Dictionary<string, string> MarkAttendance(Attendance attendance)
         {
-            try
+            var validation = _repo.Validation.ValidateAttendance(attendance);
+            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                var validation = _repo.Validation.ValidateAttendance(attendance);
-                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
-                {
-                    attendance.Status = true;
-                    _repo.Courses.MarkAttendance(attendance);
-                    _repo.Complete();
-                }
-                return validation;
+                attendance.Status = true;
+                _repo.Courses.MarkAttendance(attendance);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(MarkAttendance));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(MarkAttendance));
-                throw;
-            }
+            return validation;
         }
         /// <summary>
         /// get the attendance list
@@ -256,31 +148,14 @@ namespace TMS.API.Services
         /// <returns>
         /// Enumerable attendance list if course and topic list exists 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
         /// </exception>
         public IEnumerable<Attendance> GetAttendanceList(int courseId, int topicId)
         {
-            try
-            {
-                var courseExists = _repo.Validation.CourseExists(courseId);
-                var topicExists = _repo.Validation.TopicExists(topicId);
-                if (courseExists && topicExists) return _repo.Courses.GetAttendanceList(courseId, topicId);
-                else throw new ArgumentException("Invalid Id");
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetAttendanceList));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetAttendanceList));
-                throw;
-            }
+            var courseExists = _repo.Validation.CourseExists(courseId);
+            var topicExists = _repo.Validation.TopicExists(topicId);
+            if (courseExists && topicExists) return _repo.Courses.GetAttendanceList(courseId, topicId);
+            else throw new ArgumentException("Invalid Id");
         }
     }
 }

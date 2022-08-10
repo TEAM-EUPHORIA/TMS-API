@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
-
 namespace TMS.API.Controllers
 {
     [ApiController]
@@ -11,11 +10,10 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUnitOfService _service;
-
         public UserController(IUnitOfService service, ILogger<UserController> logger)
         {
-            _logger = logger;
-            _service = service;
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
+            _service = service ?? throw new ArgumentException(nameof(service));
         }
         /// <summary>
         /// To disable a User
@@ -32,7 +30,6 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server.</response>
         /// <param name="userId"></param>
         [HttpDelete("disable/{userId:int}")]
-
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult DisableUser(int userId)
         {
@@ -43,7 +40,7 @@ namespace TMS.API.Controllers
                 if (userExists)
                 {
                     // getting the logged in user id
-                    int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                     // calling service to disable the user
                     var res = _service.UserService.DisableUser(userId, updatedBy);
                     // response
@@ -55,14 +52,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                // An exception occurs only if IUnitOfService Dependency Injection (DI) is failed
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(UserController), nameof(DisableUser));
-                // response
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(DisableUser));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

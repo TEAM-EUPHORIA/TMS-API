@@ -2,14 +2,9 @@ namespace TMS.API.UtilityFunctions
 {
     public static class TMSLogger
     {
-        public static void ServiceInjectionFailedAtController(InvalidOperationException ex, ILogger logger, string ControllerName, string method)
+        public static void RemovedTheConnectionStringInAppsettings(InvalidOperationException ex, ILogger logger)
         {
-            logger.LogCritical($"An Critical error occured in {ControllerName} Controller inside this method {method}. Please check the program.cs. It happend due to failure of Service injection");
-            logger.LogTrace(ex.ToString());
-        }
-        public static void ServiceInjectionFailedAtService(InvalidOperationException ex, ILogger logger, string serviceName, string method)
-        {
-            logger.LogCritical($"An Critical error occured in {serviceName} Service inside this method {method}. Please check the program.cs. It happend due to failure of Service injection");
+            logger.LogCritical($"Please check the connection string in appsettings.json");
             logger.LogTrace(ex.ToString());
         }
         public static void ArgumentExceptionInDictionary(ArgumentException ex, ILogger logger, string serviceName, string method)

@@ -44,11 +44,11 @@ var _logger = new LoggerConfiguration()
 // builder.Logging.ClearProviders(); //if its enabled console loggings won't work
 builder.Logging.AddSerilog(_logger);
 
-// Making Db Context and service available for the App 
 builder.Services.AddTransient<IValidation, Validation>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IUnitOfService, UnitOfService>();
 builder.Services.AddTransient<IStatistics, Statistics>();
+// Making Db Context and service available for the App 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

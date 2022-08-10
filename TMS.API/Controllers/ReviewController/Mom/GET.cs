@@ -13,8 +13,8 @@ namespace TMS.API.Controllers.ReviewController
         private readonly IUnitOfService _service;
         public ReviewController(IUnitOfService service, ILogger<ReviewController> logger)
         {
-            _logger = logger;
-            _service = service;
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
+            _service = service ?? throw new ArgumentException(nameof(service));
         }
         /// <summary>
         /// Gets list of MOM by UserId
@@ -45,12 +45,7 @@ namespace TMS.API.Controllers.ReviewController
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetListOfMomByUserId));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex, _logger, nameof(GetListOfMomByUserId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -84,12 +79,7 @@ namespace TMS.API.Controllers.ReviewController
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(ReviewController), nameof(GetMomByReviewIdAndTraineeId));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetMomByReviewIdAndTraineeId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

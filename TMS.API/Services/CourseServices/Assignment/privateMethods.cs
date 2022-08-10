@@ -11,9 +11,15 @@ namespace TMS.API.Services
         /// </summary>
         /// <param name="assignment"></param>
         /// <param name="createdBy"></param>
-
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private static void PrepareAssignment(Assignment assignment, int createdBy)
         {
+            if (assignment is null)
+            {
+                throw new ArgumentException(nameof(assignment));
+            }
+
             File PDF = FileService.GetBase64HeaderAndByteArray(assignment.Base64!);
             assignment.Base64 = PDF.Header!;
             assignment.Document = PDF.Bytes;
@@ -29,8 +35,20 @@ namespace TMS.API.Services
         /// <param name="assignment"></param>
         /// <param name="dbAssignment"></param>
         /// <param name="updatedBy"></param>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         private static void PrepareAssignment(Assignment assignment, Assignment dbAssignment, int updatedBy)
         {
+            if (assignment is null)
+            {
+                throw new ArgumentException(nameof(assignment));
+            }
+
+            if (dbAssignment is null)
+            {
+                throw new ArgumentException(nameof(dbAssignment));
+            }
+
             File PDF = FileService.GetBase64HeaderAndByteArray(assignment.Base64!);
             dbAssignment.Base64 = PDF.Header!;
             dbAssignment.Document = PDF.Bytes;

@@ -2,28 +2,23 @@ using Microsoft.EntityFrameworkCore;
 using TMS.API.Repositories;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
 namespace TMS.API.Services
 {
-
     public partial class CourseService
     {
         private readonly IUnitOfWork _repo;
         private readonly ILogger _logger;
         const string INVALID_ID = "Invalid Id";
-
         /// <summary>
         /// Constructor of CourseService
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="logger"></param>
-
         public CourseService(IUnitOfWork repo, ILogger logger)
         {
-            _repo = repo;
-            _logger = logger;
+            _repo = repo ?? throw new ArgumentException(nameof(repo));
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
         }
-
         /// <summary>
         /// used to get Assignment based on topic id
         /// </summary>
@@ -31,34 +26,15 @@ namespace TMS.API.Services
         /// <returns>
         /// IEnumerable Assignment if Topic is found
         /// </returns>
-        /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
         public IEnumerable<Assignment> GetAssignmentsByTopicId(int topicId)
         {
-            try
+            var topicExists = _repo.Validation.TopicExists(topicId);
+            if (topicExists)
             {
-                var topicExists = _repo.Validation.TopicExists(topicId);
-                if (topicExists)
-                {
-                    return _repo.Courses.GetAssignmentsByTopicId(topicId);
-                }
-                else throw new ArgumentException(INVALID_ID);
+                return _repo.Courses.GetAssignmentsByTopicId(topicId);
             }
-
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetAssignmentsByTopicId));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetAssignmentsByTopicId));
-                throw;
-            }
+            else throw new ArgumentException(INVALID_ID);
         }
-
         /// <summary>
         /// used to get assignment by courseId,topicId,ownerId
         /// </summary>
@@ -68,35 +44,15 @@ namespace TMS.API.Services
         /// <returns>
         /// Assignment if Assignment is found
         /// </returns>
-        /// <exception cref="ArgumentException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
-
         public Assignment GetAssignmentByCourseIdTopicIdAndOwnerId(int courseId, int topicId, int ownerId)
         {
-            try
+            var assignmentExists = _repo.Validation.AssignmentExists(courseId, topicId, ownerId);
+            if (assignmentExists)
             {
-                var assignmentExists = _repo.Validation.AssignmentExists(courseId, topicId, ownerId);
-                if (assignmentExists)
-                {
-                    return _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId);
-                }
-                else throw new ArgumentException(INVALID_ID);
+                return _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(courseId, topicId, ownerId);
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(GetAssignmentByCourseIdTopicIdAndOwnerId));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetAssignmentsByTopicId));
-                throw;
-            }
-
+            else throw new ArgumentException(INVALID_ID);
         }
-
         /// <summary>
         /// used to create assignment.
         /// </summary>
@@ -105,38 +61,21 @@ namespace TMS.API.Services
         /// <returns>
         /// validation Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// </exception>
-
         public Dictionary<string, string> CreateAssignment(Assignment assignment, int createdBy)
         {
-            try
-            {
 
-                if (assignment is null) throw new ArgumentNullException(nameof(assignment));
-                var validation = _repo.Validation.ValidateAssignment(assignment);
-                if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
-                {
-                    PrepareAssignment(assignment, createdBy);
-                    _repo.Courses.CreateAssignment(assignment);
-                    _repo.Complete();
-                }
-                return validation;
-            }
-            catch (InvalidOperationException ex)
+            if (assignment is null) throw new ArgumentException(nameof(assignment));
+            var validation = _repo.Validation.ValidateAssignment(assignment);
+            if (validation.ContainsKey("IsValid") && !validation.ContainsKey("Exists"))
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(CreateAssignment));
-                throw;
+                PrepareAssignment(assignment, createdBy);
+                _repo.Courses.CreateAssignment(assignment);
+                _repo.Complete();
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(CreateAssignment));
-                throw;
-            }
+            return validation;
         }
-
         /// <summary>
         /// used to Update assignment.
         /// </summary>
@@ -145,36 +84,20 @@ namespace TMS.API.Services
         /// <returns>
         /// validation Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public Dictionary<string, string> UpdateAssignment(Assignment assignment, int updatedBy)
         {
-            try
+            if (assignment is null) throw new ArgumentException(nameof(assignment));
+            var validation = _repo.Validation.ValidateAssignment(assignment);
+            if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
             {
-                if (assignment is null) throw new ArgumentNullException(nameof(assignment));
-                var validation = _repo.Validation.ValidateAssignment(assignment);
-                if (validation.ContainsKey("IsValid") && validation.ContainsKey("Exists"))
-                {
-                    var dbAssignment = _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
-                    PrepareAssignment(assignment, dbAssignment, updatedBy);
-                    _repo.Courses.UpdateAssignment(dbAssignment);
-                    _repo.Complete();
-                }
-                return validation;
+                var dbAssignment = _repo.Courses.GetAssignmentByCourseIdTopicIdAndOwnerId(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
+                PrepareAssignment(assignment, dbAssignment, updatedBy);
+                _repo.Courses.UpdateAssignment(dbAssignment);
+                _repo.Complete();
             }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseService), nameof(UpdateAssignment));
-                throw;
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateAssignment));
-                throw;
-            }
-
+            return validation;
         }
     }
 }

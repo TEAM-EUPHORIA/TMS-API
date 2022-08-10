@@ -31,15 +31,18 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPut("course/feedback")]
-
         [Authorize(Roles = "Trainee")]
         public IActionResult UpdateCourseFeedback([FromBody] CourseFeedback feedback)
         {
+            if (feedback is null)
+            {
+                return BadRequest("feedback is required");
+            }
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
                 var feedbackExists = _service.Validation.CourseFeedbackExists(feedback.CourseId, feedback.TraineeId);
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                 bool access = userId == feedback.TraineeId;
                 if (access)
                 {
@@ -48,7 +51,7 @@ namespace TMS.API.Controllers
                         var IsValid = _service.Validation.ValidateCourseFeedback(feedback);
                         if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                         {
-                            int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                            int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                             var res = _service.FeedbackService.UpdateCourseFeedback(feedback, updatedBy);
                             if (!res.ContainsKey("Invalid Id") && res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Updated successfully" });
                         }
@@ -60,12 +63,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(UpdateCourseFeedback));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateCourseFeedback));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

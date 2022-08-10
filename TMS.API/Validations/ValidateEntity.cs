@@ -11,8 +11,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateCourseUser(CourseUsers user)
         {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             CheckCourseExists(user.CourseId);
             CheckUserExists(user.UserId, user.RoleId);
             AddEnteryValidateCourseUser(courseExists);
@@ -29,8 +36,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateAssignment(Assignment assignment)
         {
+            if (assignment is null)
+            {
+                throw new ArgumentNullException(nameof(assignment));
+            }
+
             CheckCourseExists(assignment.CourseId);
             CheckTopicExists(assignment.TopicId);
             CheckUserExists(assignment.OwnerId);
@@ -48,8 +62,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateAttendance(Attendance attendance)
         {
+            if (attendance is null)
+            {
+                throw new ArgumentNullException(nameof(attendance));
+            }
+
             CheckCourseExists(attendance.CourseId);
             CheckTopicExists(attendance.TopicId);
             CheckUserExists(attendance.OwnerId);
@@ -67,8 +88,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateLoginDetails(LoginModel user)
         {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             ValidateAndAddEntery(nameof(user.Email), user.Email, emailValidation);
             ValidateAndAddEntery(nameof(user.Password), user.Password, passwordValidation);
             CheckUserExists(user);
@@ -83,8 +111,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateCourse(Course course)
         {
+            if (course is null)
+            {
+                throw new ArgumentNullException(nameof(course));
+            }
+
             CheckIdAndAddEntery(course.TrainerId, nameof(course.TrainerId));
             CheckIdAndAddEntery(course.DepartmentId, nameof(course.DepartmentId));
             ValidateAndAddEntery(nameof(course.Name), course.Name!, nameValidation);
@@ -110,8 +145,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateCourseFeedback(CourseFeedback feedback)
         {
+            if (feedback is null)
+            {
+                throw new ArgumentNullException(nameof(feedback));
+            }
+
             CheckIdAndAddEntery(feedback.CourseId, nameof(feedback.CourseId));
             CheckIdAndAddEntery(feedback.TraineeId, nameof(feedback.TraineeId));
             ValidateAndAddEntery(nameof(feedback.Feedback), feedback.Feedback!, feedbackValidation);
@@ -135,8 +177,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateDepartment(Department department)
         {
+            if (department is null)
+            {
+                throw new ArgumentNullException(nameof(department));
+            }
+
             ValidateAndAddEntery(nameof(department.Name), department.Name!, userNameValidation);
 
             CheckDepartmentExistsIfIdIsNotZero(department.Id);
@@ -154,8 +203,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateMOM(MOM mom)
         {
+            if (mom is null)
+            {
+                throw new ArgumentNullException(nameof(mom));
+            }
+
             CheckIdAndAddEntery(mom.ReviewId, nameof(mom.ReviewId));
             CheckIdAndAddEntery(mom.TraineeId, nameof(mom.TraineeId));
             ValidateAndAddEntery(nameof(mom.Agenda), mom.Agenda!, contentValidation);
@@ -180,8 +236,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateReview(Review review)
         {
+            if (review is null)
+            {
+                throw new ArgumentNullException(nameof(review));
+            }
+
             CheckIdAndAddEntery(review.ReviewerId, nameof(review.ReviewerId));
             CheckIdAndAddEntery(review.TraineeId, nameof(review.TraineeId));
             CheckIdAndAddEntery(review.StatusId, nameof(review.StatusId));
@@ -211,8 +274,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateTopic(Topic topic)
         {
+            if (topic is null)
+            {
+                throw new ArgumentNullException(nameof(topic));
+            }
+
             CheckIdAndAddEntery(topic.CourseId, nameof(topic.CourseId));
             ValidateAndAddEntery(nameof(topic.Name), topic.Name!, nameValidation);
             ValidateAndAddEntery(nameof(topic.Duration), topic.Duration!, durationValidation);
@@ -239,8 +309,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateTraineeFeedback(TraineeFeedback feedback)
         {
+            if (feedback is null)
+            {
+                throw new ArgumentNullException(nameof(feedback));
+            }
+
             CheckIdAndAddEntery(feedback.CourseId, nameof(feedback.CourseId));
             CheckIdAndAddEntery(feedback.TraineeId, nameof(feedback.TraineeId));
             CheckIdAndAddEntery(feedback.TrainerId, nameof(feedback.TrainerId));
@@ -265,8 +342,15 @@ namespace TMS.API
         /// <returns>
         /// returns a Dictionary
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
         public Dictionary<string, string> ValidateUser(User user)
         {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             departmentExists = true;
             CheckRoleExists(user.RoleId);
             if (user.DepartmentId != null) CheckDepartmentExists((int)user.DepartmentId);
@@ -289,6 +373,11 @@ namespace TMS.API
         }
          public Dictionary<string, string> ValidateUpdtateUser(UpdateUserModel user)
         {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             departmentExists = true;
             CheckRoleExists(user.RoleId);
             if (user.DepartmentId != null) CheckDepartmentExists((int)user.DepartmentId);

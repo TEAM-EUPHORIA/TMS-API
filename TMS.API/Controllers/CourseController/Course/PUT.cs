@@ -34,10 +34,13 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="course"></param>
         [HttpPut("course")]
-
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult UpdateCourse([FromBody] Course course)
         {
+            if (course is null)
+            {
+                return BadRequest("Course is required");
+            }
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -47,22 +50,17 @@ namespace TMS.API.Controllers
                     var IsValid = _service.Validation.ValidateCourse(course);
                     if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                     {
-                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                        int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                         var res = _service.CourseService.UpdateCourse(course, updatedBy);
                         if (res.ContainsKey("IsValid") && res.ContainsKey("Exists")) return Ok(new { Response = "The Course was Updated successfully" });
                     }
                     return BadRequest(IsValid);
                 }
-                return NotFound("NotFound");
+                return NotFound("Not Found");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateCourse));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateCourse));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -94,16 +92,19 @@ namespace TMS.API.Controllers
         /// <response code="404">If course was not found. </response>
         /// <response code="500">If there is problem in server. </response>
         [HttpPut("assignUsers")]
-
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult AssignUsersToCourse([FromBody] AddUsersToCourse data)
         {
+            if (data is null)
+            {
+                return BadRequest("data is required");
+            }
             try
             {
                 var courseExists = _service.Validation.CourseExists(data.CourseId);
                 if (courseExists)
                 {
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                     var result = _service.CourseService.AddUsersToCourse(data, currentUserId);
                     return Ok(result);
                 }
@@ -111,12 +112,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(AssignUsersToCourse));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(AssignUsersToCourse));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -149,16 +145,19 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="data"></param>
         [HttpPut("removeUsers")]
-
         [Authorize(Roles = "Training Coordinator")]
         public IActionResult RemoveUsersFromCourse([FromBody] AddUsersToCourse data)
         {
+            if (data is null)
+            {
+                return BadRequest("data is required");
+            }
             try
             {
                 var courseExists = _service.Validation.CourseExists(data.CourseId);
                 if (courseExists)
                 {
-                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int currentUserId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                     var result = _service.CourseService.RemoveUsersFromCourse(data, currentUserId);
                     return Ok(result);
                 }
@@ -166,12 +165,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(RemoveUsersFromCourse));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(RemoveUsersFromCourse));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

@@ -9,10 +9,15 @@ namespace TMS.API.UtilityFunctions
         /// used to hash the password
         /// </summary>
         /// <param name="input"></param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public static string Sha256(this string input)
         {
+            if (input is null)
+            {
+                throw new ArgumentException(nameof(input));
+            }
+
             using var sha = SHA256.Create();
             var bytes = Encoding.UTF8.GetBytes(input);
             var hash = sha.ComputeHash(bytes);

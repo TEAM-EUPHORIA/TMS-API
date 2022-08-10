@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
 namespace TMS.API.Controllers
 {
     [Authorize]
@@ -32,18 +31,21 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="feedback"></param>
         [HttpPost("trainee/feedback")]
-
         [Authorize(Roles = "Trainer")]
         public IActionResult CreateTraineeFeedback([FromBody] TraineeFeedback feedback)
         {
+            if (feedback is null)
+            {
+                return BadRequest("feedback is required");
+            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
                 var IsValid = _service.Validation.ValidateTraineeFeedback(feedback);
                 if (IsValid.ContainsKey("Exists")) return BadRequest("Can't create feedback. the feedback Already exists");
                 if (IsValid.ContainsKey("IsValid"))
                 {
-                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                    int createdBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                     var res = _service.FeedbackService.CreateTraineeFeedback(feedback, createdBy);
                     if (res.ContainsKey("IsValid")) return Ok(new { Response = "The Feedback was Created successfully" });
                 }
@@ -51,12 +53,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(CreateTraineeFeedback));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(CreateTraineeFeedback));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

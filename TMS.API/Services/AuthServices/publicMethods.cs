@@ -1,7 +1,6 @@
 using TMS.API.Repositories;
 using TMS.API.UtilityFunctions;
 using TMS.API.ViewModels;
-
 namespace TMS.API.Services
 {
     public partial class AuthService : IAuthService
@@ -16,13 +15,12 @@ namespace TMS.API.Services
         /// <param name="repo"></param>
         /// <param name="configuration"></param>
         /// <param name="logger"></param>
-        public AuthService(IUnitOfWork repo, IConfiguration configuration,ILogger logger)
+        public AuthService(IUnitOfWork repo, IConfiguration configuration, ILogger logger)
         {
-            _repo = repo;
-            _configuration = configuration;
-            _logger = logger;
+            _repo = repo ?? throw new ArgumentException(nameof(repo));
+            _configuration = configuration ?? throw new ArgumentException(nameof(configuration));
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
         }
-
         /// <summary>
         /// used to Login as user.
         /// </summary>
@@ -30,34 +28,23 @@ namespace TMS.API.Services
         /// <returns>
         /// result Dictionary 
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public Dictionary<string, string> Login(LoginModel user)
         {
-            try
+            if (user is null)
             {
-                var validation = _repo.Validation.ValidateLoginDetails(user);
-                if (validation.ContainsKey("IsValid"))
-                {
-                    var dbUser = _repo.Users.GetUserByEmailAndPassword(user);
-                    string tokenString = GenerateTokenString(dbUser);
-                    result.Add("token", tokenString);
-                    return result;
-                }
-                return validation;
+                throw new ArgumentException(nameof(user));
             }
-            catch (InvalidOperationException ex)
+            var validation = _repo.Validation.ValidateLoginDetails(user);
+            if (validation.ContainsKey("IsValid"))
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(AuthService),nameof(Login));
-                throw;
+                var dbUser = _repo.Users.GetUserByEmailAndPassword(user);
+                string tokenString = GenerateTokenString(dbUser);
+                result.Add("token", tokenString);
+                return result;
             }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(Login));
-                throw;
-            }
+            return validation;
         }
     }
 }

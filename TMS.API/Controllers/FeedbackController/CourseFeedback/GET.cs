@@ -12,12 +12,11 @@ namespace TMS.API.Controllers
         private readonly ILogger<FeedBackController> _logger;
         private readonly IUnitOfService _service;
         private readonly IStatistics _stats;
-
         public FeedBackController(IUnitOfService service, ILogger<FeedBackController> logger, IStatistics stats)
         {
-            _logger = logger;
-            _service = service;
-            _stats = stats;
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
+            _service = service ?? throw new ArgumentException(nameof(service));
+            _stats = stats ?? throw new ArgumentException(nameof(stats));
         }
         /// <summary>
         /// Gets a Feedback
@@ -41,22 +40,16 @@ namespace TMS.API.Controllers
             try
             {
                 var feedbackExists = _service.Validation.CourseFeedbackExists(courseId, traineeId);
-
                 if (feedbackExists)
                 {
                     var result = _service.FeedbackService.GetCourseFeedbackByCourseIdAndTraineeId(courseId, traineeId);
                     if (result is not null) return Ok(result);
                 }
-                return NotFound("NotFound");
+                return NotFound("Not Found");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(FeedBackController), nameof(GetCourseFeedbackByCourseIdAndTraineeId));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetCourseFeedbackByCourseIdAndTraineeId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

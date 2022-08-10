@@ -1,7 +1,6 @@
 using TMS.API.Repositories;
 using TMS.API.UtilityFunctions;
 using TMS.BAL;
-
 namespace TMS.API.Services
 {
     public class RoleService : IRoleService
@@ -13,10 +12,10 @@ namespace TMS.API.Services
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="logger"></param>
-        public RoleService(IUnitOfWork repo,ILogger logger)
+        public RoleService(IUnitOfWork repo, ILogger logger)
         {
-            _repo = repo;
-            _logger = logger;
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         /// <summary>
         /// used to get roles
@@ -28,16 +27,7 @@ namespace TMS.API.Services
         /// </exception>
         public IEnumerable<Role> GetRoles()
         {
-            try
-            {
-                return _repo.Roles.GetRoles();
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex,_logger,nameof(RoleService),nameof(GetRoles));
-                throw;
-            }
+            return _repo.Roles.GetRoles();
         }
     }
 }
-

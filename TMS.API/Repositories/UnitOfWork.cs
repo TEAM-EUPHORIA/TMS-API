@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TMS.API.Services;
 using TMS.API.UtilityFunctions;
 
@@ -20,7 +21,7 @@ namespace TMS.API.Repositories
 
         public UnitOfWork(AppDbContext dbContext, ILogger<UnitOfWork> logger)
         {
-            this.dbContext = dbContext;
+            this.dbContext = dbContext ?? throw new ArgumentException(nameof(dbContext));
             Users = new UserRepository(dbContext);
             Roles = new RoleRepository(dbContext);
             Courses = new CourseRepository(dbContext);
@@ -29,7 +30,7 @@ namespace TMS.API.Repositories
             Departments = new DepartmentRepository(dbContext);
             Validation = new Validation(dbContext);
             Stats = new Statistics(dbContext);
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
         }
 
         public void Complete()
@@ -38,9 +39,9 @@ namespace TMS.API.Repositories
             {
                 dbContext.SaveChanges();
             }
-            catch (Exception ex)
+            catch (DbUpdateException ex)
             {
-                TMSLogger.DbException(ex,_logger,nameof(Complete));
+                TMSLogger.DbException(ex, _logger, nameof(Complete));
                 throw;
             }
         }

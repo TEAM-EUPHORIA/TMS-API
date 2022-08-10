@@ -21,20 +21,7 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCourses()
         {
-            try
-            {
-                return Ok(_service.CourseService.GetCourses());
-            }
-            catch (InvalidOperationException ex)
-            {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourses));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetCourses));
-                return Problem("sorry somthing went wrong");
-            }
+            return Ok(_service.CourseService.GetCourses());
         }
         /// <summary>
         /// Gets a list of courses assigned to user by userId
@@ -54,7 +41,6 @@ namespace TMS.API.Controllers
         [Authorize(Roles = "Training Head, Training Coordinator")]
         public IActionResult GetCoursesByUserId(int userId)
         {
-
             try
             {
                 var userExists = _service.Validation.UserExists(userId);
@@ -66,12 +52,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetCoursesByUserId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -81,7 +62,7 @@ namespace TMS.API.Controllers
         {
             try
             {
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                 var userExists = _service.Validation.UserExists(userId);
                 if (userExists)
                 {
@@ -91,12 +72,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByUserId));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetCoursesByUserId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -129,12 +105,7 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCoursesByDepartmentId));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetCoursesByDepartmentId));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
@@ -170,28 +141,15 @@ namespace TMS.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(GetCourseById));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(GetCourseById));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }
-
         private void VerifyAccess(int courseId, out int userId, out bool access)
         {
-            userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext) == "Training Coordinator";
-            if (check)
-            {
-                access = true;
-            }
-            else
-            {
-                access = _service.Validation.ValidateCourseAccess(courseId, userId);
-            }
+            userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+            var check = ControllerHelper.GetCurrentUserRole(this.HttpContext, _logger) == "Training Coordinator";
+            access = check || _service.Validation.ValidateCourseAccess(courseId, userId);
         }
     }
 }

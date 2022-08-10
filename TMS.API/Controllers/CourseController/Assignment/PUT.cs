@@ -32,25 +32,27 @@ namespace TMS.API.Controllers
         /// <response code="500">If there is problem in server. </response>
         /// <param name="assignment"></param>
         [HttpPut("assignment")]
-
         [Authorize(Roles = "Trainer,Trainee")]
         public IActionResult UpdateAssignment([FromBody] Assignment assignment)
         {
+            if (assignment is null)
+            {
+                BadRequest("assignment is required");
+            }
             try
             {
-                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext);
-                bool access = userId == assignment.OwnerId;
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var userId = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
+                bool access = userId == assignment!.OwnerId;
                 if (access)
                 {
-                    access = _service.Validation.ValidateCourseAccess(assignment.CourseId, assignment.OwnerId);
-                    if (!ModelState.IsValid) return BadRequest(ModelState);
                     var assignmentExists = _service.Validation.AssignmentExists(assignment.CourseId, assignment.TopicId, assignment.OwnerId);
-                    if (assignmentExists && access)
+                    if (assignmentExists)
                     {
                         var IsValid = _service.Validation.ValidateAssignment(assignment);
                         if (IsValid.ContainsKey("IsValid") && IsValid.ContainsKey("Exists"))
                         {
-                            int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext);
+                            int updatedBy = ControllerHelper.GetCurrentUserId(this.HttpContext, _logger);
                             var res = _service.CourseService.UpdateAssignment(assignment, updatedBy);
                             if (res.ContainsKey("IsValid") && IsValid.ContainsKey("Exists")) return Ok(new { Response = "The Assignment was Updated successfully" });
                         }
@@ -58,16 +60,11 @@ namespace TMS.API.Controllers
                     }
                     return NotFound("Not found");
                 }
-                return Unauthorized("UnAuthorized, contect your admin");
+                return Unauthorized("UnAuthorized");
             }
             catch (InvalidOperationException ex)
             {
-                TMSLogger.ServiceInjectionFailedAtService(ex, _logger, nameof(CourseController), nameof(UpdateAssignment));
-                return Problem("sorry somthing went wrong");
-            }
-            catch (Exception ex)
-            {
-                TMSLogger.GeneralException(ex,_logger,nameof(UpdateAssignment));
+                TMSLogger.RemovedTheConnectionStringInAppsettings(ex, _logger);
                 return Problem("sorry somthing went wrong");
             }
         }

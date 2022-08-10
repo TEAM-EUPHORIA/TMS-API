@@ -14,8 +14,7 @@ namespace TMS.API
         /// <returns>
         /// true if AttendanceExists else false
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
+
         public bool AttendanceExists(int courseId, int topicId, int ownerId)
         {
             return dbContext.Attendances.Any(a =>
@@ -32,8 +31,7 @@ namespace TMS.API
         /// <returns>
         /// true if AssignmentExists else false
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
+
         public bool AssignmentExists(int courseId, int topicId, int ownerId)
         {
             return dbContext.Assignments.Any(a =>
@@ -50,22 +48,20 @@ namespace TMS.API
         /// <returns>
         /// true if course user exists else false
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool CourseUserExists(int courseId, int userId, int roleId)
         {
             return dbContext.CourseUsers.Any(cu =>
-                    cu.CourseId == courseId && cu.Course.isDisabled == false &&
-                    cu.UserId == userId && cu.User.isDisabled == false &&
+                    cu.CourseId == courseId && cu.Course!.isDisabled == false &&
+                    cu.UserId == userId && cu.User!.isDisabled == false &&
                     cu.RoleId == roleId);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="courseId"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
+        /// <returns>
+        /// true if course user exists else false
+        /// </returns>
         public bool CourseExists(int courseId)
         {
             return dbContext.Courses.Any(c =>
@@ -78,25 +74,57 @@ namespace TMS.API
         /// <param name="courseId"></param>
         /// <param name="departmentId"></param>
         /// <param name="name"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
+        /// <returns>
+        /// true if course name is available else false
+        /// </returns>
+        /// <exception cref="ArgumentException">
         /// </exception>
         public bool IsCourseNameAvailable(int courseId, int departmentId, string name)
         {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             return dbContext.Courses.Any(c =>
                     c.Id != courseId &&
                     c.DepartmentId == departmentId &&
                     c.Name == name);
         }
+        /// <summary>
+        /// used to check if email is available
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="mailId"></param>
+        /// <returns>
+        /// true if mail is available else false
+        /// </returns>
         public bool IsUserMailAvailable(int userId, string mailId)
         {
+            if (mailId is null)
+            {
+                throw new ArgumentNullException(nameof(mailId));
+            }
+
             return dbContext.Users.Any(c =>
                     c.Id != userId &&
                     c.Email == mailId);
         }
-
+        /// <summary>
+        /// used to check if department name is available
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="name"></param>
+        /// <returns>
+        /// true if department name is available else false
+        /// </returns>
         public bool IsDepartmentNameAvailable(int departmentId, string name)
         {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             return dbContext.Departments.Any(c =>
                     c.Id != departmentId &&
                     c.Name == name);
@@ -107,11 +135,18 @@ namespace TMS.API
         /// <param name="topicId"></param>
         /// <param name="courseId"></param>
         /// <param name="name"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
+        /// <returns>
+        /// true if topic name is available else false
+        /// </returns>
+        /// <exception cref="ArgumentException">
         /// </exception>
         public bool IsTopicNameAvailabe(int topicId, int courseId, string name)
         {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             return dbContext.Topics.Any(c =>
                     c.TopicId != topicId &&
                     c.CourseId == courseId &&
@@ -121,9 +156,9 @@ namespace TMS.API
         /// 
         /// </summary>
         /// <param name="departmentId"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
+        /// <returns>
+        /// true if department exists else false
+        /// </returns>
         public bool DepartmentExists(int departmentId)
         {
             return dbContext.Departments.Any(d =>
@@ -135,9 +170,10 @@ namespace TMS.API
         /// </summary>
         /// <param name="reviewId"></param>
         /// <param name="traineeId"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
+        /// <returns>
+        /// true if MOM exists else false
+        /// </returns>
+
         public bool MOMExists(int reviewId, int traineeId)
         {
             return dbContext.MOMs.Any(m =>
@@ -149,7 +185,7 @@ namespace TMS.API
         /// </summary>
         /// <param name="reviewId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public bool ReviewExists(int reviewId)
         {
@@ -165,14 +201,14 @@ namespace TMS.API
         /// <param name="reviewDate"></param>
         /// <param name="reviewTime"></param>
         /// <param name="statusId"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
+        /// <returns>
+        /// true if reviewer is available exists else false
+        /// </returns>
         public bool ReviewerAvailabilityExists(
-            int id, 
-            int reviewerId, 
+            int id,
+            int reviewerId,
             DateTime reviewDate,
-            DateTime reviewTime, 
+            DateTime reviewTime,
             int statusId)
         {
             return dbContext.Reviews.Any(r =>
@@ -191,13 +227,11 @@ namespace TMS.API
         /// <param name="reviewTime"></param>
         /// <param name="statusId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool TraineeAvailabilityExists(
-            int id, 
-            int traineeId, 
-            DateTime reviewDate, 
-            DateTime reviewTime, 
+            int id,
+            int traineeId,
+            DateTime reviewDate,
+            DateTime reviewTime,
             int statusId)
         {
             return dbContext.Reviews.Any(r =>
@@ -213,8 +247,6 @@ namespace TMS.API
         /// <param name="reviewId"></param>
         /// <param name="traineeId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool MOMReviewExists(int reviewId, int traineeId)
         {
             return dbContext.Reviews.Any(r =>
@@ -226,8 +258,6 @@ namespace TMS.API
         /// </summary>
         /// <param name="statusId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool ReviewStatusExists(int statusId)
         {
             return dbContext.ReviewStatuses.Any(r =>
@@ -239,8 +269,6 @@ namespace TMS.API
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool RoleExists(int roleId)
         {
             return dbContext.Roles.Any(r =>
@@ -253,8 +281,6 @@ namespace TMS.API
         /// <param name="topicId"></param>
         /// <param name="courseId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool TopicExists(int topicId, int courseId)
         {
             return dbContext.Topics.Any(t =>
@@ -266,8 +292,6 @@ namespace TMS.API
         /// </summary>
         /// <param name="topicId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool TopicExists(int topicId)
         {
             return dbContext.Topics.Any(t =>
@@ -280,10 +304,15 @@ namespace TMS.API
         /// <param name="courseId"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public bool TopicValidationExists(int courseId, string name)
         {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             return dbContext.Topics.Any(t =>
                     t.CourseId == courseId &&
                     t.Name == name);
@@ -295,8 +324,7 @@ namespace TMS.API
         /// <param name="traineeId"></param>
         /// <param name="trainerId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
+
         public bool TraineeFeedbackExists(int courseId, int traineeId, int trainerId)
         {
             return dbContext.TraineeFeedbacks.Any(tf =>
@@ -310,8 +338,6 @@ namespace TMS.API
         /// <param name="courseId"></param>
         /// <param name="traineeId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool CourseFeedbackExists(int courseId, int traineeId)
         {
             return dbContext.CourseFeedbacks.Any(cf =>
@@ -323,8 +349,6 @@ namespace TMS.API
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public bool UserExists(int userId)
         {
             return dbContext.Users.Any(u =>
@@ -337,7 +361,7 @@ namespace TMS.API
         /// <param name="userId"></param>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public bool UserExists(int userId, int roleId)
         {
@@ -351,10 +375,15 @@ namespace TMS.API
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="ArgumentException">
         /// </exception>
         public bool UserExists(LoginModel user)
         {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             var pass = HashPassword.Sha256(user.Password);
             return dbContext.Users.Any(u =>
                     u.Email == user.Email
